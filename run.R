@@ -13,7 +13,7 @@ devtools::install_local(paste0(cwd, '/packages/customUtility'))
 library('customUtility')
 
 ## load packages
-load_package(c(''))
+load_package(c())
 
 ## create dataframes
 df.breaches = load_data(
