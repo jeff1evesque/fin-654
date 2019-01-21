@@ -16,8 +16,13 @@ library('customUtility')
 load_package(c('reticulate'))
 
 ## create dataframes
-df.breaches = load_data(
-    paste0(cwd, '/data/breaches.csv'),
+df.breaches1 = load_data(
+    paste0(cwd, '/data/visualisation-data.csv'),
     remove=TRUE,
     type='csv'
+)
+df.breaches2 = load_data(
+  paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
+  remove=TRUE,
+  type='csv'
 )
