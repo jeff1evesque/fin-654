@@ -14,15 +14,17 @@ library('customUtility')
 
 ## load packages
 load_package(c('reticulate'))
+py_install('pandas')
 
-## create dataframes
-df.breaches1 = load_data(
-    paste0(cwd, '/data/visualisation-data.csv'),
-    remove=TRUE,
-    type='csv'
-)
-df.breaches2 = load_data(
-  paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
-  remove=TRUE,
-  type='csv'
-)
+## source python
+source_python(paste0('python/parse.py '))
+
+## load dataset
+df1 = Dataset(paste0(cwd, '/data/data-breaches.csv'))
+df2 = Dataset(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'))
+
+## manipulate dataset
+
+## return dataset
+df_breaches1 = df1$get_df()
+df_breaches2 = df2$get_df()
