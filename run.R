@@ -17,11 +17,11 @@ load_package(c('reticulate'))
 py_install('pandas')
 
 ## source python
-source_python(paste0('python/parse.py '))
+source_python(paste0('python/dataframe.py '))
 
 ## load dataset
-df1 = Dataset(paste0(cwd, '/data/data-breaches.csv'))
-df2 = Dataset(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'))
+df1 = Dataframe(paste0(cwd, '/data/data-breaches.csv'))
+df2 = Dataframe(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'))
 
 ## manipulate dataset
 
