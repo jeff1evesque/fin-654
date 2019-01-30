@@ -20,11 +20,33 @@ py_install('pandas')
 source_python(paste0('python/dataframe.py '))
 
 ## load dataset
-df1 = Dataframe(paste0(cwd, '/data/data-breaches.csv'))
-df2 = Dataframe(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'))
+data1 = Dataframe(paste0(cwd, '/data/data-breaches.csv'))
+data2 = Dataframe(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'))
 
 ## manipulate dataset
+data1$remove_cols(c(
+  'alternative name',
+  'story',
+  'interesting story',
+  'Unnamed: 10',
+  'DATA SENSITIVITY',
+  '1st source link',
+  '2nd source link',
+  'DISPLAYED RECORDS',
+  'source name'
+))
+
+data2$remove_cols(c(
+  'City',
+  'State',
+  'Type of organization',
+  'Description of incident',
+  'Information Source',
+  'Source URL',
+  'Latitude',
+  'Longitude'
+))
 
 ## return dataset
-df_breaches1 = df1$get_df()
-df_breaches2 = df2$get_df()
+df_breaches1 = data1$get_df()
+df_breaches2 = data2$get_df()
