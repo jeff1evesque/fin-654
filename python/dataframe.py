@@ -40,6 +40,15 @@ class Dataframe:
     
         self.df.rename(columns=cols, inplace=True)
 
+    def split_remove(self, column, delimiter):
+        '''
+
+        remove all characters after delimiter
+
+        '''
+
+        self.df[column] = [x.split(delimiter, 1)[0] for x in self.df[column].astype(str)]
+
     def get_df(self):
         '''
 

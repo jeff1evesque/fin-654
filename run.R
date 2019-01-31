@@ -49,7 +49,7 @@ data2$remove_cols(c(
   'Year of Breach'
 ))
 
-data1$split_remove('.')
+data1$split_remove('story', '.')
 
 ## return dataset
 df_breaches1 = data1$get_df()
