@@ -26,14 +26,15 @@ data2 = Dataframe(paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-
 ## manipulate dataset
 data1$remove_cols(c(
   'alternative name',
-  'story',
+  'YEAR',
   'interesting story',
   'Unnamed: 10',
   'DATA SENSITIVITY',
   '1st source link',
   '2nd source link',
   'DISPLAYED RECORDS',
-  'source name'
+  'source name',
+  'SECTOR'
 ))
 
 data2$remove_cols(c(
@@ -44,8 +45,11 @@ data2$remove_cols(c(
   'Information Source',
   'Source URL',
   'Latitude',
-  'Longitude'
+  'Longitude',
+  'Year of Breach'
 ))
+
+data1$split_remove('.')
 
 ## return dataset
 df_breaches1 = data1$get_df()
