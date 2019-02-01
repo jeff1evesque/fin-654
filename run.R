@@ -50,7 +50,28 @@ data2$remove_cols(c(
 ))
 
 data1$split_remove('story', '.')
+data1$rename_col(
+  paste(
+    '{',
+    '"Entity": "company",',
+    '"records lost": "records",',
+    '"story": "date",',
+    '"METHOD": "type"',
+    '}'
+  )
+)
+data2$rename_col(
+  paste(
+    '{',
+    '"Date Made Public": "date",',
+    '"Company": "company",',
+    '"Type of breach": "type",',
+    '"Total Records": "records"',
+    '}'
+  )
+)
 
 ## return dataset
 df_breaches1 = data1$get_df()
 df_breaches2 = data2$get_df()
+
