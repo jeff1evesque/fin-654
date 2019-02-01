@@ -7,7 +7,9 @@ dataframe.py, provides methods to alter, and return a dataframe.
 '''
 
 import sys
-import pandas as pd  
+import json
+import pandas as pd
+from datetime import datetime
 
 
 class Dataframe:
@@ -18,7 +20,8 @@ class Dataframe:
 
         '''
 
-        self.df = pd.read_csv(fp, error_bad_lines=True, engine='python')
+        self.df = pd.read_csv(fp, engine='python')
+        self.df.dropna()
 
     def remove_cols(self, cols):
         '''
@@ -37,8 +40,11 @@ class Dataframe:
             {'oldName1': 'newName1', 'oldName2': 'newName2'}
 
         '''
-    
-        self.df.rename(columns=cols, inplace=True)
+
+        if isinstance(cols, dict):
+            self.df.rename(columns=cols, inplace=True)
+        elif isinstance(cols, str):
+            self.df.rename(columns=json.loads(cols), inplace=True)
 
     def split_remove(self, column, delimiter):
         '''
@@ -48,6 +54,15 @@ class Dataframe:
         '''
 
         self.df[column] = [x.split(delimiter, 1)[0] for x in self.df[column].astype(str)]
+
+    def reformat_date(self, column, format='%Y-%m'):
+        '''
+
+        remove all characters after delimiter
+
+        '''
+
+        self.df[column] = self.df[column].dt.strftime(format)
 
     def get_df(self):
         '''
