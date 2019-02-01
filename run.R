@@ -4,7 +4,7 @@
 
 ## set project cwd: only execute in RStudio
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
-  cwd <- dirname(rstudioapi::getSourceEditorContext()$path)
+  cwd = dirname(rstudioapi::getSourceEditorContext()$path)
   setwd(cwd)
 }
 
@@ -70,6 +70,9 @@ data2$rename_col(
     '}'
   )
 )
+
+data1$reformat_date('date')
+data2$reformat_date('date')
 
 ## return dataset
 df_breaches1 = data1$get_df()
