@@ -9,6 +9,7 @@ dataframe.py, provides methods to alter, and return a dataframe.
 import sys
 import json
 import pandas as pd
+import numpy as np
 from datetime import datetime
 
 
@@ -20,8 +21,16 @@ class Dataframe:
 
         '''
 
-        self.df = pd.read_csv(fp, engine='python')
-        self.df.dropna()
+        self.df = pd.read_csv(fp)
+
+    def drop_na(self):
+        '''
+
+        drop rows if any cell contain NaN.
+
+        '''
+
+        self.df.dropna(inplace=True)
 
     def remove_cols(self, cols):
         '''
