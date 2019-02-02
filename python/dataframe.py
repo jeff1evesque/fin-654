@@ -62,7 +62,10 @@ class Dataframe:
 
         '''
 
-        self.df[column] = self.df[column].dt.strftime(format)
+        self.df[column] = pd.to_datetime(
+            self.df[column],
+            errors='coerce'
+        ).dt.strftime(format)
 
     def get_df(self):
         '''
