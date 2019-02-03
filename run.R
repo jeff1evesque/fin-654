@@ -17,7 +17,7 @@ load_package(c('reticulate'))
 py_install('pandas')
 
 ## source python
-source_python(paste0('python/dataframe.py '))
+source_python(paste0('python/dataframe.py'))
 
 ## load dataset
 data1 = Dataframe(paste0(cwd, '/data/data-breaches.csv'))
@@ -73,8 +73,9 @@ data2$rename_col(
 
 data1$reformat_date('date')
 data2$reformat_date('date')
+data1$drop_na()
+data2$drop_na()
 
 ## return dataset
 df_breaches1 = data1$get_df()
 df_breaches2 = data2$get_df()
-
