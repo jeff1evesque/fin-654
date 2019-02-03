@@ -77,5 +77,4 @@ data1$drop_na()
 data2$drop_na()
 
 ## return dataset
-df_breaches1 = data1$get_df()
-df_breaches2 = data2$get_df()
+df = rbind(data1$get_df(), data2$get_df())
