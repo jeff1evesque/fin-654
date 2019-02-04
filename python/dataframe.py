@@ -22,6 +22,7 @@ class Dataframe:
         '''
 
         self.df = pd.read_csv(fp)
+        self.df = self.df.apply(lambda x: x.astype(str).str.lower())
 
     def drop_na(self):
         '''
