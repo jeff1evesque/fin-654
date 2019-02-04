@@ -75,6 +75,10 @@ data1$reformat_date('date')
 data2$reformat_date('date')
 data1$drop_na()
 data2$drop_na()
+data1$to_lower()
+data2$to_lower()
+data1$to_integer('records')
+data2$to_integer('records')
 
 ## return dataset
 df = rbind(data1$get_df(), data2$get_df())
