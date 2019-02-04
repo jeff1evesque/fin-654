@@ -22,6 +22,23 @@ class Dataframe:
         '''
 
         self.df = pd.read_csv(fp)
+
+    def to_integer(self, column):
+        '''
+
+        convert column to integer.
+
+        '''
+
+        self.df[column] = pd.to_numeric(self.df[column].str.replace(',', ''))
+
+    def to_lower(self):
+        '''
+
+        convert dataframe to lowercase.
+
+        '''
+
         self.df = self.df.apply(lambda x: x.astype(str).str.lower())
 
     def drop_na(self):
