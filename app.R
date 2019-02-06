@@ -1,5 +1,5 @@
 ##
-## run.R, entrypoint script
+## app.R, shiny application.
 ##
 
 ## set project cwd: only execute in RStudio
