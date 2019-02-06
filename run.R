@@ -13,7 +13,7 @@ devtools::install_local(paste0(cwd, '/packages/customUtility'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate', 'reticulate'))
+load_package(c('reticulate', 'shiny'))
 py_install('pandas')
 
 ## source python
@@ -82,3 +82,29 @@ data2$to_integer('records')
 
 ## return dataset
 df = rbind(data1$get_df(), data2$get_df())
+
+## user interface: controls the layout and appearance of your app
+ui = fluidPage(
+  titlePanel('Tabsets'),
+  sidebarLayout(
+    sidebarPanel(
+      # Inputs excluded for brevity
+    ),
+
+    mainPanel(
+      tabsetPanel(
+        tabPanel('Plot', plotOutput('plot')),
+        tabPanel('Summary', verbatimTextOutput('summary')),
+        tabPanel('Table', tableOutput('table'))
+      )
+    )
+  )
+)
+
+## server: instructions to build application
+server = function(input, output, session) {
+  ## Server code here
+}
+
+## shiny application
+shinyApp(ui = ui, server = server)
