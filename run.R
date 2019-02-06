@@ -13,7 +13,7 @@ devtools::install_local(paste0(cwd, '/packages/customUtility'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate'))
+load_package(c('reticulate', 'reticulate'))
 py_install('pandas')
 
 ## source python
