@@ -12,10 +12,9 @@ if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
 devtools::install_local(paste0(cwd, '/packages/customUtility'))
 devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
-library('fin654')
 
 ## load packages
-load_package(c('reticulate', 'shiny'))
+load_package(c('reticulate', 'shiny', 'fin654'))
 py_install('pandas')
 
 ## user interface: controls the layout and appearance of your app
