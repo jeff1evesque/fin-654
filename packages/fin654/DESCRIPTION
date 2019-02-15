@@ -1,0 +1,10 @@
+Package: fin654
+Type: Package
+Title: financial analytics 654 specific packages
+Version: 0.1.0
+Author: Jeffrey Levesque
+Maintainer: Jeffrey Levesque <jeff1evesque@yahoo.com>
+Description: General use utility functions.
+License: BSD
+LazyData: TRUE
+RoxygenNote: 5.0.1
