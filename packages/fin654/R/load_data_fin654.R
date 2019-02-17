@@ -75,6 +75,38 @@ load_data_fin654 = function(fp1, fp2, spath) {
   data2$to_lower()
   data1$to_integer('records')
   data2$to_integer('records')
+
+  ## replacement lists: index lenghts must match between 'old' and 'new'
+  old = c(
+    'hacked',
+    'oops!',
+    'unkn',
+    'poor security',
+    'lost device',
+    'port',
+    'disc',
+    'phys',
+    'insd',
+    'stat'
+  )
+
+  new = c(
+    'hack',
+    'accidental-disclosed',
+    'unknown',
+    'hack',
+    'lost-or-stolen',
+    'lost-or-stolen',
+    'accidental-disclosed',
+    'accidental-disclosed',
+    'insider',
+    'accidental-disclosed'
+  )
+
+  for (i in 1:length(repl)) {
+    data1$replace('type', old[i], new[i])
+    data2$replace('type', old[i], new[i])
+  }
   
   ## return dataset
   return(rbind(data1$get_df(), data2$get_df()))
