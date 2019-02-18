@@ -103,9 +103,11 @@ load_data_fin654 = function(fp1, fp2, spath) {
     'accidental-disclosed'
   )
 
-  for (i in 1:length(repl)) {
-    data1$replace('type', old[i], new[i])
-    data2$replace('type', old[i], new[i])
+  if (length(old) == length(new)) {
+    for (i in 1:length(new)) {
+      data1$replace_val('type', old[i], new[i])
+      data2$replace_val('type', old[i], new[i])
+    }
   }
   
   ## return dataset
