@@ -104,11 +104,11 @@ class Dataframe:
 
         return self.df
 
-    def replace(self, column, old, new):
+    def replace_val(self, column, old, new):
         '''
 
         replace old value with new value in specified column.
 
         '''
 
-        df[column].replace(old, new)
+        self.df[column].replace(old, new, inplace = True)
