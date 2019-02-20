@@ -76,7 +76,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
   data1$to_integer('records')
   data2$to_integer('records')
 
-  ## replacement lists: index lenghts must match between 'old' and 'new'
+  ## replacement lists: 'old' and 'new' lengths must match
   old_val = c(
     'hacked',
     'oops!',
