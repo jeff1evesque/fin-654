@@ -77,7 +77,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
   data2$to_integer('records')
 
   ## replacement lists: index lenghts must match between 'old' and 'new'
-  old = c(
+  old_val = c(
     'hacked',
     'oops!',
     'unkn',
@@ -90,7 +90,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
     'stat'
   )
 
-  new = c(
+  new_val = c(
     'hack',
     'accidental-disclosed',
     'unknown',
@@ -105,8 +105,8 @@ load_data_fin654 = function(fp1, fp2, spath) {
 
   if (length(old) == length(new)) {
     for (i in 1:length(new)) {
-      data1$replace_val('type', old[i], new[i])
-      data2$replace_val('type', old[i], new[i])
+      data1$replace_val('type', old_val[i], new_val[i])
+      data2$replace_val('type', old_val[i], new_val[i])
     }
   }
   
