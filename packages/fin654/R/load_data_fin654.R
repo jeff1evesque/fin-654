@@ -52,7 +52,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
       '"Entity": "company",',
       '"records lost": "records",',
       '"story": "date",',
-      '"METHOD": "type"',
+      '"METHOD": "breach"',
       '}'
     )
   )
@@ -61,7 +61,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
       '{',
       '"Date Made Public": "date",',
       '"Company": "company",',
-      '"Type of breach": "type",',
+      '"Type of breach": "breach",',
       '"Total Records": "records"',
       '}'
     )
@@ -75,6 +75,40 @@ load_data_fin654 = function(fp1, fp2, spath) {
   data2$to_lower()
   data1$to_integer('records')
   data2$to_integer('records')
+
+  ## replacement lists: 'old' and 'new' lengths must match
+  old_val = c(
+    'hacked',
+    'oops!',
+    'unkn',
+    'poor security',
+    'lost device',
+    'port',
+    'disc',
+    'phys',
+    'insd',
+    'stat'
+  )
+
+  new_val = c(
+    'hack',
+    'accidental-disclosed',
+    'unknown',
+    'hack',
+    'lost-or-stolen',
+    'lost-or-stolen',
+    'accidental-disclosed',
+    'accidental-disclosed',
+    'insider',
+    'accidental-disclosed'
+  )
+
+  if (length(old_val) == length(new_val)) {
+    for (i in 1:length(new_val)) {
+      data1$replace_val('breach', old_val[i], new_val[i])
+      data2$replace_val('breach', old_val[i], new_val[i])
+    }
+  }
   
   ## return dataset
   return(rbind(data1$get_df(), data2$get_df()))

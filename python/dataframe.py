@@ -22,6 +22,7 @@ class Dataframe:
         '''
 
         self.df = pd.read_csv(fp)
+        self.df = self.df.applymap(lambda x: x.strip() if type(x) is str else x)
 
     def to_integer(self, column):
         '''
@@ -35,7 +36,7 @@ class Dataframe:
     def to_lower(self):
         '''
 
-        convert dataframe to lowercase.
+        convert dataframe to lowercase, and strip leading + trailing whitespace.
 
         '''
 
@@ -102,3 +103,12 @@ class Dataframe:
         '''
 
         return self.df
+
+    def replace_val(self, column, old_val, new_val):
+        '''
+
+        replace old value with new value in specified column.
+
+        '''
+
+        self.df[column].replace(old_val, new_val, inplace = True)
