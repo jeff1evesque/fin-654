@@ -52,7 +52,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
       '"Entity": "company",',
       '"records lost": "records",',
       '"story": "date",',
-      '"METHOD": "type"',
+      '"METHOD": "breach"',
       '}'
     )
   )
@@ -61,7 +61,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
       '{',
       '"Date Made Public": "date",',
       '"Company": "company",',
-      '"Type of breach": "type",',
+      '"Type of breach": "breach",',
       '"Total Records": "records"',
       '}'
     )
@@ -103,10 +103,10 @@ load_data_fin654 = function(fp1, fp2, spath) {
     'accidental-disclosed'
   )
 
-  if (length(old) == length(new)) {
-    for (i in 1:length(new)) {
-      data1$replace_val('type', old_val[i], new_val[i])
-      data2$replace_val('type', old_val[i], new_val[i])
+  if (length(old_val) == length(new_val)) {
+    for (i in 1:length(new_val)) {
+      data1$replace_val('breach', old_val[i], new_val[i])
+      data2$replace_val('breach', old_val[i], new_val[i])
     }
   }
   
