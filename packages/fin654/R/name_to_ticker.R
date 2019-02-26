@@ -1,10 +1,14 @@
 ##
 ## name_to_ticker.R, convert company name to ticker.
 ##
-## @s, series to match and replace
-## @fps, list of file references.
+## @series, series of company names
+## @fps, list of file references
+## @spath, python source path
 ##
-name_to_ticker = function(s, fps) {
+name_to_ticker = function(series, fps, spath) {
+  ## source python
+  source_python(spath)
+
   ## load data
   context = hash()
   for (i in 1:length(fps)) {
