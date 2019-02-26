@@ -8,3 +8,8 @@ Description: General use utility functions.
 License: BSD
 LazyData: TRUE
 RoxygenNote: 5.0.1
+
+Imports:
+    hash,
+    reticulate,
+    customUtility
