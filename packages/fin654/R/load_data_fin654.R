@@ -10,8 +10,7 @@ load_data_fin654 = function(fp1, fp2, spath) {
   ##
   ## load source(s) into dataframe
   ##
-  ## @list.files, runs on the current directory
-  ##
+
   ## source python
   source_python(spath)
   
