@@ -14,7 +14,7 @@ devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate', 'shiny', 'fin654'))
+load_package(c('reticulate', 'shiny', 'fin654', 'hash'))
 py_install('pandas')
 
 ## user interface: controls the layout and appearance of your app
@@ -41,6 +41,15 @@ server = function(input, output, session) {
     paste0(cwd, '/data/data-breaches.csv'),
     paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
     paste0('python/dataframe.py')
+  )
+
+  df = name_to_ticker(
+    df,
+    c(
+      paste0(cwd, '/data/amex.csv'),
+      paste0(cwd, '/data/nasdaq.csv'),
+      paste0(cwd, '/data/nyse.csv')
+    )
   )
 }
 
