@@ -7,7 +7,7 @@ def name_to_ticker(series, ref, col_1, col_2):
     convert list of company names to list of tickers.
 
     @col_1, column converted to index in dict
-    @col_2, column convertd to value in dict
+    @col_2, column converted to value in dict
 
     '''
 
