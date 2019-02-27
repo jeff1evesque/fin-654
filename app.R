@@ -14,7 +14,7 @@ devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate', 'shiny', 'fin654', 'hash'))
+load_package(c('reticulate', 'shiny', 'fin654'))
 py_install('pandas')
 
 ## user interface: controls the layout and appearance of your app

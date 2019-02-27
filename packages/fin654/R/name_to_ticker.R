@@ -10,10 +10,14 @@ name_to_ticker = function(series, fps, spath) {
   source_python(spath)
 
   ## load data
-  context = hash()
-  for (i in 1:length(fps)) {
-    context[i] = Dataframe(fps[i])
+  df = Dataframe(fps[1])
+  if length(fps > 1) {
+    for (i in 1:length(fps)) {
+      df = merge(df, Dataframe(fps[i]))
+    }
   }
+
+  ## convert name to ticker
 
   ## return company name
   return()

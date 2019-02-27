@@ -10,6 +10,5 @@ LazyData: TRUE
 RoxygenNote: 5.0.1
 
 Imports:
-    hash,
     reticulate,
     customUtility
