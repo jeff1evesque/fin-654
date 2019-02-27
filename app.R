@@ -43,7 +43,7 @@ server = function(input, output, session) {
     paste0('python/dataframe.py')
   )
 
-  df = name_to_ticker(
+  tickers = name_to_ticker(
     df$company,
     c(
       paste0(cwd, '/data/amex.csv'),
@@ -52,6 +52,8 @@ server = function(input, output, session) {
     ),
     c(paste0('python/dataframe.py'), paste0('python/name_to_ticker.py'))
   )
+
+  df$ticker = tickers
 }
 
 ## shiny application

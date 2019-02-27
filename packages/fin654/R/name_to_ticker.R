@@ -1,5 +1,5 @@
 ##
-## name_to_ticker.R, convert company name to ticker.
+## name_to_ticker.R, convert list of company name to list of tickers.
 ##
 ## @series, series of company names
 ## @fps, list of file references
@@ -12,25 +12,26 @@ name_to_ticker = function(series, fps, spath) {
   }
 
   ## load data
-  df = Dataframe(fps[1])
+  df.ref = Dataframe(fps[1])
   if length(fps > 1) {
     for (i in 1:length(fps)) {
-      df = merge(df, Dataframe(fps[i]))
+      df.ref = merge(df, Dataframe(fps[i]))
     }
   }
 
   ## manipulate dataset
-  df$remove_cols(c(
+  df.ref$remove_cols(c(
     'LastSale',
     'MarketCap',
     'ADR TSO',
     'IPOyear',
     'Summary Quote'
   ))
-  df$to_lower()
+  df.ref$to_lower()
 
   ## convert name to ticker
+  adjusted = name_to_ticker(series, df.ref, 'name', 'symbol')
 
   ## return company name
-  return()
+  return(adjusted)
 }
