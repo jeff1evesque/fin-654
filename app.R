@@ -50,7 +50,7 @@ server = function(input, output, session) {
       paste0(cwd, '/data/nasdaq.csv'),
       paste0(cwd, '/data/nyse.csv')
     ),
-    paste0('python/name_to_ticker.py')
+    c(paste0('python/dataframe.py'), paste0('python/name_to_ticker.py'))
   )
 }
 

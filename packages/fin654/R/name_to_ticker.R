@@ -7,7 +7,9 @@
 ##
 name_to_ticker = function(series, fps, spath) {
   ## source python
-  source_python(spath)
+  for (p in spath) {
+    source_python(p)
+  }
 
   ## load data
   df = Dataframe(fps[1])
@@ -16,6 +18,16 @@ name_to_ticker = function(series, fps, spath) {
       df = merge(df, Dataframe(fps[i]))
     }
   }
+
+  ## manipulate dataset
+  df$remove_cols(c(
+    'LastSale',
+    'MarketCap',
+    'ADR TSO',
+    'IPOyear',
+    'Summary Quote'
+  ))
+  df$to_lower()
 
   ## convert name to ticker
 
