@@ -13,9 +13,9 @@ name_to_ticker = function(series, fps, spath) {
 
   ## load data
   df.ref = Dataframe(fps[1])
-  if length(fps > 1) {
-    for (i in 1:length(fps)) {
-      df.ref = merge(df, Dataframe(fps[i]))
+  if (length(fps) > 1) {
+    for (i in 2:length(fps)) {
+      df.ref$merge_fp(fps[i])
     }
   }
 
@@ -30,7 +30,7 @@ name_to_ticker = function(series, fps, spath) {
   df.ref$to_lower()
 
   ## convert name to ticker
-  adjusted = name_to_ticker(series, df.ref, 'name', 'symbol')
+  adjusted = name_to_ticker(series, df.ref$get_df(), 'name', 'symbol')
 
   ## return company name
   return(adjusted)
