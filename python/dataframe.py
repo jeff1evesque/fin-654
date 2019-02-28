@@ -112,3 +112,16 @@ class Dataframe:
         '''
 
         self.df[column].replace(old_val, new_val, inplace = True)
+
+    def merge_fp(self, dfs):
+        '''
+
+        merge one or more dataframes with existing dataframe.
+
+        @dfs, a list of dataframes.
+
+        '''
+
+        dfs = [pd.read_csv(x) for x dfs]
+        dfs = dfs.append(self.get_df())
+        self.df = pd.concat(dfs, axis=0, join='outer', ignore_index=False)
