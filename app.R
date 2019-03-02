@@ -40,7 +40,7 @@ server = function(input, output, session) {
   df = load_data_fin654(
     paste0(cwd, '/data/data-breaches.csv'),
     paste0(cwd, '/data/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
-    paste0('python/dataframe.py')
+    paste0(cwd, '/python/dataframe.py')
   )
 
   tickers = name_to_ticker(
@@ -50,7 +50,7 @@ server = function(input, output, session) {
       paste0(cwd, '/data/nasdaq.csv'),
       paste0(cwd, '/data/nyse.csv')
     ),
-    c(paste0('python/dataframe.py'), paste0('python/name_to_ticker.py'))
+    c(paste0(cwd, '/python/dataframe.py'), paste0(cwd, '/python/name_to_ticker.py'))
   )
 
   df$ticker = tickers
