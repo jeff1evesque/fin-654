@@ -118,7 +118,7 @@ class Dataframe:
 
         merge one or more dataframes with existing dataframe.
 
-        @dfs, a list of dataframes.
+        @dfs, list of file pointers.
 
         '''
 
