@@ -66,7 +66,7 @@ class Dataframe:
 
         '''
 
-        self.df.drop(cols, axis=1, inplace=True)
+        [self.df.drop(c, axis=1, inplace=True) for c in cols if c in self.df]
 
     def rename_col(self, cols):
         '''
