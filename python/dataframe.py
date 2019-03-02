@@ -14,14 +14,19 @@ from datetime import datetime
 
 
 class Dataframe:
-    def __init__(self, fp):
+    def __init__(self, fp, type='csv'):
         '''
 
         define class variables
 
         '''
 
-        self.df = pd.read_csv(fp)
+        if type == 'csv':
+            self.df = pd.read_csv(fp)
+
+        elif type == 'json':
+            self.df = pd.read_json(fp)
+
         self.df = self.df.applymap(lambda x: x.strip() if type(x) is str else x)
 
     def to_integer(self, column):
