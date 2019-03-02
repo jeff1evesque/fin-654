@@ -14,18 +14,21 @@ from datetime import datetime
 
 
 class Dataframe:
-    def __init__(self, fp, type='csv'):
+    def __init__(self, data, dtype='csv'):
         '''
 
         define class variables
 
         '''
 
-        if type == 'csv':
-            self.df = pd.read_csv(fp)
+        if dtype == 'csv':
+            self.df = pd.read_csv(data)
 
-        elif type == 'json':
-            self.df = pd.read_json(fp)
+        elif dtype == 'json':
+            self.df = pd.read_json(data)
+
+        else:
+            self.df = data
 
         self.df = self.df.applymap(lambda x: x.strip() if type(x) is str else x)
 
@@ -117,21 +120,3 @@ class Dataframe:
         '''
 
         self.df[column].replace(old_val, new_val, inplace = True)
-
-    def merge_fp(self, fps, type='csv'):
-        '''
-
-        merge one or more dataframes with existing dataframe.
-
-        @fps, list of file pointers.
-
-        '''
-
-        if type == 'csv':
-            dfs = [pd.read_csv(x) for x in fps]
-
-        elif type == 'json':
-            dfs = [pd.read_json(x) for x in fps]
-
-        dfs = dfs.append(self.get_df())
-        self.df = pd.concat(dfs, axis=0, join='outer', ignore_index=True)
