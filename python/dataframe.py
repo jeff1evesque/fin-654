@@ -113,7 +113,7 @@ class Dataframe:
 
         self.df[column].replace(old_val, new_val, inplace = True)
 
-    def merge_fp(self, dfs):
+    def merge_fp(self, dfs, type='csv'):
         '''
 
         merge one or more dataframes with existing dataframe.
@@ -122,6 +122,11 @@ class Dataframe:
 
         '''
 
-        dfs = [pd.read_csv(x) for x dfs]
+        if type == 'csv':
+            dfs = [pd.read_csv(x) for x in dfs]
+
+        elif type == 'json':
+            dfs = [pd.read_json(x) for x in dfs]
+
         dfs = dfs.append(self.get_df())
-        self.df = pd.concat(dfs, axis=0, join='outer', ignore_index=False)
+        self.df = pd.concat(dfs, axis=0, join='outer', ignore_index=True)
