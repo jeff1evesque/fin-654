@@ -118,20 +118,20 @@ class Dataframe:
 
         self.df[column].replace(old_val, new_val, inplace = True)
 
-    def merge_fp(self, dfs, type='csv'):
+    def merge_fp(self, fps, type='csv'):
         '''
 
         merge one or more dataframes with existing dataframe.
 
-        @dfs, list of file pointers.
+        @fps, list of file pointers.
 
         '''
 
         if type == 'csv':
-            dfs = [pd.read_csv(x) for x in dfs]
+            dfs = [pd.read_csv(x) for x in fps]
 
         elif type == 'json':
-            dfs = [pd.read_json(x) for x in dfs]
+            dfs = [pd.read_json(x) for x in fps]
 
         dfs = dfs.append(self.get_df())
         self.df = pd.concat(dfs, axis=0, join='outer', ignore_index=True)
