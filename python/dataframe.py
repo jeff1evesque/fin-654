@@ -59,19 +59,22 @@ class Dataframe:
 
         self.df.dropna(inplace=True)
 
-    def remove_rows(self, cols, str):
+    def remove_rows(self, cols, items):
         '''
 
         remove any rows where specified column contains a specified string.
 
         @cols, list of columns to check for unacceptable strings.
-        @str, list of unacceptable strings
+        @items, list of unacceptable strings
 
         '''
 
+        if isinstance(items, str):
+            items = [items]
+
         for c in cols:
             if c in self.df:
-                self.df = self.df[~self.df[c].isin(str)]
+                self.df = self.df[~self.df[c].isin(items)]
 
     def remove_cols(self, cols):
         '''
