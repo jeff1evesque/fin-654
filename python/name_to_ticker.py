@@ -4,7 +4,7 @@
 def name_to_ticker(series, refs, names, targets):
     '''
 
-    convert list of company names to list of tickers.
+    convert list of 'names' to be converted to matching 'targets'.
 
     @series, list of company names to be converted
     @refs, dataframe containing references for conversion
