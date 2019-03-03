@@ -12,8 +12,8 @@ name_to_ticker = function(series, fps, spath) {
   }
 
   ## load data
-  data = do.call(rbind,lapply(fps, read.csv))
-  df.ref = Dataframe(data, 'False')
+  df = do.call(rbind,lapply(fps, read.csv))
+  df.ref = Dataframe(df, 'False')
 
   ## manipulate dataset
   df.ref$remove_cols(c(
