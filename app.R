@@ -53,7 +53,7 @@ server = function(input, output, session) {
     c(paste0(cwd, '/python/dataframe.py'), paste0(cwd, '/python/name_to_ticker.py'))
   )
 
-  df = df$finalize_dataset(
+  df = finalize_dataset(
     df,
     'company',
     tickers,
