@@ -1,15 +1,17 @@
 #!/usr/bin/python
 
 
-def name_to_ticker(series, ref, col_1, col_2):
+def name_to_ticker(series, refs, names, targets):
     '''
 
     convert list of company names to list of tickers.
 
-    @col_1, column converted to index in dict
-    @col_2, column converted to value in dict
+    @series, list of company names to be converted
+    @refs, dataframe containing references for conversion
+        @names, column with name references
+        @targets, column with target references
 
     '''
 
-    references = ref[[col_1, col_2]].set_index(col_1).to_dict()
-    return([references[x] if x in references else None for x in series])
+    r = refs[[names, targets]]
+    return(r.loc[r[names].isin(series)][targets])
