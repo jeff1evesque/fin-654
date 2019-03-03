@@ -12,5 +12,6 @@ finalize_dataset = function(df, column, tickers, spath) {
   df.final = Dataframe(df, 'False')
 
   ## dataframe with tickers column
-  return(df.final$subset_on_col(column, tickers))
+  df.final$subset_on_col(column, tickers)
+  return(df.final$get_df())
 }
