@@ -12,4 +12,4 @@ def name_to_ticker(series, ref, col_1, col_2):
     '''
 
     references = ref[[col_1, col_2]].set_index(col_1).to_dict()
-    return([x if x not in references else references[x] for x in series])
+    return([references[x] if x in references else None for x in series])
