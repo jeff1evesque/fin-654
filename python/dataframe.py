@@ -137,3 +137,13 @@ class Dataframe:
         '''
 
         self.df[column].replace(old_val, new_val, inplace = True)
+
+    def subset_on_col(self, column, subset):
+        '''
+
+        subset current dataframe, where specified column must 'contain' values
+        from the 'subset' list.
+
+        '''
+
+        self.df = self.df[self.df[column].isin(subset)]
