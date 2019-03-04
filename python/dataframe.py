@@ -147,3 +147,26 @@ class Dataframe:
         '''
 
         self.df = self.df[self.df[column].isin(subset)]
+
+    def set_column(self, column, ref, new_key):
+        '''
+
+        for each 'column' value in the current dataframe, add an associated
+        'ref.symbol' value in the 'new_key' column, if the corresponding
+        'ref.name' exists in the current dataframe 'column'.
+
+        @column, lookup column for current dataframe
+        @ref, dataframe consisting of two lookup columns
+            @name, similar to 'column' lookup type
+            @symbol, the associated value to append if conditions are satisfied
+        @new_key, column to append 'symbol' values if conditions are satisfied
+
+        '''
+
+        ## only 'ref' contains stock symbols
+        results = []
+        for i, x in self.df.iterrows():
+            if x[column] in ref['name'].values:
+                results.append(ref.loc[ref['name'] == x[column], 'symbol'].iloc[0])
+
+        self.df[new_key] = results
