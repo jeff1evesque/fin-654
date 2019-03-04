@@ -14,14 +14,22 @@ from datetime import datetime
 
 
 class Dataframe:
-    def __init__(self, fp):
+    def __init__(self, data, dtype='csv'):
         '''
 
         define class variables
 
         '''
 
-        self.df = pd.read_csv(fp)
+        if dtype == 'csv':
+            self.df = pd.read_csv(data)
+
+        elif dtype == 'json':
+            self.df = pd.read_json(data)
+
+        else:
+            self.df = data
+
         self.df = self.df.applymap(lambda x: x.strip() if type(x) is str else x)
 
     def to_integer(self, column):
@@ -51,6 +59,23 @@ class Dataframe:
 
         self.df.dropna(inplace=True)
 
+    def remove_rows(self, cols, items):
+        '''
+
+        remove any rows where specified column contains a specified string.
+
+        @cols, list of columns to check for unacceptable strings.
+        @items, list of unacceptable strings
+
+        '''
+
+        if isinstance(items, str):
+            items = [items]
+
+        for c in cols:
+            if c in self.df:
+                self.df = self.df[~self.df[c].isin(items)]
+
     def remove_cols(self, cols):
         '''
 
@@ -58,7 +83,7 @@ class Dataframe:
 
         '''
 
-        self.df.drop(cols, axis=1, inplace=True)
+        [self.df.drop(c, axis=1, inplace=True) for c in cols if c in self.df]
 
     def rename_col(self, cols):
         '''
@@ -112,3 +137,36 @@ class Dataframe:
         '''
 
         self.df[column].replace(old_val, new_val, inplace = True)
+
+    def subset_on_col(self, column, subset):
+        '''
+
+        subset current dataframe, where specified column must 'contain' values
+        from the 'subset' list.
+
+        '''
+
+        self.df = self.df[self.df[column].isin(subset)]
+
+    def set_column(self, column, ref, new_key):
+        '''
+
+        for each 'column' value in the current dataframe, add an associated
+        'ref.symbol' value in the 'new_key' column, if the corresponding
+        'ref.name' exists in the current dataframe 'column'.
+
+        @column, lookup column for current dataframe
+        @ref, dataframe consisting of two lookup columns
+            @name, similar to 'column' lookup type
+            @symbol, the associated value to append if conditions are satisfied
+        @new_key, column to append 'symbol' values if conditions are satisfied
+
+        '''
+
+        ## only 'ref' contains stock symbols
+        results = []
+        for i, x in self.df.iterrows():
+            if x[column] in ref['name'].values:
+                results.append(ref.loc[ref['name'] == x[column], 'symbol'].iloc[0])
+
+        self.df[new_key] = results

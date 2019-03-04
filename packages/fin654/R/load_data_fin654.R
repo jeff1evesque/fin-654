@@ -10,14 +10,13 @@ load_data_fin654 = function(fp1, fp2, spath) {
   ##
   ## load source(s) into dataframe
   ##
-  ## @list.files, runs on the current directory
-  ##
+
   ## source python
   source_python(spath)
   
   ## load dataset
-  data1 = Dataframe(fp1)
-  data2 = Dataframe(fp2)
+  data1 = Dataframe(fp1, 'csv')
+  data2 = Dataframe(fp2, 'csv')
   
   ## manipulate dataset
   data1$remove_cols(c(
