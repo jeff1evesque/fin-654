@@ -28,8 +28,8 @@ name_to_ticker = function(series, fps, spath) {
   df.ref$remove_rows(c('Name', 'Symbol'), c('n/a'))
 
   ## convert name to ticker
-  adjusted = name_to_ticker(series, df.ref$get_df(), 'Name', 'Symbol')
+  results = name_to_ticker(series, df.ref$get_df(), 'Name', 'Symbol')
 
   ## return company name
-  return(adjusted)
+  return(data.frame('name'=results$Name, 'symbol'=results$Symbol))
 }
