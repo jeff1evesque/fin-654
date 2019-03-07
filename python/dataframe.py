@@ -85,6 +85,27 @@ class Dataframe:
 
         [self.df.drop(c, axis=1, inplace=True) for c in cols if c in self.df]
 
+    def remove_rows(self, col, val, condition);
+        '''
+
+        remove row(s) where column satisfies condition.
+
+        '''
+
+        if condition == 'lt':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] < val]
+        elif conditions == 'lte':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] <= val]
+        elif condition == 'gt':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] > val]
+        elif condition == 'gte':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] >= val]
+        elif condition == 'eq':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] == val]
+        elif condition == 'neq':
+            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] != val]
+
+
     def rename_col(self, cols):
         '''
 
