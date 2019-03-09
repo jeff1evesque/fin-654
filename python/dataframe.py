@@ -94,7 +94,7 @@ class Dataframe:
 
         if condition == 'lt':
             [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] < val]
-        elif conditions == 'lte':
+        elif condition == 'lte':
             [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] <= val]
         elif condition == 'gt':
             [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] > val]
