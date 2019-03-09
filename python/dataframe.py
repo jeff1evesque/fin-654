@@ -85,7 +85,7 @@ class Dataframe:
 
         [self.df.drop(c, axis=1, inplace=True) for c in cols if c in self.df]
 
-    def remove_rows(self, col, val, condition);
+    def remove_rows(self, col, val, condition):
         '''
 
         remove row(s) where column satisfies condition.
