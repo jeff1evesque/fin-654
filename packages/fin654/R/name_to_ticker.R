@@ -25,7 +25,7 @@ name_to_ticker = function(series, fps, spath) {
   ))
   df.ref$to_lower()
   df.ref$drop_na()
-  df.ref$remove_rows(c('Name', 'Symbol'), c('n/a'))
+  df.ref$remove_rows(c('Name', 'Symbol'), c('n/a'), 'isin')
 
   ## convert name to ticker
   results = name_to_ticker(series, df.ref$get_df(), 'Name', 'Symbol')
