@@ -88,17 +88,17 @@ class Dataframe:
         '''
 
         if condition == 'lt':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] < val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] < val]
         elif condition == 'lte':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] <= val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] <= val]
         elif condition == 'gt':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] > val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] > val]
         elif condition == 'gte':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] >= val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] >= val]
         elif condition == 'eq':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] == val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] == val]
         elif condition == 'neq':
-            [self.df.drop(r, axis=0, inplace=True) for r in self.df.iterrows() if self.df[col] != val]
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] != val]
         elif condition == 'isin':
             # val, array dictating row removal
             if isinstance(val, str):
