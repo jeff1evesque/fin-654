@@ -69,12 +69,7 @@ class Dataframe:
 
         '''
 
-        if isinstance(items, str):
-            items = [items]
 
-        for c in cols:
-            if c in self.df:
-                self.df = self.df[~self.df[c].isin(items)]
 
     def remove_cols(self, cols):
         '''
@@ -84,6 +79,35 @@ class Dataframe:
         '''
 
         [self.df.drop(c, axis=1, inplace=True) for c in cols if c in self.df]
+
+    def remove_rows(self, col, val, condition):
+        '''
+
+        remove row(s) where column satisfies condition.
+
+        '''
+
+        if condition == 'lt':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] < val]
+        elif condition == 'lte':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] <= val]
+        elif condition == 'gt':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] > val]
+        elif condition == 'gte':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] >= val]
+        elif condition == 'eq':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] == val]
+        elif condition == 'neq':
+            [self.df.drop(i, axis=0, inplace=True) for i,r in self.df.iterrows() if r[col] != val]
+        elif condition == 'isin':
+            # val, array dictating row removal
+            if isinstance(val, str):
+                items = [val]
+
+            # col, an array of columns
+            for c in col:
+                if c in self.df:
+                    self.df = self.df[~self.df[c].isin(items)]
 
     def rename_col(self, cols):
         '''
