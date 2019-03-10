@@ -1,12 +1,12 @@
 ##
-## load_data.R, loads sourcefile(s) into dataframe.
+## load_security.R, loads sourcefile(s) into dataframe.
 ##
 ## Note: this script requires the following packages:
 ##
 ##     - data.table
 ##     - RJSONIO
 ##
-load_data_fin654 = function(fp1, fp2, spath) {
+load_security = function(fp1, fp2, spath) {
   ##
   ## load source(s) into dataframe
   ##
