@@ -53,7 +53,10 @@ server = function(input, output, session) {
     c(paste0(cwd, '/python/dataframe.py'), paste0(cwd, '/python/name_to_ticker.py'))
   )
 
-  df.ts = load_symbol(C('bls', 'dal', 'fb', 'gpn', 'mar', 'ms', 'sti'))
+  df.ts = load_symbol(
+    c('blw', 'dal', 'fb', 'gpn', 'mar', 'ms', 'sti'),
+    paste0(cwd, '/python/dataframe.py')
+  )
 
   df = finalize_dataset(
     df,
