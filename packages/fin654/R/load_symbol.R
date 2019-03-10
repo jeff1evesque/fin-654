@@ -14,11 +14,15 @@ load_symbol = function(symbols, spath) {
   source_python(spath)
 
   ## load dataset
-  data = list()
+  dfs = list()
   for (symbol in symbols) {
-    data[[symbol]] = Dataframe(paste0(cwd, '/data/symbol/', symbol, '.csv'), 'csv')
+    fp = paste0(cwd, '/data/symbol/', symbol, '.csv')
+    if(file.exists(fp)) {
+        data = Dataframe(fp, 'csv')
+        dfs[[symbol]] = data$get_df()
+    }
   }
   
   ## return dataset
-  return(data$get_df())
+  return(dfs)
 }
