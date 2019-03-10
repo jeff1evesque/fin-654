@@ -14,5 +14,9 @@ finalize_dataset = function(df, column, ref, spath) {
   ## dataframe with tickers column
   df.final$subset_on_col(column, ref$name)
   df.final$set_column(column, ref, 'symbol')
+
+  ## enforce minimum
+  df.final$remove_rows('records', 100000, 'lte')
+
   return(df.final$get_df())
 }
