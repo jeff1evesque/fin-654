@@ -1,3 +1,4 @@
-export(load_data_fin654)
+export(load_security)
+export(load_symbol)
 export(name_to_ticker)
 export(finalize_dataset)
