@@ -6,6 +6,8 @@
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
   cwd = dirname(rstudioapi::getSourceEditorContext()$path)
   setwd(cwd)
+} else {
+  cwd = getwd()
 }
 
 ## utility functions
