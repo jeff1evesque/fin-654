@@ -26,7 +26,7 @@ load_symbol = function(symbols, spath, quandl) {
       Quandl.api_key(quandl[0])
       data = Quandl.datatable(
         'WIKI/PRICES',
-        ticker=symbol
+        ticker=symbol,
         start_date = quandl[1]
       )
 
