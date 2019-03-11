@@ -30,9 +30,9 @@ load_symbol = function(symbols, spath, quandl) {
         start_date = quandl[1]
       )
 
-      data$data = as.Date(data$date, '%Y-%m-%d')
-      data$date = data[order(data$Date),]
-      data$data = as.Date(data$date, '%m-%d-%Y')
+      data$date = as.Date(data$date, '%Y-%m-%d')
+      data$date = data[order(data$date),]
+      data$date = as.Date(data$date, '%m-%d-%Y')
 
       dfs[[symbol]] = data
     }
