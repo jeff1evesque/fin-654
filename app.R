@@ -14,7 +14,7 @@ devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate', 'shiny', 'fin654', 'hash'))
+load_package(c('reticulate', 'shiny', 'fin654', 'hash', 'Quandl'))
 py_install(c('pandas'))
 
 ## user interface: controls the layout and appearance of your app
@@ -53,16 +53,17 @@ server = function(input, output, session) {
     c(paste0(cwd, '/python/dataframe.py'), paste0(cwd, '/python/name_to_ticker.py'))
   )
 
-  df.ts = load_symbol(
-    c('blw', 'dal', 'fb', 'gpn', 'mar', 'ms', 'sti'),
-    paste0(cwd, '/python/dataframe.py')
-  )
-
   df = finalize_dataset(
     df,
     'company',
     tickers,
     c(paste0(cwd, '/python/dataframe.py'))
+  )
+
+  df.ts = load_symbol(
+    unique(df$symbol),
+    paste0(cwd, '/python/dataframe.py'),
+    c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
   )
 }
 

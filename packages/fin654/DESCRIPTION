@@ -13,3 +13,4 @@ Imports:
     reticulate,
     customUtility
     hash
+    Quandl
