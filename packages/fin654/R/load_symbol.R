@@ -18,7 +18,7 @@ load_symbol = function(symbols, basedir, spath, quandl) {
   dfs = list()
   for (symbol in symbols) {
     fp = paste0(basedir, symbol, '.csv')
-    if(file.exists(fp)) {
+    if (file.exists(fp)) {
         data = Dataframe(fp, 'csv')
         dfs[[symbol]] = data$get_df()
     }
