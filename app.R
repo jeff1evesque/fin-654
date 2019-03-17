@@ -16,25 +16,68 @@ devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
 ## load packages
-load_package(c('reticulate', 'shiny', 'fin654', 'hash', 'Quandl'))
+load_package(c(
+  'reticulate',
+  'shiny',
+  'shinydashboard',
+  'fin654',
+  'hash',
+  'Quandl'
+))
 py_install(c('pandas'))
 
-## user interface: controls the layout and appearance of your app
-ui = fluidPage(
-  titlePanel('Tabsets'),
-  sidebarLayout(
-    sidebarPanel(
-      # Inputs excluded for brevity
+## dashboard
+frow1 = fluidRow(
+  valueBoxOutput('value1'),
+  valueBoxOutput('value2'),
+  valueBoxOutput('value3')
+)
+frow2 = fluidRow(
+  box(
+    title = 'Plot1',
+    status = 'primary',
+    solidHeader = TRUE,
+    collapsible = TRUE,
+    plotOutput('revenuebyPrd', height = '300px')
+  ),
+  box(
+    title = 'Plot2',
+    status = 'primary',
+    solidHeader = TRUE,
+    collapsible = TRUE,
+    plotOutput('revenuebyRegion', height = '300px')
+  )
+)
+header = dashboardHeader(title = 'Financial Analytics 654')
+sidebar = dashboardSidebar(
+  sidebarMenu(
+    menuItem(
+      'Dashboard',
+      tabName = 'dashboard',
+      icon = icon('dashboard')
     ),
-
-    mainPanel(
-      tabsetPanel(
-        tabPanel('Plot', plotOutput('plot')),
-        tabPanel('Summary', verbatimTextOutput('summary')),
-        tabPanel('Table', tableOutput('table'))
-      )
+    menuItem(
+      'Analysis',
+      tabName = 'analysis',
+      icon = icon('bar-chart-o'),
+        menuSubItem('Time series', tabName = 'subitem1'),
+        menuSubItem('Sub-item 2', tabName = 'subitem2')
+    ),
+    menuItem(
+      'Source Code',
+      icon = icon('send',lib='glyphicon'),
+      href = 'https://github.com/jeff1evesque/fin-654'
     )
   )
+)
+body = dashboardBody(frow1, frow2)
+
+## user interface: controls the layout and appearance of your app
+ui = dashboardPage(
+  header,
+  sidebar,
+  body,
+  skin='green'
 )
 
 ## server: instructions to build application
