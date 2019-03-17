@@ -6,7 +6,7 @@
 ##     - hash
 ##     - quandl
 ##
-load_symbol = function(symbols, spath, quandl) {
+load_symbol = function(symbols, basedir, spath, quandl) {
   ##
   ## load source(s) into dataframe
   ##
@@ -17,7 +17,7 @@ load_symbol = function(symbols, spath, quandl) {
   ## load dataset
   dfs = list()
   for (symbol in symbols) {
-    fp = paste0(cwd, '/data/symbol/', symbol, '.csv')
+    fp = paste0(basedir, symbol, '.csv')
     if(file.exists(fp)) {
         data = Dataframe(fp, 'csv')
         dfs[[symbol]] = data$get_df()

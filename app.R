@@ -64,6 +64,7 @@ server = function(input, output, session) {
 
   df.ts = load_symbol(
     unique(df$symbol),
+    paste0(cwd, '/data/symbol/'),
     paste0(cwd, '/python/dataframe.py'),
     c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
   )
