@@ -182,3 +182,17 @@ class Dataframe:
                 results.append(ref.loc[ref['name'] == x[column], 'symbol'].iloc[0])
 
         self.df[new_key] = results
+
+    def set_order(self, val, axis=0, ascending=True, inplace=True):
+        '''
+
+        set dataframe order by specified column.
+
+        '''
+
+        self.df.sort_values(
+            by=val,
+            axis=axis,
+            ascending=ascending,
+            inplace=inplace
+        )
