@@ -20,6 +20,9 @@ load_symbol = function(symbols, basedir, spath, quandl) {
     fp = paste0(basedir, symbol, '.csv')
     if (file.exists(fp)) {
         data = Dataframe(fp, 'csv')
+        data$reformat_date('date', '%Y-%m-%d')
+        data$date = data[order(data$date),]
+        data$reformat_date('date', '%m-%d-%Y')
         dfs[[symbol]] = data$get_df()
     }
     else {
@@ -30,9 +33,9 @@ load_symbol = function(symbols, basedir, spath, quandl) {
         start_date = quandl[1]
       )
 
-      data$date = as.Date(data$date, '%Y-%m-%d')
+      data$reformat_date('date', '%Y-%m-%d')
       data$date = data[order(data$date),]
-      data$date = as.Date(data$date, '%m-%d-%Y')
+      data$reformat_date('date', '%m-%d-%Y')
 
       dfs[[symbol]] = data
     }
