@@ -22,7 +22,8 @@ load_package(c(
   'shinydashboard',
   'fin654',
   'hash',
-  'Quandl'
+  'Quandl',
+  'ggplot2'
 ))
 py_install(c('pandas'))
 
@@ -85,15 +86,23 @@ server = function(input, output, session) {
     c(paste0(cwd, '/python/dataframe.py'))
   )
 
+  df.ts = load_symbol(
+    unique(df$symbol),
+    paste0(cwd, '/data/symbol/'),
+    paste0(cwd, '/python/dataframe.py'),
+    c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
+  )
+
   ## conditionally render
   output$ui = renderUI({
     if (input$tab == 'stock-time-series') {
-      df.ts = load_symbol(
-        unique(df$symbol),
-        paste0(cwd, '/data/symbol/'),
-        paste0(cwd, '/python/dataframe.py'),
-        c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
-      )
+      for (t in df.ts) {
+        print(str(t))
+        my_ts = ts(t)
+        plot.ts(my_ts)
+        ggplot(data = t, aes(x = date, y = close)) +
+        geom_line(color = 'red')
+      }
     }
   })
 }
