@@ -23,7 +23,8 @@ load_package(c(
   'fin654',
   'hash',
   'Quandl',
-  'ggplot2'
+  'ggplot2',
+  'xts'
 ))
 py_install(c('pandas'))
 
@@ -96,12 +97,10 @@ server = function(input, output, session) {
   ## conditionally render
   output$ui = renderUI({
     if (input$tab == 'stock-time-series') {
-      for (t in df.ts) {
-        print(str(t))
-        my_ts = ts(t)
-        plot.ts(my_ts)
-        ggplot(data = t, aes(x = date, y = close)) +
-        geom_line(color = 'red')
+      for (symbol in df.ts) {
+        symbol$date = as.Date(symbol$date, '%M-%d-%Y')
+        symbol.ts = xts(x = symbol, order.by = symbol$date)
+        str(symbol.ts)
       }
     }
   })
