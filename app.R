@@ -52,7 +52,18 @@ sidebar = dashboardSidebar(
     )
   )
 )
-body = dashboardBody(uiOutput('ui'))
+body = dashboardBody(
+  fluidRow(
+    conditionalPanel(
+      condition = 'input.tab == "stock-time-series"',
+      box(plotOutput('plot1', height = 250))
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      box(plotOutput('plot2', height = 250))
+    )
+  )
+)
 
 ## user interface: controls the layout and appearance of your app
 ui = dashboardPage(
@@ -95,15 +106,16 @@ server = function(input, output, session) {
   )
 
   ## conditionally render
-  output$ui = renderUI({
-    if (input$tab == 'stock-time-series') {
-      for (symbol in df.ts) {
-        symbol$date = as.Date(symbol$date, '%M-%d-%Y')
-        symbol.ts = xts(x = symbol, order.by = symbol$date)
-        str(symbol.ts)
-      }
-    }
-  })
+  for (symbol in df.ts) {
+    symbol$date = as.Date(symbol$date, '%M-%d-%Y')
+    symbol.ts = reactive({
+      xts(symbol$open, order.by = symbol$date)
+    })
+
+    output$plot1 = renderPlot({
+      plot(symbol.ts())
+    })
+  }
 }
 
 ## shiny application
