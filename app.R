@@ -15,6 +15,10 @@ devtools::install_local(paste0(cwd, '/packages/customUtility'))
 devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
+if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
+  load_package(c('rstudioapi', 'devtools'))
+}
+
 ## load packages
 load_package(c(
   'reticulate',
