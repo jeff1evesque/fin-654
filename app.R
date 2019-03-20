@@ -1,6 +1,12 @@
 ##
 ## app.R, shiny application.
 ##
+## Note: some linux machines require additional configuration:
+##
+##     conda install -y pandas=0.22.0 --name r-reticulate
+##     yum install -y libgcc
+##     yum remove gcc
+##
 
 ## additional functionality
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
