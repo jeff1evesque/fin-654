@@ -22,35 +22,17 @@ load_package(c(
   'shinydashboard',
   'fin654',
   'hash',
-  'Quandl'
+  'Quandl',
+  'ggplot2',
+  'xts'
 ))
 py_install(c('pandas'))
 
 ## dashboard
-frow1 = fluidRow(
-  valueBoxOutput('value1'),
-  valueBoxOutput('value2'),
-  valueBoxOutput('value3')
-)
-frow2 = fluidRow(
-  box(
-    title = 'Plot1',
-    status = 'primary',
-    solidHeader = TRUE,
-    collapsible = TRUE,
-    plotOutput('revenuebyPrd', height = '300px')
-  ),
-  box(
-    title = 'Plot2',
-    status = 'primary',
-    solidHeader = TRUE,
-    collapsible = TRUE,
-    plotOutput('revenuebyRegion', height = '300px')
-  )
-)
 header = dashboardHeader(title = 'Financial Analytics 654')
 sidebar = dashboardSidebar(
   sidebarMenu(
+    id = 'tab',
     menuItem(
       'Dashboard',
       tabName = 'dashboard',
@@ -60,7 +42,7 @@ sidebar = dashboardSidebar(
       'Analysis',
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
-        menuSubItem('Time series', tabName = 'subitem1'),
+        menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Sub-item 2', tabName = 'subitem2')
     ),
     menuItem(
@@ -70,7 +52,18 @@ sidebar = dashboardSidebar(
     )
   )
 )
-body = dashboardBody(frow1, frow2)
+body = dashboardBody(
+  fluidRow(
+    conditionalPanel(
+      condition = 'input.tab == "stock-time-series"',
+      box(plotOutput('ts1', height = 250))
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      box(plotOutput('plot2', height = 250))
+    )
+  )
+)
 
 ## user interface: controls the layout and appearance of your app
 ui = dashboardPage(
@@ -111,6 +104,23 @@ server = function(input, output, session) {
     paste0(cwd, '/python/dataframe.py'),
     c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
   )
+
+  ## conditionally render
+  i = 1
+  for (symbol in df.ts) {
+    local({
+      symbol$date = as.Date(symbol$date, '%M-%d-%Y')
+      symbol.ts = reactive({
+        xts(symbol$open, order.by = symbol$date)
+      })
+
+      plotname = paste0('ts', i)
+      output[[plotname]] = renderPlot({
+          plot(symbol.ts())
+      })
+    })
+    i = i + 1
+  }
 }
 
 ## shiny application
