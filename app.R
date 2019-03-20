@@ -11,15 +11,17 @@ if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
 }
 
 ## utility functions
+if (!require('devtools')) install.packages('devtools')
+library('devtools')
 devtools::install_local(paste0(cwd, '/packages/customUtility'))
 devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
+## load packages
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
-  load_package(c('rstudioapi', 'devtools'))
+  load_package(c('rstudioapi'))
 }
 
-## load packages
 load_package(c(
   'reticulate',
   'shiny',
@@ -30,6 +32,7 @@ load_package(c(
   'ggplot2',
   'xts'
 ))
+
 py_install(c('pandas'))
 
 ## dashboard
