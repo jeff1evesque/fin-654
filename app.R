@@ -2,6 +2,12 @@
 ## app.R, shiny application.
 ##
 
+## additional functionality
+if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
+  if (!require('rstudioapi')) install.packages('rstudioapi')
+  library('rstudioapi')
+}
+
 ## set project cwd: only execute in RStudio
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
   cwd = dirname(rstudioapi::getSourceEditorContext()$path)
@@ -18,10 +24,6 @@ devtools::install_local(paste0(cwd, '/packages/fin654'))
 library('customUtility')
 
 ## load packages
-if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
-  load_package(c('rstudioapi'))
-}
-
 load_package(c(
   'reticulate',
   'shiny',
