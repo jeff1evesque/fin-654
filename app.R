@@ -1,11 +1,16 @@
 ##
 ## app.R, shiny application.
 ##
+## Note: if anaconda is present on the given system:
+##
+##       conda install r
+##       conda install rstudio
+##       conda install -y pandas=0.22.0 --name r-reticulate
+##
 ## Note: some linux machines require additional configuration:
 ##
-##     conda install -y pandas=0.22.0 --name r-reticulate
-##     yum install -y libgcc
-##     yum remove gcc
+##       yum install -y libgcc
+##       yum remove gcc
 ##
 
 ## additional functionality
