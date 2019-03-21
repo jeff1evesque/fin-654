@@ -3,7 +3,7 @@
 ##
 ## Note: if anaconda is present on the given system:
 ##
-##       conda install r
+##       conda install -c r r=3.4.2
 ##       conda install rstudio
 ##       conda install -y pandas=0.22.0 --name r-reticulate
 ##
@@ -12,7 +12,10 @@
 ##       yum install -y libgcc
 ##       yum remove gcc
 ##
-
+## Note: if receiving 'git2r' and 'libssl' errors:
+##
+##       conda install r-git2r
+##
 ## additional functionality
 if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
   if (!require('rstudioapi')) install.packages('rstudioapi')
@@ -28,7 +31,7 @@ if (nzchar(Sys.getenv('RSTUDIO_USER_IDENTITY'))) {
 }
 
 ## utility functions
-if (!require('devtools')) install.packages('devtools')
+if (!require('devtools')) install.packages('devtools', repos='http://cloud.r-project.org')
 library('devtools')
 devtools::install_local(paste0(cwd, '/packages/customUtility'))
 devtools::install_local(paste0(cwd, '/packages/fin654'))
