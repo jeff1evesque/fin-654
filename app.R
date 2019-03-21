@@ -71,11 +71,11 @@ body = dashboardBody(
   fluidRow(
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
-      box(plotOutput('ts1', height = 250))
+      box(uiOutput('ts'))
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
-      box(plotOutput('plot2', height = 250))
+      box(plotOutput('ts1', height = 250))
     )
   )
 )
@@ -121,21 +121,23 @@ server = function(input, output, session) {
   )
 
   ## conditionally render
-  i = 1
+  len = 1
+  output_list = list()
   for (symbol in df.ts) {
-    local({
-      symbol$date = as.Date(symbol$date, '%M-%d-%Y')
-      symbol.ts = reactive({
-        xts(symbol$open, order.by = symbol$date)
-      })
-
-      plotname = paste0('ts', i)
-      output[[plotname]] = renderPlot({
-          plot(symbol.ts())
-      })
+    symbol$date = as.Date(symbol$date, '%M-%d-%Y')
+    symbol.ts = reactive({
+      xts(symbol$open, order.by = symbol$date)
     })
-    i = i + 1
+
+    plotname = paste0('ts', len)
+    current_plot = renderPlot({
+      plot(symbol.ts())
+    })
+    output[[plotname]] = current_plot
+    output_list[[len]] = current_plot
+    len = len + 1
   }
+  output$ts = renderUI(output_list)
 }
 
 ## shiny application
