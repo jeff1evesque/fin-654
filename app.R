@@ -127,20 +127,19 @@ server = function(input, output, session) {
     c('PROVIDE-QUANDL-APIKEY', '2007-01-01')
   )
 
-  ## conditionally render
-  len = 1
-  output_list = list()
-  symbol.ts = list()
-  for (symbol in df.ts) {
-    symbol$date = as.Date(symbol$date, '%M-%d-%Y')
-    symbol.ts[[len]] = reactive({
-      symbol[,c('date', 'open')]
+  ##
+  ## https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
+  ##
+  symbol.ts = lapply(df.ts, function(x, y) {
+    x$date = as.Date(x$date, '%M-%d-%Y')
+    reactive({
+      x[,c('date', 'open')]
     })
-    len = len + 1
-  }
+  })
 
-  for (i in seq_len(length(symbol.ts))) {
-    symbol_name = names(df.ts)[i]
+  output_list = list()
+  for (i in 1:length(symbol.ts)) {
+    symbol_name = names(symbol.ts)[i]
     plotname = paste0('ts', i)
     current_plot = renderPlot({
       ggplot(
