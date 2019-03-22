@@ -149,7 +149,8 @@ server = function(input, output, session) {
         mapping = aes(x = date, y = open)
       ) +
       geom_line() +
-      ggtitle(symbol_name)
+      ggtitle(symbol_name) +
+      theme(plot.title = element_text(hjust = 0.5))
     })
 
     output[[plotname]] = current_plot
