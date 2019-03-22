@@ -45,8 +45,7 @@ load_package(c(
   'fin654',
   'hash',
   'Quandl',
-  'ggplot2',
-  'xts'
+  'ggplot2'
 ))
 
 py_install(c('pandas'))
