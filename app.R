@@ -135,15 +135,21 @@ server = function(input, output, session) {
   for (symbol in df.ts) {
     symbol$date = as.Date(symbol$date, '%M-%d-%Y')
     symbol.ts[[len]] = reactive({
-      xts(symbol$open, order.by = symbol$date)
+      symbol[,c('date', 'open')]
     })
     len = len + 1
   }
 
   for (i in seq_len(length(symbol.ts))) {
+    symbol_name = names(df.ts)[i]
     plotname = paste0('ts', i)
     current_plot = renderPlot({
-      plot(symbol.ts[[i]]())
+      ggplot(
+        data = symbol.ts[[i]](),
+        mapping = aes(x = date, y = open)
+      ) +
+      geom_line() +
+      ggtitle(symbol_name)
     })
 
     output[[plotname]] = current_plot
