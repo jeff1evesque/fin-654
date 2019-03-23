@@ -128,7 +128,10 @@ server = function(input, output, session) {
   )
 
   ##
-  ## https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
+  ## timeseries assignment requires lapply as a work around to
+  ## ensure unique assignment. Otherwise, last assignment used.
+  ##
+  ## - https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
   ##
   symbol.ts = lapply(df.ts, function(x, y) {
     x$date = as.Date(x$date, '%M-%d-%Y')
@@ -137,24 +140,28 @@ server = function(input, output, session) {
     })
   })
 
-  output_list = list()
-  for (i in 1:length(symbol.ts)) {
+  ##
+  ## plot timeseries: lapply and 'local({})' workaround ensures
+  ##     unique assignment. Otherwise, last plot used.
+  ##
+  ## - https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
+  ##
+  current_plot = lapply(1:length(symbol.ts), function(i) {
     symbol_name = names(symbol.ts)[i]
     plotname = paste0('ts', i)
-    current_plot = renderPlot({
-      ggplot(
-        data = symbol.ts[[i]](),
-        mapping = aes(x = date, y = open)
-      ) +
-      geom_line() +
-      ggtitle(symbol_name) +
-      theme(plot.title = element_text(hjust = 0.5))
+    local({
+      current_plot = renderPlot({
+        ggplot(
+          data = symbol.ts[[i]](),
+          mapping = aes(x = date, y = open)
+        ) +
+        geom_line() +
+        ggtitle(symbol_name) +
+        theme(plot.title = element_text(hjust = 0.5))
+      })
     })
-
-    output[[plotname]] = current_plot
-    output_list[[i]] = current_plot
-  }
-  output$ts = renderUI(output_list)
+  })
+  output$ts = renderUI(current_plot)
 }
 
 ## shiny application
