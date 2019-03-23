@@ -45,7 +45,8 @@ load_package(c(
   'fin654',
   'hash',
   'Quandl',
-  'ggplot2'
+  'ggplot2',
+  'stats'
 ))
 
 py_install(c('pandas'))
@@ -65,7 +66,7 @@ sidebar = dashboardSidebar(
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
         menuSubItem('Time series', tabName = 'stock-time-series'),
-        menuSubItem('Sub-item 2', tabName = 'subitem2')
+        menuSubItem('Autocorrelation', tabName = 'acf')
     ),
     menuItem(
       'Source Code',
@@ -87,7 +88,9 @@ body = dashboardBody(
   )
 )
 
+##
 ## user interface: controls the layout and appearance of your app
+##
 ui = dashboardPage(
   header,
   sidebar,
@@ -95,7 +98,9 @@ ui = dashboardPage(
   skin='green'
 )
 
+##
 ## server: instructions to build application
+##
 server = function(input, output, session) {
   df = load_security(
     paste0(cwd, '/data/security/data-breaches.csv'),
