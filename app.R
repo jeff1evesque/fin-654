@@ -47,7 +47,7 @@ load_package(c(
   'Quandl',
   'ggplot2',
   'stats',
-  'ismev'
+  'QRM'
 ))
 
 py_install(c('pandas'))
@@ -248,16 +248,13 @@ server = function(input, output, session) {
 
     alpha.tolerance = 0.95
     u = quantile(loss.rf, alpha.tolerance , names=FALSE)
-    fit = gpd.fit(loss.rf, threshold=u) # Fit GPD to the excesses
+    fit = fit.GPD(loss.rf, threshold=u) # Fit GPD to the excesses
     xi.hat = fit$par.ests[["xi"]] # fitted xi
     beta.hat = fit$par.ests[["beta"]] # fitted beta
 
     n.relative.excess = length(loss.excess) / length(loss.rf) # = N_u/n
     VaR.gpd = u + (beta.hat/xi.hat)*(((1-alpha.tolerance) / n.relative.excess)^(-1*xi.hat)-1)
     ES.gpd = (VaR.gpd + beta.hat-xi.hat*u) / (1-xi.hat)
-
-    print(paste0('n.relative.excess: ', n.relative.excess))
-    print(paste0('fit$par.ests: ', fit$par.ests))
 
     loss.rf = -rowSums(expm1(data.r/100) * weights.rf)
     loss.rf.df = data.frame(
@@ -271,9 +268,9 @@ server = function(input, output, session) {
     title.text = paste(VaRgpd.text, ESgpd.text, sep = " ")
     loss.plot = ggplot(loss.rf.df, aes(x = Loss, fill = Distribution)) +
       geom_density(alpha = 0.2)
-#    loss.plot = loss.plot +
-#      geom_vline(aes(xintercept = VaR.gpd), colour = "blue", linetype = "dashed", size = 0.8)
-#    loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = "blue", size = 0.8) 
+    loss.plot = loss.plot +
+      geom_vline(aes(xintercept = VaR.gpd), colour = "blue", linetype = "dashed", size = 0.8)
+    loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = "blue", size = 0.8) 
     #+ annotate("text", x = 300, y = 0.0075, label = VaRgpd.text, colour = "blue") + annotate("text", x = 300, y = 0.005, label = ESgpd.text, colour = "blue")
     loss.plot = loss.plot + xlim(0,500) +
       ggtitle(title.text)
