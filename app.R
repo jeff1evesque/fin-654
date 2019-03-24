@@ -82,6 +82,10 @@ body = dashboardBody(
       box(uiOutput('ts'), width = 12)
     ),
     conditionalPanel(
+      condition = 'input.tab == "acf"',
+      box(uiOutput('acf'), width = 12)
+    ),
+    conditionalPanel(
       condition = 'input.tab == "dashboard"',
       box(plotOutput('ts1', height = 250))
     )
@@ -133,7 +137,7 @@ server = function(input, output, session) {
   )
 
   ##
-  ## timeseries assignment requires lapply as a work around to
+  ## timeseries assignment requires lapply as a workaround to
   ## ensure unique assignment. Otherwise, last assignment used.
   ##
   ## - https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
@@ -145,17 +149,25 @@ server = function(input, output, session) {
     })
   })
 
+  symbol.ts.full = lapply(df.ts, function(x, y) {
+    date = as.Date(x$date, '%M-%d-%Y')
+    df.ts$open = as.numeric(df.ts$open)
+    reactive({
+      x[,c('close', 'volume')]
+    })
+  })
+
   ##
   ## plot timeseries: lapply and 'local({})' workaround ensures
   ##     unique assignment. Otherwise, last plot used.
   ##
   ## - https://github.com/rstudio/shiny/issues/532#issuecomment-48008956
   ##
-  current_plot = lapply(1:length(symbol.ts), function(i) {
+  ts_plot = lapply(1:length(symbol.ts), function(i) {
     symbol_name = names(symbol.ts)[i]
     plotname = paste0('ts', i)
     local({
-      current_plot = renderPlot({
+      renderPlot({
         ggplot(
           data = symbol.ts[[i]](),
           mapping = aes(x = date, y = open)
@@ -166,7 +178,22 @@ server = function(input, output, session) {
       })
     })
   })
-  output$ts = renderUI(current_plot)
+  output$ts = renderUI(ts_plot)
+
+  ##
+  ## plot autocorrelation
+  ##
+  acf_plot = lapply(1:length(symbol.ts.full), function(i) {
+    symbol_name = names(symbol.ts.full)[i]
+    local({
+      renderPlot({
+        acf.full = acf(symbol.ts.full[[i]]())
+        plot(acf.full)
+        title(sub = symbol_name)
+      })
+    })
+  })
+  output$acf = renderUI(acf_plot)
 }
 
 ## shiny application
