@@ -66,7 +66,8 @@ sidebar = dashboardSidebar(
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
         menuSubItem('Time series', tabName = 'stock-time-series'),
-        menuSubItem('Autocorrelation', tabName = 'acf')
+        menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
+        menuSubItem('Partial ACF', tabName = 'pacf')
     ),
     menuItem(
       'Source Code',
@@ -84,6 +85,10 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "acf"',
       box(uiOutput('acf'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "pacf"',
+      box(uiOutput('pacf'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -194,6 +199,21 @@ server = function(input, output, session) {
     })
   })
   output$acf = renderUI(acf_plot)
+
+  ##
+  ## plot partial autocorrelation
+  ##
+  pacf_plot = lapply(1:length(symbol.ts.full), function(i) {
+    symbol_name = names(symbol.ts.full)[i]
+    local({
+      renderPlot({
+        pacf.full = pacf(symbol.ts.full[[i]]())
+        plot(pacf.full)
+        title(sub = symbol_name)
+      })
+    })
+  })
+  output$pacf = renderUI(pacf_plot)
 }
 
 ## shiny application
