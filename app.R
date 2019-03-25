@@ -3,7 +3,7 @@
 ##
 ## Note: if anaconda is present on the given system:
 ##
-##       conda install -c r r=3.4.2
+##       conda install -c r r=3.5.1
 ##       conda install rstudio
 ##       conda install -y pandas=0.22.0 --name r-reticulate
 ##
@@ -47,7 +47,8 @@ load_package(c(
   'Quandl',
   'ggplot2',
   'stats',
-  'QRM'
+  'QRM',
+  'plotly'
 ))
 
 py_install(c('pandas'))
@@ -221,6 +222,9 @@ server = function(input, output, session) {
   })
   output$pacf = renderUI(pacf_plot)
 
+  ##
+  ## gpd
+  ##
   output$gpd = renderPlotly({
     data = na.omit(df.ts)
     data.cbind = cbind(
@@ -239,18 +243,18 @@ server = function(input, output, session) {
     weights.rf = matrix(w, nrow=nrow(data.r), ncol=ncol(data.r), byrow=TRUE)
     loss.rf = -rowSums(expm1(data.r/100) * weights.rf)
 
-    d    =  as.vector(loss.rf) # data is purely numeric
-    umin =  min(d)         # threshold u min
-    umax =  max(d) - 0.1   # threshold u max
-    nint = 100                # grid length to generate mean excess plot
-    u = seq(umin, umax, length = nint) # threshold u grid
+    d    =  as.vector(loss.rf)          # data is purely numeric
+    umin =  min(d)                      # threshold u min
+    umax =  max(d) - 0.1                # threshold u max
+    nint = 100                          # grid length to generate mean excess plot
+    u = seq(umin, umax, length = nint)  # threshold u grid
     loss.excess = loss.rf[loss.rf > u]
 
     alpha.tolerance = 0.95
     u = quantile(loss.rf, alpha.tolerance , names=FALSE)
     fit = fit.GPD(loss.rf, threshold=u) # Fit GPD to the excesses
-    xi.hat = fit$par.ests[["xi"]] # fitted xi
-    beta.hat = fit$par.ests[["beta"]] # fitted beta
+    xi.hat = fit$par.ests[["xi"]]       # fitted xi
+    beta.hat = fit$par.ests[["beta"]]   # fitted beta
 
     n.relative.excess = length(loss.excess) / length(loss.rf) # = N_u/n
     VaR.gpd = u + (beta.hat/xi.hat)*(((1-alpha.tolerance) / n.relative.excess)^(-1*xi.hat)-1)
