@@ -95,7 +95,7 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "gpd"',
-      box(plotlyOutput('gpd', width = 12))
+      box(plotlyOutput('gpd'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
