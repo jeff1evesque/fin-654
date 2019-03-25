@@ -95,7 +95,8 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "gpd"',
-      box(plotlyOutput('gpd'), width = 12)
+      box(plotlyOutput('gpdOverallOpen'), width = 12),
+      box(plotlyOutput('gpdOverallVolume'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -169,21 +170,36 @@ server = function(input, output, session) {
     })
   })
 
-  data.gpd = reactive({
-    ## construct gpd data
-    data = na.omit(df.ts)
-    data.cbind = cbind(
-      df.ts$blw$open,
-      df.ts$gpn$open,
-      df.ts$ms$open,
-      df.ts$dal$open,
-      df.ts$sti$open,
-      df.ts$fb$open,
-      df.ts$mar$open
-    )
+  data.gpdOverallOpen = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = cbind(
+        df.ts$blw$open,
+        df.ts$gpn$open,
+        df.ts$ms$open,
+        df.ts$dal$open,
+        df.ts$sti$open,
+        df.ts$fb$open,
+        df.ts$mar$open
+      )
+      return(gpd_compute(data.cbind))
+    })
+  })
 
-    ## implement gpd
-    return(gpd(data.cbind))
+  data.gpdOverallVolume = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = cbind(
+        df.ts$blw$volume,
+        df.ts$gpn$volume,
+        df.ts$ms$volume,
+        df.ts$dal$volume,
+        df.ts$sti$volume,
+        df.ts$fb$volume,
+        df.ts$mar$volume
+      )
+      return(gpd_compute(data.cbind))
+    })
   })
 
   ##
@@ -242,23 +258,14 @@ server = function(input, output, session) {
   ##
   ## gpd
   ##
-  output$gpd = renderPlotly({
-    r.gpd = data.gpd()
-    VaR.gpd = r.gpd$VaR.gpd
-    ES.gpd = r.gpd$ES.gpd
-    loss.rf.df = r.gpd$loss.rf.df
+  output$gpdOverallOpen = renderPlotly({
+    r.gpd = data.gpdOverallVolume()
+    ggplotly(gpd_plot(r.gpd))
+  })
 
-    VaRgpd.text = paste('GPD: Value at Risk =', round(VaR.gpd, 2))
-    ESgpd.text = paste('Expected Shortfall =', round(ES.gpd, 2))
-    title.text = paste(VaRgpd.text, ESgpd.text, sep = ' ')
-    loss.plot = ggplot(loss.rf.df, aes(x = Loss, fill = Distribution)) +
-      geom_density(alpha = 0.8)
-    loss.plot = loss.plot +
-      geom_vline(aes(xintercept = VaR.gpd), colour = 'blue', linetype = 'dashed', size = 0.8)
-    loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = 'blue', size = 0.8)
-    loss.plot = loss.plot + xlim(0,500) + ggtitle(title.text)
-
-    ggplotly(loss.plot)
+  output$gpdOverallVolume = renderPlotly({
+    r.gpd = data.gpdOverallVolume()
+    ggplotly(gpd_plot(r.gpd))
   })
 }
 

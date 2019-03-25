@@ -1,11 +1,13 @@
 ##
 ## gpd.R, compute general pareto distribution.
 ##
-## @data, provided dataframe used to compute gpd components.
-##
-## Note: this function requires the 'hash' package.
-##
-gpd = function(data) {
+
+gpd_compute = function(data) {
+  ##
+  ## @data, provided dataframe used to compute gpd components.
+  ##
+  ## Note: this function requires the 'hash' package.
+  ##
   data.r = diff(log(as.matrix(data))) * 100
   price.last = as.numeric(tail(data.r, n=1))
   position.rf = c(1/3, 1/3, 1/3)
@@ -47,4 +49,25 @@ gpd = function(data) {
       'loss.rf.df' = loss.rf.df
     )
   )
+}
+
+gpd_plot = function(data) {
+  ##
+  ## @data, must contain same attributes as the return of above 'gdp_compute'.
+  ##
+  VaR.gpd = data$VaR.gpd
+  ES.gpd = data$ES.gpd
+  loss.rf.df = data$loss.rf.df
+    
+  VaRgpd.text = paste('GPD: Value at Risk =', round(VaR.gpd, 2))
+  ESgpd.text = paste('Expected Shortfall =', round(ES.gpd, 2))
+  title.text = paste(VaRgpd.text, ESgpd.text, sep = ' ')
+  loss.plot = ggplot(loss.rf.df, aes(x = Loss, fill = Distribution)) +
+    geom_density(alpha = 0.8)
+  loss.plot = loss.plot +
+    geom_vline(aes(xintercept = VaR.gpd), colour = 'blue', linetype = 'dashed', size = 0.8)
+  loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = 'blue', size = 0.8)
+  loss.plot = loss.plot + xlim(0,500) + ggtitle(title.text)
+
+  return(loss.plot)
 }
