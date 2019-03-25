@@ -175,13 +175,13 @@ server = function(input, output, session) {
     local({
       data = na.omit(df.ts)
       data.cbind = cbind(
-        df.ts$blw$open,
-        df.ts$gpn$open,
-        df.ts$ms$open,
-        df.ts$dal$open,
-        df.ts$sti$open,
-        df.ts$fb$open,
-        df.ts$mar$open
+        data$blw$open,
+        data$gpn$open,
+        data$ms$open,
+        data$dal$open,
+        data$sti$open,
+        data$fb$open,
+        data$mar$open
       )
       return(gpd_compute(data.cbind))
     })
@@ -191,13 +191,13 @@ server = function(input, output, session) {
     local({
       data = na.omit(df.ts)
       data.cbind = cbind(
-        df.ts$blw$close,
-        df.ts$gpn$close,
-        df.ts$ms$close,
-        df.ts$dal$close,
-        df.ts$sti$close,
-        df.ts$fb$close,
-        df.ts$mar$close
+        data$blw$close,
+        data$gpn$close,
+        data$ms$close,
+        data$dal$close,
+        data$sti$close,
+        data$fb$close,
+        data$mar$close
       )
       return(gpd_compute(data.cbind))
     })
@@ -207,13 +207,13 @@ server = function(input, output, session) {
     local({
       data = na.omit(df.ts)
       data.cbind = cbind(
-        df.ts$blw$volume,
-        df.ts$gpn$volume,
-        df.ts$ms$volume,
-        df.ts$dal$volume,
-        df.ts$sti$volume,
-        df.ts$fb$volume,
-        df.ts$mar$volume
+        data$blw$volume,
+        data$gpn$volume,
+        data$ms$volume,
+        data$dal$volume,
+        data$sti$volume,
+        data$fb$volume,
+        data$mar$volume
       )
       return(gpd_compute(data.cbind))
     })
