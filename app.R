@@ -183,7 +183,7 @@ server = function(input, output, session) {
     )
 
     ## implement gpd
-    return(gpd(data))
+    return(gpd(data.cbind))
   })
 
   ##
