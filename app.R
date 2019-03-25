@@ -289,12 +289,13 @@ server = function(input, output, session) {
     ESgpd.text = paste('Expected Shortfall =', round(ES.gpd, 2))
     title.text = paste(VaRgpd.text, ESgpd.text, sep = ' ')
     loss.plot = ggplot(loss.rf.df, aes(x = Loss, fill = Distribution)) +
-      geom_density(alpha = 0.2)
+      geom_density(alpha = 0.8)
     loss.plot = loss.plot +
       geom_vline(aes(xintercept = VaR.gpd), colour = 'blue', linetype = 'dashed', size = 0.8)
     loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = 'blue', size = 0.8)
     loss.plot = loss.plot + xlim(0,500) + ggtitle(title.text)
-    print(ggplotly(loss.plot))
+
+    ggplotly(loss.plot)
   })
 }
 
