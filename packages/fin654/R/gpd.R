@@ -6,7 +6,7 @@
 ## Note: this function requires the 'hash' package.
 ##
 gpd = function(data) {
-  data.r = diff(log(as.matrix(data.cbind))) * 100
+  data.r = diff(log(as.matrix(data))) * 100
   price.last = as.numeric(tail(data.r, n=1))
   position.rf = c(1/3, 1/3, 1/3)
   w = position.rf * price.last
