@@ -96,6 +96,7 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "gpd"',
       box(plotlyOutput('gpdOverallOpen'), width = 12),
+      box(plotlyOutput('gpdOverallClose'), width = 12),
       box(plotlyOutput('gpdOverallVolume'), width = 12)
     ),
     conditionalPanel(
@@ -186,6 +187,22 @@ server = function(input, output, session) {
     })
   })
 
+  data.gpdOverallClose = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = cbind(
+        df.ts$blw$close,
+        df.ts$gpn$close,
+        df.ts$ms$close,
+        df.ts$dal$close,
+        df.ts$sti$close,
+        df.ts$fb$close,
+        df.ts$mar$close
+      )
+      return(gpd_compute(data.cbind))
+    })
+  })
+
   data.gpdOverallVolume = reactive({
     local({
       data = na.omit(df.ts)
@@ -261,6 +278,11 @@ server = function(input, output, session) {
   output$gpdOverallOpen = renderPlotly({
     r.gpd = data.gpdOverallOpen()
     ggplotly(gpd_plot(r.gpd, 'GPD Open:'))
+  })
+
+  output$gpdOverallClose = renderPlotly({
+    r.gpd = data.gpdOverallClose()
+    ggplotly(gpd_plot(r.gpd, 'GPD Close:'))
   })
 
   output$gpdOverallVolume = renderPlotly({
