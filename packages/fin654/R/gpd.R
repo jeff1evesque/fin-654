@@ -51,22 +51,31 @@ gpd_compute = function(data) {
   )
 }
 
-gpd_plot = function(data) {
+gpd_plot = function(data, prefix) {
   ##
   ## @data, must contain same attributes as the return of above 'gdp_compute'.
   ##
   VaR.gpd = data$VaR.gpd
   ES.gpd = data$ES.gpd
   loss.rf.df = data$loss.rf.df
-    
-  VaRgpd.text = paste('GPD: Value at Risk =', round(VaR.gpd, 2))
+  if (missing(prefix)) {
+    prefix = ''
+  }
+
+  VaRgpd.text = paste('Value at Risk =', round(VaR.gpd, 2))
   ESgpd.text = paste('Expected Shortfall =', round(ES.gpd, 2))
-  title.text = paste(VaRgpd.text, ESgpd.text, sep = ' ')
+  title.text = paste(prefix, VaRgpd.text, ESgpd.text, sep = ' ')
   loss.plot = ggplot(loss.rf.df, aes(x = Loss, fill = Distribution)) +
     geom_density(alpha = 0.8)
   loss.plot = loss.plot +
-    geom_vline(aes(xintercept = VaR.gpd), colour = 'blue', linetype = 'dashed', size = 0.8)
-  loss.plot = loss.plot + geom_vline(aes(xintercept = ES.gpd), colour = 'blue', size = 0.8)
+    geom_vline(
+      aes(xintercept = VaR.gpd),
+      colour = 'blue',
+      linetype = 'dashed',
+      size = 0.8
+    )
+  loss.plot = loss.plot +
+    geom_vline(aes(xintercept = ES.gpd), colour = 'blue', size = 0.8)
   loss.plot = loss.plot + xlim(0,500) + ggtitle(title.text)
 
   return(loss.plot)

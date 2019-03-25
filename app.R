@@ -259,13 +259,13 @@ server = function(input, output, session) {
   ## gpd
   ##
   output$gpdOverallOpen = renderPlotly({
-    r.gpd = data.gpdOverallVolume()
-    ggplotly(gpd_plot(r.gpd))
+    r.gpd = data.gpdOverallOpen()
+    ggplotly(gpd_plot(r.gpd, 'GPD Open:'))
   })
 
   output$gpdOverallVolume = renderPlotly({
     r.gpd = data.gpdOverallVolume()
-    ggplotly(gpd_plot(r.gpd))
+    ggplotly(gpd_plot(r.gpd, 'GPD Volume:'))
   })
 }
 
