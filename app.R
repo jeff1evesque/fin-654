@@ -174,15 +174,15 @@ server = function(input, output, session) {
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = custom_bind(
-        data$blw$open,
-        data$gpn$open,
-        data$ms$open,
-        data$dal$open,
-        data$sti$open,
-        data$fb$open,
-        data$mar$open
-      )
+      data.cbind = custom_bind(c(
+        data[['blw']]['open'],
+        data[['gpn']]['open'],
+        data[['ms']]['open'],
+        data[['dal']]['open'],
+        data[['sti']]['open'],
+        data[['fb']]['open'],
+        data[['mar']]['open']
+      ))
       return(gpd_compute(data.cbind))
     })
   })
@@ -190,15 +190,15 @@ server = function(input, output, session) {
   data.gpdOverallClose = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = custom_bind(
-        data$blw$close,
-        data$gpn$close,
-        data$ms$close,
-        data$dal$close,
-        data$sti$close,
-        data$fb$close,
-        data$mar$close
-      )
+      data.cbind = custom_bind(c(
+        data[['blw']]['close'],
+        data[['gpn']]['close'],
+        data[['ms']]['close'],
+        data[['dal']]['close'],
+        data[['sti']]['close'],
+        data[['fb']]['close'],
+        data[['mar']]['close']
+      ))
       return(gpd_compute(data.cbind))
     })
   })
@@ -206,15 +206,15 @@ server = function(input, output, session) {
   data.gpdOverallVolume = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = custom_bind(
-        data$blw$volume,
-        data$gpn$volume,
-        data$ms$volume,
-        data$dal$volume,
-        data$sti$volume,
-        data$fb$volume,
-        data$mar$volume
-      )
+      data.cbind = custom_bind(c(
+        data[['blw']]['volume'],
+        data[['gpn']]['volume'],
+        data[['ms']]['volume'],
+        data[['dal']]['volume'],
+        data[['sti']]['volume'],
+        data[['fb']]['volume'],
+        data[['mar']]['volume']
+      ))
       return(gpd_compute(data.cbind))
     })
   })
