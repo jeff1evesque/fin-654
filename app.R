@@ -174,7 +174,7 @@ server = function(input, output, session) {
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = cbind(
+      data.cbind = custom_bind(
         data$blw$open,
         data$gpn$open,
         data$ms$open,
@@ -190,7 +190,7 @@ server = function(input, output, session) {
   data.gpdOverallClose = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = cbind(
+      data.cbind = custom_bind(
         data$blw$close,
         data$gpn$close,
         data$ms$close,
@@ -206,7 +206,7 @@ server = function(input, output, session) {
   data.gpdOverallVolume = reactive({
     local({
       data = na.omit(df.ts)
-      data.cbind = cbind(
+      data.cbind = custom_bind(
         data$blw$volume,
         data$gpn$volume,
         data$ms$volume,
