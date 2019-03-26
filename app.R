@@ -70,7 +70,7 @@ sidebar = dashboardSidebar(
         menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
         menuSubItem('Partial ACF', tabName = 'pacf'),
-        menuSubItem('GPD', tabName = 'gpd')
+        menuSubItem('General Pareto Distribution', tabName = 'gpd')
     ),
     menuItem(
       'Source Code',
