@@ -2,7 +2,7 @@
 ## gpd.R, compute general pareto distribution.
 ##
 
-gpd_compute = function(data) {
+gpd_compute = function(data, position.rf) {
   ##
   ## @data, provided dataframe used to compute gpd components.
   ##
@@ -10,7 +10,6 @@ gpd_compute = function(data) {
   ##
   data.r = diff(log(as.matrix(data))) * 100
   price.last = as.numeric(tail(data.r, n=1))
-  position.rf = c(1/3, 1/3, 1/3)
   w = position.rf * price.last
   weights.rf = matrix(w, nrow=nrow(data.r), ncol=ncol(data.r), byrow=TRUE)
   loss.rf = -rowSums(expm1(data.r/100) * weights.rf)

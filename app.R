@@ -171,6 +171,14 @@ server = function(input, output, session) {
     })
   })
 
+  ##
+  ## gpd: general pareto distribution
+  ##
+  ## Note: weights are defined as a value of the positions for
+  ##       each risk factor. In the below case, the number of
+  ##       weights corresponds to the elements in the 'cbind'.
+  ##
+  weights = c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6, 1/6)
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
@@ -183,7 +191,7 @@ server = function(input, output, session) {
         data[['fb']]['open'],
         data[['mar']]['open']
       ))
-      return(gpd_compute(data.cbind))
+      return(gpd_compute(data.cbind, weights))
     })
   })
 
@@ -199,7 +207,7 @@ server = function(input, output, session) {
         data[['fb']]['close'],
         data[['mar']]['close']
       ))
-      return(gpd_compute(data.cbind))
+      return(gpd_compute(data.cbind, weights))
     })
   })
 
@@ -215,7 +223,7 @@ server = function(input, output, session) {
         data[['fb']]['volume'],
         data[['mar']]['volume']
       ))
-      return(gpd_compute(data.cbind))
+      return(gpd_compute(data.cbind, weights))
     })
   })
 
