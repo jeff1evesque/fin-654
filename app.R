@@ -64,13 +64,19 @@ sidebar = dashboardSidebar(
       icon = icon('dashboard')
     ),
     menuItem(
+      'Exploratory',
+      tabName = 'exploratory',
+      icon = icon('bar-chart-o'),
+        menuSubItem('Time series', tabName = 'stock-time-series')
+    ),
+    menuItem(
       'Analysis',
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
-        menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
         menuSubItem('Partial ACF', tabName = 'pacf'),
-        menuSubItem('General Pareto Distribution', tabName = 'gpd')
+        menuSubItem('General Pareto Distribution', tabName = 'gpd'),
+        menuSubItem('Markowitz Model', tabName = 'markowitz')
     ),
     menuItem(
       'Source Code',
@@ -98,6 +104,10 @@ body = dashboardBody(
       box(plotlyOutput('gpdOverallOpen'), width = 12),
       box(plotlyOutput('gpdOverallClose'), width = 12),
       box(plotlyOutput('gpdOverallVolume'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "markowitz"',
+      box(plotlyOutput('markowitz'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
