@@ -3,7 +3,7 @@
 ##
 ## Note: if anaconda is present on the given system:
 ##
-##       conda install -c r r=3.4.2
+##       conda install -c r r=3.5.1
 ##       conda install rstudio
 ##       conda install -y pandas=0.22.0 --name r-reticulate
 ##
@@ -46,7 +46,9 @@ load_package(c(
   'hash',
   'Quandl',
   'ggplot2',
-  'stats'
+  'stats',
+  'QRM',
+  'plotly'
 ))
 
 py_install(c('pandas'))
@@ -67,7 +69,8 @@ sidebar = dashboardSidebar(
       icon = icon('bar-chart-o'),
         menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
-        menuSubItem('Partial ACF', tabName = 'pacf')
+        menuSubItem('Partial ACF', tabName = 'pacf'),
+        menuSubItem('General Pareto Distribution', tabName = 'gpd')
     ),
     menuItem(
       'Source Code',
@@ -89,6 +92,12 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "pacf"',
       box(uiOutput('pacf'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "gpd"',
+      box(plotlyOutput('gpdOverallOpen'), width = 12),
+      box(plotlyOutput('gpdOverallClose'), width = 12),
+      box(plotlyOutput('gpdOverallVolume'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -163,6 +172,62 @@ server = function(input, output, session) {
   })
 
   ##
+  ## gpd: general pareto distribution
+  ##
+  ## Note: weights are defined as a value of the positions for
+  ##       each risk factor. In the below case, the number of
+  ##       weights corresponds to the elements in the 'cbind'.
+  ##
+  weights = c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6, 1/6)
+  data.gpdOverallOpen = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['open'],
+        data[['gpn']]['open'],
+        data[['ms']]['open'],
+        data[['dal']]['open'],
+        data[['sti']]['open'],
+        data[['fb']]['open'],
+        data[['mar']]['open']
+      ))
+      return(gpd_compute(data.cbind, weights))
+    })
+  })
+
+  data.gpdOverallClose = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['close'],
+        data[['gpn']]['close'],
+        data[['ms']]['close'],
+        data[['dal']]['close'],
+        data[['sti']]['close'],
+        data[['fb']]['close'],
+        data[['mar']]['close']
+      ))
+      return(gpd_compute(data.cbind, weights))
+    })
+  })
+
+  data.gpdOverallVolume = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['volume'],
+        data[['gpn']]['volume'],
+        data[['ms']]['volume'],
+        data[['dal']]['volume'],
+        data[['sti']]['volume'],
+        data[['fb']]['volume'],
+        data[['mar']]['volume']
+      ))
+      return(gpd_compute(data.cbind, weights))
+    })
+  })
+
+  ##
   ## plot timeseries: lapply and 'local({})' workaround ensures
   ##     unique assignment. Otherwise, last plot used.
   ##
@@ -214,6 +279,24 @@ server = function(input, output, session) {
     })
   })
   output$pacf = renderUI(pacf_plot)
+
+  ##
+  ## gpd
+  ##
+  output$gpdOverallOpen = renderPlotly({
+    r.gpd = data.gpdOverallOpen()
+    ggplotly(gpd_plot(r.gpd, 'GPD Open:'))
+  })
+
+  output$gpdOverallClose = renderPlotly({
+    r.gpd = data.gpdOverallClose()
+    ggplotly(gpd_plot(r.gpd, 'GPD Close:'))
+  })
+
+  output$gpdOverallVolume = renderPlotly({
+    r.gpd = data.gpdOverallVolume()
+    ggplotly(gpd_plot(r.gpd, 'GPD Volume:'))
+  })
 }
 
 ## shiny application
