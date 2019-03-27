@@ -178,7 +178,7 @@ server = function(input, output, session) {
   ##       each risk factor. In the below case, the number of
   ##       weights corresponds to the elements in the 'cbind'.
   ##
-  weights = c(1/6, 1/6, 1/6, 1/6, 1/6, 1/6, 1/6)
+  weights = c(1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7)
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
