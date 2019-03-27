@@ -2,12 +2,25 @@
 ## markowitz.R, compute markowitz model.
 ##
 
-compute_markowitz = function(returns) {
+compute_markowitz = function(data) {
   ##
-  ## @data, provided dataframe used to compute gpd components.
+  ## @data, provided dataframe used to compute markowitz components.
   ##
   ## Note: this function requires the 'hash' package.
   ##
+
+  ## compute log difference percent using as.matrix to force numeric type
+  data.r = diff(log(as.matrix(data[, -1]))) * 100
+
+  ## split into date and rates
+  dates = as.Date(data$DATE[-1], '%m/%d/%Y')
+  dates.chr = as.character(data$DATE[-1])
+  str(dates.chr)
+  values = cbind(data.r, size, direction)
+
+  ## xts object with row names equal to the dates
+  returns = na.omit(as.xts(values, dates))
+
   R = returns[,1:3] / 100
   quantile_R = quantile(R[,1], 0.95)
   names.R = colnames(R)

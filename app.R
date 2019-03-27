@@ -307,6 +307,14 @@ server = function(input, output, session) {
     r.gpd = data.gpdOverallVolume()
     ggplotly(plot_gpd(r.gpd, 'GPD Volume:'))
   })
+
+  ##
+  ## markowitz model
+  ##
+  output$markowitz = renderPlotly({
+    r.markowitz = compute_gpd(symbol.ts())
+    ggplotly(plot_markowitz(r.markowitz))
+  })
 }
 
 ## shiny application
