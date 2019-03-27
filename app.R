@@ -201,7 +201,7 @@ server = function(input, output, session) {
         data[['fb']]['open'],
         data[['mar']]['open']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -217,7 +217,7 @@ server = function(input, output, session) {
         data[['fb']]['close'],
         data[['mar']]['close']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -233,7 +233,7 @@ server = function(input, output, session) {
         data[['fb']]['volume'],
         data[['mar']]['volume']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -295,17 +295,17 @@ server = function(input, output, session) {
   ##
   output$gpdOverallOpen = renderPlotly({
     r.gpd = data.gpdOverallOpen()
-    ggplotly(gpd_plot(r.gpd, 'GPD Open:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Open:'))
   })
 
   output$gpdOverallClose = renderPlotly({
     r.gpd = data.gpdOverallClose()
-    ggplotly(gpd_plot(r.gpd, 'GPD Close:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Close:'))
   })
 
   output$gpdOverallVolume = renderPlotly({
     r.gpd = data.gpdOverallVolume()
-    ggplotly(gpd_plot(r.gpd, 'GPD Volume:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Volume:'))
   })
 }
 
