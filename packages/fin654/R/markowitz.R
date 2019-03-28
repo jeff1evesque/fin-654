@@ -2,7 +2,11 @@
 ## markowitz.R, compute markowitz model.
 ##
 
-compute_markowitz = function(data) {
+compute_markowitz = function(df) {
+  print(paste0('df: ', df))
+  
+  return(df)
+
   ##
   ## @data, provided dataframe used to compute markowitz components.
   ##
@@ -10,15 +14,12 @@ compute_markowitz = function(data) {
   ##
 
   ## compute log difference percent using as.matrix to force numeric type
-  data.r = diff(log(as.matrix(data))) * 100
-  print(paste0('data.r: ', data.r))
-  return(data.r)
+  data.r = diff(log(as.matrix(data[, -1]))) * 100
 
   ## split into date and rates
   dates = as.Date(data$date[-1], '%m/%d/%Y')
   dates.chr = as.character(data$date[-1])
   values = cbind(data.r, size, direction)
-  print(paste0('values', values, ' type: ', typeof(data.r)))
 
   ## xts object with row names equal to the dates
 ##  returns = na.omit(as.xts(values, dates))
