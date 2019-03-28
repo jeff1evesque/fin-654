@@ -179,16 +179,17 @@ server = function(input, output, session) {
     })
   })
 
-  data.date = reactive({
-    lapply(df.ts, function(x, y) {
-      x$date
-    })
-  })
+  data.df = reactive({
+    ## flatten nested lists
+    df.long = do.call(rbind, df.ts)
+    df.long$symbol = gsub('\\..*', '', rownames(df.long))
 
-  data.open = reactive({
-    lapply(df.ts, function(x, y) {
-      x$open
-    })
+    ## remove rows with unique date
+    df.long = df.long[duplicated(df.long$date), ]
+
+    ## reshape
+    df.m = melt(df.long, c('date', 'symbol'), 'open')
+    df.cast = cast(df.m, date ~ symbol)
   })
 
   ##
@@ -322,8 +323,7 @@ server = function(input, output, session) {
   ## markowitz model
   ##
   output$markowitz = renderPlotly({
-    df = custom_bind(c('date' = data.date(), 'open' = data.open()))
-    r.markowitz = compute_markowitz(df)
+    r.markowitz = compute_markowitz(data.df)
     ggplotly(plot_markowitz(r.markowitz))
   })
 }
