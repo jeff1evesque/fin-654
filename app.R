@@ -174,25 +174,20 @@ server = function(input, output, session) {
   })
 
   symbol.ts.full = lapply(df.ts, function(x, y) {
-    df.ts$open = as.numeric(df.ts$open)
     reactive({
       x[,c('close', 'volume')]
     })
   })
 
-  data.cbind = reactive({
-    local({
-      data = lapply(df.ts, function(x, y) {
-        x$date = as.Date(x$date, '%M-%d-%Y')
-        x$open = x$open
-      })
+  data.date = reactive({
+    lapply(df.ts, function(x, y) {
+      x$date
+    })
+  })
 
-      ##
-      ## FIX THIS
-      ##
-      return(
-        custom_bind(c(data), 'dataframe')
-      )
+  data.open = reactive({
+    lapply(df.ts, function(x, y) {
+      x$open
     })
   })
 
@@ -327,7 +322,8 @@ server = function(input, output, session) {
   ## markowitz model
   ##
   output$markowitz = renderPlotly({
-    r.markowitz = compute_markowitz(data.cbind())
+    df = do.call(rbind, Map(data.frame, date=data.date(), open=data.open()))
+    r.markowitz = compute_markowitz(df)
 ##    ggplotly(plot_markowitz(r.markowitz))
   })
 }
