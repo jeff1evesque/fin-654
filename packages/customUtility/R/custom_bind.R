@@ -12,8 +12,15 @@ custom_bind = function(data, dtype) {
   }
 
   if (typeof(dtype) == 'dataframe') {
-    #### CONVERT LARGE LIST TO DATAFRAME WITH CBIND
+    df = data.frame()
 
+    ##
+    ## Note: names(d)[1], obtains the list name
+    ##
+    for (d in data) {
+      df[[names(d)[1]]] = d
+    }
+    result=df
   } else {
     result=cbind()
     for (d in data) {
