@@ -322,9 +322,9 @@ server = function(input, output, session) {
   ## markowitz model
   ##
   output$markowitz = renderPlotly({
-    df = do.call(rbind, Map(data.frame, date=data.date(), open=data.open()))
+    df = custom_bind(c('date' = data.date(), 'open' = data.open()))
     r.markowitz = compute_markowitz(df)
-##    ggplotly(plot_markowitz(r.markowitz))
+    ggplotly(plot_markowitz(r.markowitz))
   })
 }
 
