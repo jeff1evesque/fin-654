@@ -49,7 +49,8 @@ load_package(c(
   'stats',
   'QRM',
   'plotly',
-  'reshape2'
+  'reshape2',
+  'quadprog'
 ))
 
 py_install(c('pandas'))
@@ -188,9 +189,16 @@ server = function(input, output, session) {
     ## remove rows with unique date
     df.long = df.long[duplicated(df.long$date), ]
 
-    ## reshape
-    df.m = melt(df.long, c('date', 'symbol'), 'open')
+    ##
+    ## reshape on 'open'
+    ##
+    df.m = melt(df.long, id=c('date', 'symbol'), 'open')
     df.cast = dcast(df.m, date ~ symbol)
+###    df.cast[['date']] = lapply(df.cast[['date']], as.Date)
+##    df.cast[['date']] = lapply(df.cast[['date']], as.Date, format='%m-%d-%Y')
+##    print(paste0("df.cast: ", str(df.cast)))
+
+    return(df.cast)
   })
 
   ##
@@ -323,8 +331,10 @@ server = function(input, output, session) {
   ##
   ## markowitz model
   ##
+  weights = c(1/7, 1/7, 1/7)
   output$markowitz = renderPlotly({
-    r.markowitz = compute_markowitz(data.df)
+    data.df()
+    r.markowitz = compute_markowitz(data.df(), weights)
     ggplotly(plot_markowitz(r.markowitz))
   })
 }
