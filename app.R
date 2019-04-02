@@ -132,6 +132,12 @@ ui = dashboardPage(
 ## server: instructions to build application
 ##
 server = function(input, output, session) {
+  ##
+  ## @weights are defined as a value of the positions for each risk factor.
+  ##     This is used for gpd, and markowitz related computattions.
+  ##
+  weights = c(1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7)
+
   df = load_security(
     paste0(cwd, '/data/security/data-breaches.csv'),
     paste0(cwd, '/data/security/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
@@ -194,9 +200,6 @@ server = function(input, output, session) {
     ##
     df.m = melt(df.long, id=c('date', 'symbol'), 'open')
     df.cast = dcast(df.m, date ~ symbol)
-###    df.cast[['date']] = lapply(df.cast[['date']], as.Date)
-##    df.cast[['date']] = lapply(df.cast[['date']], as.Date, format='%m-%d-%Y')
-##    print(paste0("df.cast: ", str(df.cast)))
 
     return(df.cast)
   })
@@ -204,11 +207,6 @@ server = function(input, output, session) {
   ##
   ## gpd: general pareto distribution
   ##
-  ## Note: weights are defined as a value of the positions for
-  ##       each risk factor. In the below case, the number of
-  ##       weights corresponds to the elements in the 'cbind'.
-  ##
-  weights = c(1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7)
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
@@ -331,11 +329,10 @@ server = function(input, output, session) {
   ##
   ## markowitz model
   ##
-  weights = c(1/7, 1/7, 1/7)
   output$markowitz = renderPlotly({
     data.df()
-    r.markowitz = compute_markowitz(data.df(), weights)
-    ggplotly(plot_markowitz(r.markowitz))
+    r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
+    ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
   })
 }
 
