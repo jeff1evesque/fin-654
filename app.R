@@ -48,7 +48,8 @@ load_package(c(
   'ggplot2',
   'stats',
   'QRM',
-  'plotly'
+  'plotly',
+  'reshape2'
 ))
 
 py_install(c('pandas'))
