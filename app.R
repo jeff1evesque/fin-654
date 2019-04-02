@@ -190,7 +190,7 @@ server = function(input, output, session) {
 
     ## reshape
     df.m = melt(df.long, c('date', 'symbol'), 'open')
-    df.cast = cast(df.m, date ~ symbol)
+    df.cast = dcast(df.m, date ~ symbol)
   })
 
   ##
