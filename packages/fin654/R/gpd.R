@@ -2,7 +2,7 @@
 ## gpd.R, compute general pareto distribution.
 ##
 
-gpd_compute = function(data, position.rf) {
+compute_gpd = function(data, position.rf) {
   ##
   ## @data, provided dataframe used to compute gpd components.
   ##
@@ -50,9 +50,9 @@ gpd_compute = function(data, position.rf) {
   )
 }
 
-gpd_plot = function(data, prefix) {
+plot_gpd = function(data, prefix) {
   ##
-  ## @data, must contain same attributes as the return of above 'gdp_compute'.
+  ## @data, must contain same attributes as the return from 'compute_gpd'.
   ##
   VaR.gpd = data$VaR.gpd
   ES.gpd = data$ES.gpd

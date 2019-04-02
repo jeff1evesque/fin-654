@@ -48,7 +48,9 @@ load_package(c(
   'ggplot2',
   'stats',
   'QRM',
-  'plotly'
+  'plotly',
+  'reshape2',
+  'quadprog'
 ))
 
 py_install(c('pandas'))
@@ -64,13 +66,19 @@ sidebar = dashboardSidebar(
       icon = icon('dashboard')
     ),
     menuItem(
+      'Exploratory',
+      tabName = 'exploratory',
+      icon = icon('bar-chart-o'),
+        menuSubItem('Time series', tabName = 'stock-time-series')
+    ),
+    menuItem(
       'Analysis',
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
-        menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
         menuSubItem('Partial ACF', tabName = 'pacf'),
-        menuSubItem('General Pareto Distribution', tabName = 'gpd')
+        menuSubItem('General Pareto Distribution', tabName = 'gpd'),
+        menuSubItem('Markowitz Model', tabName = 'markowitz')
     ),
     menuItem(
       'Source Code',
@@ -100,6 +108,10 @@ body = dashboardBody(
       box(plotlyOutput('gpdOverallVolume'), width = 12)
     ),
     conditionalPanel(
+      condition = 'input.tab == "markowitz"',
+      box(plotlyOutput('markowitz'), width = 12)
+    ),
+    conditionalPanel(
       condition = 'input.tab == "dashboard"',
       box(plotOutput('ts1', height = 250))
     )
@@ -120,6 +132,12 @@ ui = dashboardPage(
 ## server: instructions to build application
 ##
 server = function(input, output, session) {
+  ##
+  ## @weights are defined as a value of the positions for each risk factor.
+  ##     This is used for gpd, and markowitz related computattions.
+  ##
+  weights = c(1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7)
+
   df = load_security(
     paste0(cwd, '/data/security/data-breaches.csv'),
     paste0(cwd, '/data/security/Privacy_Rights_Clearinghouse-Data-Breaches-Export.csv'),
@@ -164,21 +182,31 @@ server = function(input, output, session) {
   })
 
   symbol.ts.full = lapply(df.ts, function(x, y) {
-    date = as.Date(x$date, '%M-%d-%Y')
-    df.ts$open = as.numeric(df.ts$open)
     reactive({
       x[,c('close', 'volume')]
     })
   })
 
+  data.df = reactive({
+    ## flatten nested lists
+    df.long = do.call(rbind, df.ts)
+    df.long$symbol = gsub('\\..*', '', rownames(df.long))
+
+    ## remove rows with unique date
+    df.long = df.long[duplicated(df.long$date), ]
+
+    ##
+    ## reshape on 'open'
+    ##
+    df.m = melt(df.long, id=c('date', 'symbol'), 'open')
+    df.cast = dcast(df.m, date ~ symbol)
+
+    return(df.cast)
+  })
+
   ##
   ## gpd: general pareto distribution
   ##
-  ## Note: weights are defined as a value of the positions for
-  ##       each risk factor. In the below case, the number of
-  ##       weights corresponds to the elements in the 'cbind'.
-  ##
-  weights = c(1/7, 1/7, 1/7, 1/7, 1/7, 1/7, 1/7)
   data.gpdOverallOpen = reactive({
     local({
       data = na.omit(df.ts)
@@ -191,7 +219,7 @@ server = function(input, output, session) {
         data[['fb']]['open'],
         data[['mar']]['open']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -207,7 +235,7 @@ server = function(input, output, session) {
         data[['fb']]['close'],
         data[['mar']]['close']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -223,7 +251,7 @@ server = function(input, output, session) {
         data[['fb']]['volume'],
         data[['mar']]['volume']
       ))
-      return(gpd_compute(data.cbind, weights))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
@@ -285,17 +313,26 @@ server = function(input, output, session) {
   ##
   output$gpdOverallOpen = renderPlotly({
     r.gpd = data.gpdOverallOpen()
-    ggplotly(gpd_plot(r.gpd, 'GPD Open:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Open:'))
   })
 
   output$gpdOverallClose = renderPlotly({
     r.gpd = data.gpdOverallClose()
-    ggplotly(gpd_plot(r.gpd, 'GPD Close:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Close:'))
   })
 
   output$gpdOverallVolume = renderPlotly({
     r.gpd = data.gpdOverallVolume()
-    ggplotly(gpd_plot(r.gpd, 'GPD Volume:'))
+    ggplotly(plot_gpd(r.gpd, 'GPD Volume:'))
+  })
+
+  ##
+  ## markowitz model
+  ##
+  output$markowitz = renderPlotly({
+    data.df()
+    r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
+    ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
   })
 }
 
