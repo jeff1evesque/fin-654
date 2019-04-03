@@ -53,7 +53,11 @@ load_package(c(
   'quadprog'
 ))
 
-py_install(c('pandas', 'keras'))
+py_install(c(
+  'pandas',
+  'keras',
+  'scikit-learn'
+))
 
 ## dashboard
 header = dashboardHeader(title = 'Financial Analytics 654')
