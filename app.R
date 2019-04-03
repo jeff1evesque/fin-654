@@ -219,8 +219,24 @@ server = function(input, output, session) {
   ##
   forecast.rnn = reactive({
     source_python(paste0(cwd, '/python/forecast.py'))
-    lstm = Lstm(data.df())
-    lstm$train()
+    df.rnn = data.df()
+    col_size = seq(2, ncol(df.rnn))
+    df.rnn[['total']] = rowSums(df.rnn[, col_size], na.rm=TRUE)
+    df.rnn = df.rnn[, -col_size]
+
+    print(paste0('df.rnn: ', df.rnn))
+    lstm = Lstm(df.rnn)
+
+##### DELETE START
+
+    lstm$split_data()
+    lstm$normalize()
+##    lstm$train()
+##    print(paste0('lstm$predict_test(): ', lstm$predict_test()))
+
+#### DELETE END
+
+##    lstm$train()
     return(lstm$predict_test())
   })
 

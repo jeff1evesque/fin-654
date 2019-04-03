@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import math
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -27,11 +28,12 @@ class Lstm():
         else:
             self.data = data
 
+        self.row_length = len(data)
         self.data.set_index('date', inplace=True)
 
         # execute model
-        self.split_data()
-        self.normalize()
+##        self.split_data()
+##        self.normalize()
 
         # train
         if train:
@@ -48,22 +50,27 @@ class Lstm():
         '''
 
         self.train, self.test = train_test_split(self.data, test_size=test_size)
-        train_set = self.train['open']
-        test_set = self.test['open']
+        train_set = self.train
+        test_set = self.test
 
         self.df_train = pd.DataFrame(train_set)
         self.df_test = pd.DataFrame(test_set)
 
-    def normalize(self):
+    def normalize(self, timesteps=60):
         # scaling normalization
         self.sc = MinMaxScaler(feature_range = (0, 1))
         training_set_scaled = self.sc.fit_transform(self.df_train)
 
-        # Creating a data structure with 60 timesteps and 1 output
+        #
+        # used for creating a data structure with n timesteps and 1 output
+        #
+        if (self.row_length < timesteps):
+            timesteps = math.ceil(self.row_length / 2)
+
         X_train = []
         y_train = []
-        for i in range(60, 1258):
-            X_train.append(training_set_scaled[i-60:i, 0])
+        for i in range(timesteps, self.row_length):
+            X_train.append(training_set_scaled[i-timesteps:i, 0])
             y_train.append(training_set_scaled[i, 0])
         X_train, self.y_train = np.array(X_train), np.array(y_train)
 
@@ -122,7 +129,7 @@ class Lstm():
 
     def predict_test(self):
         dataset_total = pd.concat(
-            (self.train['open'], self.test['open']),
+            (self.train, self.test),
             axis = 0
         )
         inputs = dataset_total[len(dataset_total) - len(self.test) - 60:].values
