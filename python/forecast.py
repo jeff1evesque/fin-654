@@ -28,7 +28,7 @@ class Lstm():
         else:
             self.data = data
 
-        self.row_length = len(data)
+        self.row_length = len(self.data)
         self.data.set_index('date', inplace=True)
 
         # execute model
@@ -56,15 +56,24 @@ class Lstm():
         self.df_train = pd.DataFrame(train_set)
         self.df_test = pd.DataFrame(test_set)
 
-    def normalize(self, timesteps=60):
+    def normalize(self, training_set, timesteps=60):
+        '''
+
+        @train_set, must be the value column from the original dataframe.
+
+        '''
+
         # scaling normalization
         self.sc = MinMaxScaler(feature_range = (0, 1))
-        training_set_scaled = self.sc.fit_transform(self.df_train)
+        training_set=pd.DataFrame(training_set)
+        training_set_scaled = self.sc.fit_transform(training_set)
 
         #
         # used for creating a data structure with n timesteps and 1 output
         #
-        if (self.row_length < timesteps):
+        if (len(training_set_scaled) < timesteps):
+            timesteps = math.ceil(len(training_set_scaled) / 2)
+        elif (self.row_length < timesteps):
             timesteps = math.ceil(self.row_length / 2)
 
         X_train = []
