@@ -78,7 +78,8 @@ sidebar = dashboardSidebar(
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
         menuSubItem('Partial ACF', tabName = 'pacf'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
-        menuSubItem('Markowitz Model', tabName = 'markowitz')
+        menuSubItem('Markowitz Model', tabName = 'markowitz'),
+        menuSubItem('RNN Forecast', tabName = 'rnn-forecast')
     ),
     menuItem(
       'Source Code',
@@ -110,6 +111,10 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "markowitz"',
       box(plotlyOutput('markowitz'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "rnn-forecast"',
+      box(plotlyOutput('rnn-forecast'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
