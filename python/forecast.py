@@ -22,9 +22,12 @@ class Lstm():
 
         '''
 
-        self.data = data
-        for df in self.data:
-            df.set_index('date', inplace=True)
+        if isinstance(data, dict):
+            self.data = pd.DataFrame(data)
+        else:
+            self.data = data
+
+        self.data.set_index('date', inplace=True)
 
         # execute model
         self.split_data()
