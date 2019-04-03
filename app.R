@@ -53,7 +53,7 @@ load_package(c(
   'quadprog'
 ))
 
-py_install(c('pandas'))
+py_install(c('pandas', 'keras'))
 
 ## dashboard
 header = dashboardHeader(title = 'Financial Analytics 654')
@@ -214,6 +214,7 @@ server = function(input, output, session) {
   ## implement rnn prediction
   ##
   forecast.rnn = reactive({
+    source_python(paste0(cwd, '/python/forecast.py'))
     lstm = Lstm(data.df())
     lstm$train()
     return(lstm$predict_test())
@@ -355,8 +356,8 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast = renderPlotly({
     model = forecast.rnn()
-    r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
-    ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
+    print(paste0('rnn model: ', model))
+#    ggplotly()
   })
 }
 
