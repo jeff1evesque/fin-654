@@ -79,7 +79,7 @@ sidebar = dashboardSidebar(
         menuSubItem('Partial ACF', tabName = 'pacf'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
         menuSubItem('Markowitz Model', tabName = 'markowitz'),
-        menuSubItem('RNN Forecast', tabName = 'rnn-forecast')
+        menuSubItem('RNN Forecast', tabName = 'rnn_forecast')
     ),
     menuItem(
       'Source Code',
@@ -113,8 +113,8 @@ body = dashboardBody(
       box(plotlyOutput('markowitz'), width = 12)
     ),
     conditionalPanel(
-      condition = 'input.tab == "rnn-forecast"',
-      box(plotlyOutput('rnn-forecast'), width = 12)
+      condition = 'input.tab == "rnn_forecast"',
+      box(plotlyOutput('rnn_forecast'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -192,6 +192,9 @@ server = function(input, output, session) {
     })
   })
 
+   ##
+   ## convert list of dataframe to single dataframe
+   ##
   data.df = reactive({
     ## flatten nested lists
     df.long = do.call(rbind, df.ts)
@@ -200,13 +203,20 @@ server = function(input, output, session) {
     ## remove rows with unique date
     df.long = df.long[duplicated(df.long$date), ]
 
-    ##
     ## reshape on 'open'
-    ##
     df.m = melt(df.long, id=c('date', 'symbol'), 'open')
     df.cast = dcast(df.m, date ~ symbol)
 
     return(df.cast)
+  })
+
+  ##
+  ## implement rnn prediction
+  ##
+  forecast.rnn = reactive({
+    lstm = Lstm(data.df())
+    lstm$train()
+    return(lstm$predict_test())
   })
 
   ##
@@ -314,7 +324,8 @@ server = function(input, output, session) {
   output$pacf = renderUI(pacf_plot)
 
   ##
-  ## gpd
+  ## gpd: general pareto distribution showing value at risk and
+  ##      expected shortfall.
   ##
   output$gpdOverallOpen = renderPlotly({
     r.gpd = data.gpdOverallOpen()
@@ -332,10 +343,18 @@ server = function(input, output, session) {
   })
 
   ##
-  ## markowitz model
+  ## markowitz model: placed on efficient frontier
   ##
   output$markowitz = renderPlotly({
-    data.df()
+    r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
+    ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
+  })
+
+  ##
+  ## rnn: use lstm for timeseries predictions
+  ##
+  output$rnn_forecast = renderPlotly({
+    model = forecast.rnn()
     r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
     ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
   })
