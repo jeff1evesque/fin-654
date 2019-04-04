@@ -232,7 +232,11 @@ server = function(input, output, session) {
     df.rnn[['total']] = rowSums(df.rnn[, col_size], na.rm=TRUE)
     df.rnn = df.rnn[, -col_size]
 
+    ##
     ## create lstm model
+    ##
+    ## @normalize_key, must match the above 'df.rnn' key.
+    ##
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
     return(lstm$get_model())
