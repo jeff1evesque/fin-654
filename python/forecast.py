@@ -138,21 +138,24 @@ class Lstm():
             batch_size = 32
         )
 
-    def predict_test(self):
+    def predict_test(self, timesteps=60):
         dataset_total = pd.concat(
             (self.train, self.test),
             axis = 0
         )
-        inputs = dataset_total[len(dataset_total) - len(self.test) - 60:].values
+        inputs = dataset_total[len(dataset_total) - len(self.test) - timesteps:].values
         inputs = inputs.reshape(-1,1)
         inputs = self.sc.transform(inputs)
         X_test = []
 
-        for i in range(60, 80):
-            X_test.append(inputs[i-60:i, 0])
+        for i in range(timesteps, self.row_length):
+            X_test.append(inputs[i-timesteps:i, 0])
 
         X_test = np.array(X_test)
         X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+        return(X_test)
+
         predicted_stock_price = self.regressor.predict(X_test)
         predicted_stock_price = self.sc.inverse_transform(predicted_stock_price)
 
