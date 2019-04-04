@@ -53,9 +53,14 @@ load_package(c(
   'quadprog'
 ))
 
+##
+## keras compatibility requirement:
+##
+## https://github.com/jeff1evesque/fin-654/issues/14#issuecomment-479725039
+##
 py_install(c(
   'pandas',
-  'keras',
+  'keras=2.1.2',
   'scikit-learn'
 ))
 
@@ -225,19 +230,9 @@ server = function(input, output, session) {
     df.rnn = df.rnn[, -col_size]
 
     print(paste0('df.rnn: ', df.rnn))
-    lstm = Lstm(df.rnn)
-
-##### DELETE START
-
-    lstm$split_data()
-    lstm$normalize(df.rnn[['total']])
+    lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
-##    print(paste0('lstm$predict_test(): ', lstm$predict_test()))
-
-#### DELETE END
-
-##    lstm$train()
-##    return(lstm$predict_test())
+    return(lstm$get_model())
   })
 
   ##
@@ -376,7 +371,6 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast = renderPlotly({
     model = forecast.rnn()
-    print(paste0('rnn model: ', model))
 #    ggplotly()
   })
 }

@@ -16,7 +16,7 @@ class Lstm():
 
     '''
 
-    def __init__(self, data, train=False):
+    def __init__(self, data, train=False, normalize_key=None):
         '''
 
         define class variables.
@@ -32,8 +32,10 @@ class Lstm():
         self.data.set_index('date', inplace=True)
 
         # execute model
-##        self.split_data()
-##        self.normalize()
+        self.split_data()
+
+        if normalize_key:
+            self.normalize(self.data[normalize_key])
 
         # train
         if train:
