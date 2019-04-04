@@ -29,7 +29,12 @@ class Lstm():
             self.data = data
 
         self.row_length = len(self.data)
+        
+        # convert column to dataframe index
         self.data.set_index('date', inplace=True)
+
+        # convert dataframe columns to integer
+        self.data.total = self.data.total.astype(int)
 
         # execute model
         self.split_data()
@@ -58,7 +63,7 @@ class Lstm():
         self.df_train = pd.DataFrame(train_set)
         self.df_test = pd.DataFrame(test_set)
 
-    def normalize(self, training_set, timesteps=60):
+    def normalize(self, timesteps=60):
         '''
 
         @train_set, must be the value column from the original dataframe.
@@ -67,26 +72,21 @@ class Lstm():
 
         # scaling normalization
         self.sc = MinMaxScaler(feature_range = (0, 1))
-        training_set=pd.DataFrame(training_set)
-        training_set_scaled = self.sc.fit_transform(training_set)
-
-        #
-        # used for creating a data structure with n timesteps and 1 output
-        #
-        if (len(training_set_scaled) < timesteps):
-            timesteps = math.ceil(len(training_set_scaled) / 2)
-        elif (self.row_length < timesteps):
-            timesteps = math.ceil(self.row_length / 2)
+        training_set_scaled = self.sc.fit_transform(self.df_train)
+        return(self.row_length)
 
         X_train = []
         y_train = []
         for i in range(timesteps, self.row_length):
-            X_train.append(training_set_scaled[i-timesteps:i, 0])
-            y_train.append(training_set_scaled[i, 0])
-        X_train, self.y_train = np.array(X_train), np.array(y_train)
+            continue
+#            X_train.append(training_set_scaled[i-timesteps:i, 0])
+#            X_train.append(training_set_scaled[i-60:i, 0])
+#            y_train.append(training_set_scaled[i, 0])
+
+#        X_train, self.y_train = np.array(X_train), np.array(y_train)
 
         # Reshaping
-        self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+#        self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 
     def train_model(self, epochs=50):
         '''
@@ -146,11 +146,11 @@ class Lstm():
         '''
 
         dataset_total = pd.concat(
-            (self.train, self.test),
+            (self.df_train, self.df_test),
             axis = 0
         )
-        inputs = dataset_total[len(dataset_total) - len(self.test) - timesteps:].values
-        inputs = inputs.reshape(-1,1)
+        inputs = dataset_total[len(dataset_total) - len(self.df_test) - timesteps:].values
+        inputs = inputs.reshape(-1, 1)
         inputs = self.sc.transform(inputs)
         X_test = []
 
