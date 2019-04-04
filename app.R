@@ -239,7 +239,7 @@ server = function(input, output, session) {
     ##
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
-    return(lstm$get_model())
+    return(lstm)
   })
 
   ##
@@ -378,6 +378,7 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast = renderPlotly({
     model = forecast.rnn()
+    test_result = model$predict_test()
 #    ggplotly()
   })
 }
