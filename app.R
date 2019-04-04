@@ -223,13 +223,16 @@ server = function(input, output, session) {
   ## implement rnn prediction
   ##
   forecast.rnn = reactive({
+    ## initial dataframe
     source_python(paste0(cwd, '/python/forecast.py'))
     df.rnn = data.df()
+
+    ## create aggregate column sum of all stocks
     col_size = seq(2, ncol(df.rnn))
     df.rnn[['total']] = rowSums(df.rnn[, col_size], na.rm=TRUE)
     df.rnn = df.rnn[, -col_size]
 
-    print(paste0('df.rnn: ', df.rnn))
+    ## create lstm model
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
     return(lstm$get_model())
