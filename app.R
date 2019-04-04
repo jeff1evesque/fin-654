@@ -379,6 +379,9 @@ server = function(input, output, session) {
   output$rnn_forecast = renderPlotly({
     model = forecast.rnn()
     test_result = model$predict_test()
+    actual = model$get_actual()
+    print(paste0('test_result: ', test_result))
+    print(paste0('actual: ', actual))
 #    ggplotly()
   })
 }
