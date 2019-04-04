@@ -139,6 +139,12 @@ class Lstm():
         )
 
     def predict_test(self, timesteps=60):
+        '''
+
+        generate prediction using hold out sample.
+
+        '''
+
         dataset_total = pd.concat(
             (self.train, self.test),
             axis = 0
@@ -160,6 +166,15 @@ class Lstm():
         predicted_stock_price = self.sc.inverse_transform(predicted_stock_price)
 
         return(pd.DataFrame(predicted_stock_price))
+
+    def get_actual(self):
+        '''
+
+        get actual values from hold out sample.
+
+        '''
+
+        return(self.test)
 
     def get_model(self):
         '''
