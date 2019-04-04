@@ -153,7 +153,7 @@ class Lstm():
 
         X_test = np.array(X_test)
         X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-        predicted_stock_price = regressor.predict(X_test)
+        predicted_stock_price = self.regressor.predict(X_test)
         predicted_stock_price = self.sc.inverse_transform(predicted_stock_price)
 
         return(pd.DataFrame(predicted_stock_price))
