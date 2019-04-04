@@ -230,14 +230,14 @@ server = function(input, output, session) {
 ##### DELETE START
 
     lstm$split_data()
-    lstm$normalize()
-##    lstm$train()
+    lstm$normalize(df.rnn[['total']])
+    lstm$train_model()
 ##    print(paste0('lstm$predict_test(): ', lstm$predict_test()))
 
 #### DELETE END
 
 ##    lstm$train()
-    return(lstm$predict_test())
+##    return(lstm$predict_test())
   })
 
   ##

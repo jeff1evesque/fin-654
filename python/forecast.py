@@ -86,7 +86,7 @@ class Lstm():
         # Reshaping
         self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 
-    def train(self, epochs=50):
+    def train_model(self, epochs=50):
         '''
 
         train lstm model.
