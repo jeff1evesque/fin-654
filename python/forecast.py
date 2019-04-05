@@ -40,7 +40,10 @@ class Lstm():
         self.split_data()
 
         if normalize_key:
+            self.normalize_key = normalize_key
             self.normalize(self.data[normalize_key])
+        else:
+            self.normalize_key = None
 
         # train
         if train:
@@ -72,21 +75,18 @@ class Lstm():
 
         # scaling normalization
         self.sc = MinMaxScaler(feature_range = (0, 1))
-        training_set_scaled = self.sc.fit_transform(self.df_train)
-        return(self.row_length)
+        training_set_scaled = self.sc.fit_transform(self.df_train[[self.normalize_key]])
 
         X_train = []
         y_train = []
         for i in range(timesteps, self.row_length):
-            continue
-#            X_train.append(training_set_scaled[i-timesteps:i, 0])
-#            X_train.append(training_set_scaled[i-60:i, 0])
-#            y_train.append(training_set_scaled[i, 0])
+            X_train.append(training_set_scaled[i-timesteps:i, 0])
+            y_train.append(training_set_scaled[i, 0])
 
-#        X_train, self.y_train = np.array(X_train), np.array(y_train)
+        X_train, self.y_train = np.array(X_train), np.array(y_train)
 
         # Reshaping
-#        self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+        self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 
     def train_model(self, epochs=50):
         '''
