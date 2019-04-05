@@ -36,12 +36,21 @@ class Lstm():
         # convert dataframe columns to integer
         self.data.total = self.data.total.astype(int)
 
-        # execute model
+        # create train + test
         self.split_data()
 
         if normalize_key:
             self.normalize_key = normalize_key
-            self.normalize(self.data[normalize_key])
+            train_x, train_y = self.normalize(self.train)
+            test_x, test_y = self.normalize(self.test)
+
+            #
+            # reshape for lstm: convert current [samples, features] to required lstm 
+            #     format [samples, timesteps, features].
+            #
+            self.trainX = numpy.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
+            self.testX = numpy.reshape(test_x, (test_x.shape[0], 1, test_x.shape[1]))
+
         else:
             self.normalize_key = None
 
@@ -66,8 +75,26 @@ class Lstm():
         self.df_train = pd.DataFrame(train_set)
         self.df_test = pd.DataFrame(test_set)
 
-    def normalize(self, timesteps=60):
+    def get_data(self):
         '''
+
+        get current train and test data.
+
+        '''
+
+        return(self.df_train, self.df_test)
+
+    def normalize(self, data, lookback=60):
+        '''
+
+        given a vector [x], a matrix [x, y] is returned:
+
+            x     y
+            112		118
+            118		132
+            132		129
+            129		121
+            121		135
 
         @train_set, must be the value column from the original dataframe.
 
@@ -75,18 +102,17 @@ class Lstm():
 
         # scaling normalization
         self.sc = MinMaxScaler(feature_range = (0, 1))
-        training_set_scaled = self.sc.fit_transform(self.df_train[[self.normalize_key]])
+        dataset = self.sc.fit_transform(data[[self.normalize_key]])
 
+        # convert array of values into dataset matrix
         X_train = []
         y_train = []
-        for i in range(timesteps, self.row_length):
-            X_train.append(training_set_scaled[i-timesteps:i, 0])
-            y_train.append(training_set_scaled[i, 0])
+        for i in range(self.row_length - lookback - 1):
+            a = dataset[i:(i+look_back), 0]
+            X_train.append(a)
+            y_train.append(dataset[i + look_back, 0]))
 
-        X_train, self.y_train = np.array(X_train), np.array(y_train)
-
-        # Reshaping
-        self.X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+        return(np.array(X_train), np.array(y_train))
 
     def train_model(self, epochs=50):
         '''
@@ -102,7 +128,7 @@ class Lstm():
         self.regressor.add(LSTM(
             units = 50,
             return_sequences = True,
-            input_shape = (self.X_train.shape[1], 1)
+            input_shape = (self.trainX.shape[1], 1)
         ))
         self.regressor.add(Dropout(0.2))
 
@@ -132,8 +158,8 @@ class Lstm():
 
         # Fitting the RNN to the Training set
         self.regressor.fit(
-            self.X_train,
-            self.y_train,
+            self.trainX,
+            self.trainY,
             epochs = epochs,
             batch_size = 32
         )
