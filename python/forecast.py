@@ -102,8 +102,8 @@ class Lstm():
         '''
 
         # scaling normalization
-        self.sc = MinMaxScaler(feature_range = (0, 1))
-        dataset = self.sc.fit_transform(data[[self.normalize_key]])
+        self.scaler = MinMaxScaler(feature_range = (0, 1))
+        dataset = self.scaler.fit_transform(data[[self.normalize_key]])
 
         # eliminate edge cases
         if (look_back >= self.row_length):
@@ -178,17 +178,30 @@ class Lstm():
         train_predict = self.regressor.predict(self.trainX)
         test_predict = self.regressor.predict(self.testX)
 
-        # invert predictions
-        train_predict = scaler.inverse_transform(train_predict)
-        trainY = scaler.inverse_transform([self.trainY])
-        test_predict = scaler.inverse_transform(test_predict)
-        testY = scaler.inverse_transform([self.testY])
+        #
+        # @inverse_transform, convert prediction back to normal scale.
+        #
+        self.train_predict = self.scaler.inverse_transform(train_predict)
+        self.trainY = self.scaler.inverse_transform([self.trainY])
+        self.test_predict = self.scaler.inverse_transform(test_predict)
+        self.testY = self.scaler.inverse_transform([self.testY])
 
-        # root mean squared error
-        train_score = math.sqrt(mean_squared_error(trainY[0], train_predict[:,0]))
-        test_score = math.sqrt(mean_squared_error(testY[0], test_predict[:,0]))
+        return(train_predict, test_predict)
 
-        return(train_score, test_score)
+    def predict_test_score(self):
+        '''
+
+        return root mean sqaured error.
+
+        '''
+
+        if (self.trainY and self.train_predict and self.test_predict):
+            train_score = math.sqrt(mean_squared_error(self.trainY[0], self.train_predict[:,0]))
+            test_score = math.sqrt(mean_squared_error(self.testY[0], self.test_predict[:,0]))
+            return(train_score, test_score)
+
+        else:
+            return(None)
 
     def get_actual(self):
         '''
