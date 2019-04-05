@@ -175,25 +175,20 @@ class Lstm():
 
         '''
 
-        dataset_total = pd.concat(
-            (self.df_train, self.df_test),
-            axis = 0
-        )
-        inputs = dataset_total[len(dataset_total) - len(self.df_test) - timesteps:].values
-        inputs = inputs.reshape(-1, 1)
-        inputs = self.sc.transform(inputs)
-        X_test = []
+        train_predict = self.regressor.predict(self.trainX)
+        test_predict = self.regressor.predict(self.testX)
 
-        for i in range(timesteps, self.row_length):
-            X_test.append(inputs[i-timesteps:i, 0])
+        # invert predictions
+        train_predict = scaler.inverse_transform(train_predict)
+        trainY = scaler.inverse_transform([self.trainY])
+        test_predict = scaler.inverse_transform(test_predict)
+        testY = scaler.inverse_transform([self.testY])
 
-        X_test = np.array(X_test)
-        X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+        # root mean squared error
+        train_score = math.sqrt(mean_squared_error(trainY[0], train_predict[:,0]))
+        test_score = math.sqrt(mean_squared_error(testY[0], test_predict[:,0]))
 
-        predicted = self.regressor.predict(X_test)
-        predicted = self.sc.inverse_transform(predicted)
-
-        return(pd.DataFrame(predicted))
+        return(train_score, test_score)
 
     def get_actual(self):
         '''
