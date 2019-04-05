@@ -238,7 +238,6 @@ server = function(input, output, session) {
     ## @normalize_key, must match the above 'df.rnn' key.
     ##
     lstm = Lstm(df.rnn, normalize_key='total')
-    print(lstm$normalize())
     lstm$train_model()
     return(lstm)
   })
@@ -379,7 +378,9 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast = renderPlot({
     model = forecast.rnn()
-#    test_result = ts(as.numeric(model$predict_test()))
+    print(model$predict_test())
+    print(model$get_test_score())
+##    test_result = ts(as.numeric(model$predict_test()))
 #    actual = model$get_actual()
 #    print(paste0('test_result: ', test_result))
 #    print(paste0('actual: ', actual))
