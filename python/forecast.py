@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import math
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
@@ -41,15 +42,15 @@ class Lstm():
 
         if normalize_key:
             self.normalize_key = normalize_key
-            train_x, train_y = self.normalize(self.train)
-            test_x, test_y = self.normalize(self.test)
+            train_x, self.trainY = self.normalize(self.df_train)
+            test_x, self.testY = self.normalize(self.df_test)
 
             #
             # reshape for lstm: convert current [samples, features] to required lstm 
             #     format [samples, timesteps, features].
             #
-            self.trainX = numpy.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
-            self.testX = numpy.reshape(test_x, (test_x.shape[0], 1, test_x.shape[1]))
+            self.trainX = np.reshape(train_x, (train_x.shape[0], 1, train_x.shape[1]))
+            self.testX = np.reshape(test_x, (test_x.shape[0], 1, test_x.shape[1]))
 
         else:
             self.normalize_key = None
@@ -84,7 +85,7 @@ class Lstm():
 
         return(self.df_train, self.df_test)
 
-    def normalize(self, data, lookback=60):
+    def normalize(self, data, look_back=5):
         '''
 
         given a vector [x], a matrix [x, y] is returned:
@@ -104,17 +105,20 @@ class Lstm():
         self.sc = MinMaxScaler(feature_range = (0, 1))
         dataset = self.sc.fit_transform(data[[self.normalize_key]])
 
+        # eliminate edge cases
+        if (look_back >= self.row_length):
+            look_back = math.ceil(self.row_length / 4)
+
         # convert array of values into dataset matrix
-        X_train = []
-        y_train = []
-        for i in range(self.row_length - lookback - 1):
+        X_train, y_train = [], []
+        for i in range(len(dataset) - look_back - 1):
             a = dataset[i:(i+look_back), 0]
             X_train.append(a)
-            y_train.append(dataset[i + look_back, 0]))
+            y_train.append(dataset[i + look_back, 0])
 
         return(np.array(X_train), np.array(y_train))
 
-    def train_model(self, epochs=50):
+    def train_model(self, look_back=5, epochs=50):
         '''
 
         train lstm model.
@@ -128,7 +132,7 @@ class Lstm():
         self.regressor.add(LSTM(
             units = 50,
             return_sequences = True,
-            input_shape = (self.trainX.shape[1], 1)
+            input_shape = (1, look_back)
         ))
         self.regressor.add(Dropout(0.2))
 
@@ -164,7 +168,7 @@ class Lstm():
             batch_size = 32
         )
 
-    def predict_test(self, timesteps=60):
+    def predict_test(self, timesteps=10):
         '''
 
         generate prediction using hold out sample.
