@@ -168,6 +168,18 @@ class Lstm():
             batch_size = 32
         )
 
+    def get_actual(self):
+        '''
+
+        get actual lagged values.
+
+        '''
+
+        return(
+            self.scaler.inverse_transform([self.trainY]),
+            self.scaler.inverse_transform([self.testY])
+        )
+
     def predict_test(self, timesteps=10):
         '''
 
@@ -182,35 +194,26 @@ class Lstm():
         # @inverse_transform, convert prediction back to normal scale.
         #
         self.train_predict = self.scaler.inverse_transform(train_predict)
-        self.trainY = self.scaler.inverse_transform([self.trainY])
         self.test_predict = self.scaler.inverse_transform(test_predict)
-        self.testY = self.scaler.inverse_transform([self.testY])
 
-        return(train_predict, test_predict)
+        return(self.train_predict, self.test_predict)
 
-    def predict_test_score(self):
+    def get_test_score(self):
         '''
 
         return root mean sqaured error.
 
         '''
 
-        if (self.trainY and self.train_predict and self.test_predict):
-            train_score = math.sqrt(mean_squared_error(self.trainY[0], self.train_predict[:,0]))
-            test_score = math.sqrt(mean_squared_error(self.testY[0], self.test_predict[:,0]))
+        actual_train, actual_test = self.get_actual()
+
+        if (actual_train and actual_test and self.train_predict and self.test_predict):
+            train_score = math.sqrt(mean_squared_error(actual_train[0], self.train_predict[:,0]))
+            test_score = math.sqrt(mean_squared_error(actual_test[0], self.test_predict[:,0]))
             return(train_score, test_score)
 
         else:
             return(None)
-
-    def get_actual(self):
-        '''
-
-        get actual values from hold out sample.
-
-        '''
-
-        return(self.test)
 
     def get_model(self):
         '''
@@ -220,4 +223,3 @@ class Lstm():
         '''
 
         return(self.regressor)
-
