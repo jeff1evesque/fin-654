@@ -78,14 +78,14 @@ sidebar = dashboardSidebar(
       'Exploratory',
       tabName = 'exploratory',
       icon = icon('bar-chart-o'),
-        menuSubItem('Time series', tabName = 'stock-time-series')
+        menuSubItem('Time series', tabName = 'stock-time-series'),
+        menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
+        menuSubItem('Partial ACF', tabName = 'pacf')
     ),
     menuItem(
       'Analysis',
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
-        menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
-        menuSubItem('Partial ACF', tabName = 'pacf'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
         menuSubItem('Markowitz Model', tabName = 'markowitz'),
         menuSubItem('RNN Forecast', tabName = 'rnn_forecast')
