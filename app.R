@@ -378,21 +378,14 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast = renderPlot({
     model = forecast.rnn()
-    print(model$predict_test())
-    print(model$get_test_score())
-##    test_result = ts(as.numeric(model$predict_test()))
-#    actual = model$get_actual()
-#    print(paste0('test_result: ', test_result))
-#    print(paste0('actual: ', actual))
+    predicted = model$predict_test()
+    actual = model$get_actual()
 
-#    plot.ts(test_result)
-#    plot.ts(actual)
+    predicted_ts = ts(as.numeric(unlist(predicted)))
+    predicted_actual = ts(as.numeric(unlist(actual)))
 
-#    ggplotly(
-#      ggplot(data=data.frame(test_result)) +
-#      geom_line(color = 'blue')# +
-#      geom_line(data=actual, color = 'green')
-#    )
+    plot.ts(predicted_ts)
+    plot.ts(predicted_actual)
   })
 }
 
