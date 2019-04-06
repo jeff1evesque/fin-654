@@ -224,3 +224,12 @@ class Lstm():
         '''
 
         return(self.regressor)
+
+    def get_index(self):
+        '''
+
+        get dataframe row index.
+
+        '''
+
+        return(self.data.index.values)
