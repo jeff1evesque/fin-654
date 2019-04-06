@@ -8,6 +8,7 @@ from keras.layers import LSTM
 from keras.layers import Dropout
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
 
 class Lstm():
@@ -207,12 +208,12 @@ class Lstm():
 
         actual_train, actual_test = self.get_actual()
 
-        if (actual_train and actual_test and self.train_predict and self.test_predict):
+        try:
             train_score = math.sqrt(mean_squared_error(actual_train[0], self.train_predict[:,0]))
             test_score = math.sqrt(mean_squared_error(actual_test[0], self.test_predict[:,0]))
             return(train_score, test_score)
 
-        else:
+        except:
             return(None)
 
     def get_model(self):
