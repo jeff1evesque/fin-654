@@ -376,16 +376,32 @@ server = function(input, output, session) {
   ##
   ## rnn: use lstm for timeseries predictions
   ##
-  output$rnn_forecast = renderPlot({
+  output$rnn_forecast = renderPlotly({
     model = forecast.rnn()
-    predicted = model$predict_test()
-    actual = model$get_actual()
+    dates = model$get_index()
 
-    predicted_ts = ts(as.numeric(unlist(predicted)))
-    predicted_actual = ts(as.numeric(unlist(actual)))
+    actual_train = model$get_actual()[[1]]
+    actual_test = model$get_actual()[[2]]
+    predicted_train = model$predict_test()[[1]]
+    predicted_test = model$predict_test()[[2]]
 
-    plot.ts(predicted_ts)
-    plot.ts(predicted_actual)
+    ## dataframes for multi-timeseries plot
+    df_train = data.frame(
+        predicted=predicted_train,
+        actual=t(actual_train)
+    )
+    rownames(df_train) = head(c(dates), length(predicted_train))
+
+    df_test = data.frame(
+      predicted=predicted_test,
+      actual=t(actual_test)
+    )
+    rownames(df_test) = tail(c(dates), length(predicted_test))
+
+    ## generate plots
+#    gg = ggplot(predictions)
+
+#    ggplotly()
   })
 }
 
