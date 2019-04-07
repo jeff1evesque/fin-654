@@ -14,7 +14,7 @@ plot_lstm = function(model, index) {
 
   dates = model$get_index()
   actual = model$get_actual()[[index]]
-  predicted_ = model$predict_test()[[index]]
+  predicted = model$predict_test()[[index]]
   
   ## dataframes for multi-timeseries plot
   df = data.frame(
