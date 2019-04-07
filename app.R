@@ -123,7 +123,8 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
-      box(plotlyOutput('rnn_forecast'), width = 12)
+      box(plotlyOutput('rnn_forecast_train'), width = 12),
+      box(plotlyOutput('rnn_forecast_test'), width=12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -376,35 +377,14 @@ server = function(input, output, session) {
   ##
   ## rnn: use lstm for timeseries predictions
   ##
-  output$rnn_forecast = renderPlotly({
+  output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
-    dates = model$get_index()
+    ggplotly(plot_lstm(model, 1))
+  })
 
-    actual_train = model$get_actual()[[1]]
-    actual_test = model$get_actual()[[2]]
-    predicted_train = model$predict_test()[[1]]
-    predicted_test = model$predict_test()[[2]]
-
-    ## dataframes for multi-timeseries plot
-    df_train = data.frame(
-        date=head(c(dates), length(predicted_train)),
-        predicted=predicted_train,
-        actual=t(actual_train)
-    )
-
-    df_test = data.frame(
-      date=tail(c(dates), length(predicted_test)),
-      predicted=predicted_test,
-      actual=t(actual_test)
-    )
-
-    ## generate plots
-    gg.train = ggplot(df_train, aes(x=date)) +
-      geom_line(aes(y=predicted, group=1), color='#00AFBB') +
-      geom_line(aes(y=actual, group=1), color='#FC4E07') +
-      ggtitle('Training Data') +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1))
-    ggplotly(gg.train)
+  output$rnn_forecast_test = renderPlotly({
+    model = forecast.rnn()
+    ggplotly(plot_lstm(model, 2))
   })
 }
 
