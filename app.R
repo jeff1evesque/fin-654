@@ -387,21 +387,24 @@ server = function(input, output, session) {
 
     ## dataframes for multi-timeseries plot
     df_train = data.frame(
+        date=head(c(dates), length(predicted_train)),
         predicted=predicted_train,
         actual=t(actual_train)
     )
-    rownames(df_train) = head(c(dates), length(predicted_train))
 
     df_test = data.frame(
+      date=tail(c(dates), length(predicted_test)),
       predicted=predicted_test,
       actual=t(actual_test)
     )
-    rownames(df_test) = tail(c(dates), length(predicted_test))
 
     ## generate plots
-#    gg = ggplot(predictions)
-
-#    ggplotly()
+    gg.train = ggplot(df_train, aes(x=date)) +
+      geom_line(aes(y=predicted, group=1), color='#00AFBB') +
+      geom_line(aes(y=actual, group=1), color='#FC4E07') +
+      ggtitle('Training Data') +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1))
+    ggplotly(gg.train)
   })
 }
 
