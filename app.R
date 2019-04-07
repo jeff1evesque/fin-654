@@ -53,7 +53,16 @@ load_package(c(
   'quadprog'
 ))
 
-py_install(c('pandas'))
+##
+## keras compatibility requirement:
+##
+## https://github.com/jeff1evesque/fin-654/issues/14#issuecomment-479725039
+##
+py_install(c(
+  'pandas',
+  'keras=2.1.2',
+  'scikit-learn'
+))
 
 ## dashboard
 header = dashboardHeader(title = 'Financial Analytics 654')
@@ -69,16 +78,17 @@ sidebar = dashboardSidebar(
       'Exploratory',
       tabName = 'exploratory',
       icon = icon('bar-chart-o'),
-        menuSubItem('Time series', tabName = 'stock-time-series')
+        menuSubItem('Time series', tabName = 'stock-time-series'),
+        menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
+        menuSubItem('Partial ACF', tabName = 'pacf')
     ),
     menuItem(
       'Analysis',
       tabName = 'analysis',
       icon = icon('bar-chart-o'),
-        menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
-        menuSubItem('Partial ACF', tabName = 'pacf'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
-        menuSubItem('Markowitz Model', tabName = 'markowitz')
+        menuSubItem('Markowitz Model', tabName = 'markowitz'),
+        menuSubItem('RNN Forecast', tabName = 'rnn_forecast')
     ),
     menuItem(
       'Source Code',
@@ -110,6 +120,11 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "markowitz"',
       box(plotlyOutput('markowitz'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "rnn_forecast"',
+      box(plotlyOutput('rnn_forecast_train'), width = 12),
+      box(plotlyOutput('rnn_forecast_test'), width=12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -187,6 +202,9 @@ server = function(input, output, session) {
     })
   })
 
+   ##
+   ## convert list of dataframe to single dataframe
+   ##
   data.df = reactive({
     ## flatten nested lists
     df.long = do.call(rbind, df.ts)
@@ -195,13 +213,34 @@ server = function(input, output, session) {
     ## remove rows with unique date
     df.long = df.long[duplicated(df.long$date), ]
 
-    ##
     ## reshape on 'open'
-    ##
     df.m = melt(df.long, id=c('date', 'symbol'), 'open')
     df.cast = dcast(df.m, date ~ symbol)
 
     return(df.cast)
+  })
+
+  ##
+  ## implement rnn prediction
+  ##
+  forecast.rnn = reactive({
+    ## initial dataframe
+    source_python(paste0(cwd, '/python/forecast.py'))
+    df.rnn = data.df()
+
+    ## column sum of all stocks
+    col_size = seq(2, ncol(df.rnn))
+    df.rnn[['total']] = rowSums(df.rnn[, col_size], na.rm=TRUE)
+    df.rnn = df.rnn[, -col_size]
+
+    ##
+    ## create lstm model
+    ##
+    ## @normalize_key, must match the above 'df.rnn' key.
+    ##
+    lstm = Lstm(df.rnn, normalize_key='total')
+    lstm$train_model()
+    return(lstm)
   })
 
   ##
@@ -309,7 +348,8 @@ server = function(input, output, session) {
   output$pacf = renderUI(pacf_plot)
 
   ##
-  ## gpd
+  ## gpd: general pareto distribution showing value at risk and
+  ##      expected shortfall.
   ##
   output$gpdOverallOpen = renderPlotly({
     r.gpd = data.gpdOverallOpen()
@@ -327,12 +367,24 @@ server = function(input, output, session) {
   })
 
   ##
-  ## markowitz model
+  ## markowitz model: placed on efficient frontier
   ##
   output$markowitz = renderPlotly({
-    data.df()
     r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
     ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
+  })
+
+  ##
+  ## rnn: use lstm for timeseries predictions
+  ##
+  output$rnn_forecast_train = renderPlotly({
+    model = forecast.rnn()
+    ggplotly(plot_lstm(model, 1))
+  })
+
+  output$rnn_forecast_test = renderPlotly({
+    model = forecast.rnn()
+    ggplotly(plot_lstm(model, 2))
   })
 }
 
