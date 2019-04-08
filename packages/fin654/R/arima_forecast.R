@@ -5,7 +5,7 @@
 plot_arima = function(model, index) {
   ## local variables
   dates = model$get_index()
-  scores = model$get_actual()
+  scores = model$get_data()
 
   print(paste0('scores: ', scores))
 #  predicted = scores

@@ -61,7 +61,8 @@ load_package(c(
 py_install(c(
   'pandas',
   'keras=2.1.2',
-  'scikit-learn'
+  'scikit-learn',
+  'statsmodels'
 ))
 
 ## dashboard
@@ -258,7 +259,7 @@ server = function(input, output, session) {
     
     ## column sum of all stocks
     col_size = seq(2, ncol(df.arima))
-    df.rnn[['total']] = rowSums(df.arima[, col_size], na.rm=TRUE)
+    df.arima[['total']] = rowSums(df.arima[, col_size], na.rm=TRUE)
     df.arima = df.arima[, -col_size]
 
     ##
@@ -267,8 +268,13 @@ server = function(input, output, session) {
     ## @normalize_key, must match the above 'df.rnn' key.
     ##
     arima = Arima(df.arima, normalize_key='total')
-    arima$train_model()
-    return(lstm)
+    iterations = arima$get_data()
+
+    ## @1, train data
+    ## @2, test data
+    print(paste0('iterations: ', iterations[[1]]['total']))
+###    arima$train_model(iterations[[1]])
+###    return(arima)
   })
 
   ##
@@ -408,7 +414,9 @@ server = function(input, output, session) {
   output$arima_forecast = renderPlotly({
     model = forecast.arima()
 
-    plot_arima(model)
+    print(paste0('index: ', model$get_index()))
+    print(paste0('scores: ', model$get_actual()))
+###    plot_arima(model)
 ####    ggplotly(plot_arima(model))
   })
 

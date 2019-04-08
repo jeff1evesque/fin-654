@@ -2,6 +2,7 @@
 
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
 
 
 class Arima():
@@ -64,7 +65,7 @@ class Arima():
 
         return(self.df_train, self.df_test)
 
-    def train_model(self, iterations=len(self.df_test), order=(1,1,1)):
+    def train_model(self, iterations, order=(1,1,1)):
         '''
 
         train arima model.
