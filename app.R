@@ -407,7 +407,9 @@ server = function(input, output, session) {
   ##
   output$arima_forecast = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model, 1))
+
+    plot_arima(model)
+####    ggplotly(plot_arima(model))
   })
 
   ##
