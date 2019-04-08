@@ -69,6 +69,9 @@ class Arima():
 
         train arima model.
 
+        @order, (p,q,d) arguments can be defined using acf (MA), and pacf (AR)
+            implementation. Corresponding large significant are indicators.
+
         Note: requires 'split_data' to be executed.
 
         '''
