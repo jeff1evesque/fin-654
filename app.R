@@ -225,7 +225,7 @@ server = function(input, output, session) {
   ##
   forecast.rnn = reactive({
     ## initial dataframe
-    source_python(paste0(cwd, '/python/forecast.py'))
+    source_python(paste0(cwd, '/python/lstm.py'))
     df.rnn = data.df()
 
     ## column sum of all stocks
