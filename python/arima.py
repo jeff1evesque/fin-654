@@ -56,14 +56,17 @@ class Arima():
         self.df_train = pd.DataFrame(train_set)
         self.df_test = pd.DataFrame(test_set)
 
-    def get_data(self):
+    def get_data(self, key=None):
         '''
 
         get current train and test data.
 
         '''
 
-        return(self.df_train, self.df_test)
+        if key:
+            return(self.df_train[key], self.df_test[key])
+        else:
+            return(self.df_train, self.df_test)
 
     def train_model(self, iterations, order=(1,1,1)):
         '''
@@ -77,13 +80,13 @@ class Arima():
 
         '''
 
-        self.history = [x for x in self.df_train]
-        predictions = list()
-        differences = list()
-        rolling = list()
+        predictions = []
+        differences = []
+        rolling = []
+        self.history = self.df_train[self.normalize_key].tolist()
 
         for t in range(iterations):
-            model = ARIMA(history, order=order)
+            model = ARIMA(self.history, order=order)
             model_fit = model.fit(disp=0)
             output = model_fit.forecast()
             yhat = output[0]
@@ -107,6 +110,7 @@ class Arima():
 
             self.history.append(obs)
 
+        return(differences)
         self.score = {
             'mse': mean_squared_error(self.df_test, predictions),
             'differences': differences,

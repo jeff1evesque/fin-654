@@ -268,12 +268,11 @@ server = function(input, output, session) {
     ## @normalize_key, must match the above 'df.rnn' key.
     ##
     arima = Arima(df.arima, normalize_key='total')
-    iterations = arima$get_data()
+    iterations = arima$get_data('total')
 
     ## @1, train data
     ## @2, test data
-    print(paste0('iterations: ', iterations[[1]]['total']))
-###    arima$train_model(iterations[[1]])
+    print(paste0('JEFF: ', arima$train_model(length(iterations))))
 ###    return(arima)
   })
 
@@ -414,8 +413,8 @@ server = function(input, output, session) {
   output$arima_forecast = renderPlotly({
     model = forecast.arima()
 
-    print(paste0('index: ', model$get_index()))
-    print(paste0('scores: ', model$get_actual()))
+###    print(paste0('index: ', model$get_index()))
+###    print(paste0('scores: ', model$get_actual()))
 ###    plot_arima(model)
 ####    ggplotly(plot_arima(model))
   })
