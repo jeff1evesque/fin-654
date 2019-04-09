@@ -86,7 +86,7 @@ class Lstm():
 
         return(self.df_train, self.df_test)
 
-    def normalize(self, data, look_back=5):
+    def normalize(self, data, look_back=2):
         '''
 
         given a vector [x], a matrix [x, y] is returned:
@@ -119,7 +119,7 @@ class Lstm():
 
         return(np.array(X_train), np.array(y_train))
 
-    def train_model(self, look_back=5, epochs=50):
+    def train_model(self, look_back=2, epochs=100):
         '''
 
         train lstm model.
