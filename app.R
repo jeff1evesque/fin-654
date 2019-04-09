@@ -268,12 +268,16 @@ server = function(input, output, session) {
     ## @normalize_key, must match the above 'df.rnn' key.
     ##
     arima = Arima(df.arima, normalize_key='total')
-    iterations = arima$get_data('total')
 
-    ## @1, train data
-    ## @2, test data
-    print(paste0('JEFF: ', arima$train_model(length(iterations))))
-###    return(arima)
+    ##
+    ## @1, represents train
+    ## @2, represents test
+    ##
+    iterations = length(arima$get_data('total')[2])
+
+    ## train arima model
+    arima$train_model(iterations)
+    return(arima)
   })
 
   ##
@@ -412,6 +416,7 @@ server = function(input, output, session) {
   ##
   output$arima_forecast = renderPlotly({
     model = forecast.arima()
+    print(paste0('differences: ', model$get_differences()))
 
 ###    print(paste0('index: ', model$get_index()))
 ###    print(paste0('scores: ', model$get_actual()))
