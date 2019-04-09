@@ -68,7 +68,7 @@ class Arima():
         else:
             return(self.df_train, self.df_test)
 
-    def train_model(self, iterations, order=(1,1,1)):
+    def train_model(self, iterations, order=(1,0,0)):
         '''
 
         train arima model.
@@ -80,51 +80,73 @@ class Arima():
 
         '''
 
-        predictions = []
-        differences = []
-        rolling = []
+        actuals, predicted, rolling, differences = [], [], [], []
         self.history = self.df_train[self.normalize_key].tolist()
 
         for t in range(iterations):
             model = ARIMA(self.history, order=order)
             model_fit = model.fit(disp=0)
             output = model_fit.forecast()
-            yhat = output[0]
-            predictions.append(yhat)
+            yhat = float(output[0])
+            predicted.append(yhat)
 
             #
             # observation: if current value doesn't exist from test, append current
             #     prediction, to ensure successive rolling prediction computed.
             #
+            # @rolling, defined when 'iterations' exceeds original dataframe length,
+            #     which defines the rolling predictions.
+            #
             try:
-                obs = self.df_test[t]
-                differences.append({
-                    'predicted': float(yhat),
-                    'expected': obs,
-                    'difference': abs(1-float(yhat)/obs)
-                })
+                obs = float(self.df_test[self.normalize_key].tolist()[t])
+                actuals.append(obs)
+                predicted.append(yhat)
+                differences.append(abs(1-(yhat/obs)))
 
             except:
                 obs = yhat
-                rolling.append({'predicted': obs})
+                self.history.append(obs)
+                rolling.append(obs)
 
-            self.history.append(obs)
+        self.differences = actuals##, predicted, differences)
+###        self.mse = mean_squared_error(actuals, predicted)
+        self.rolling = rolling
 
-        return(differences)
-        self.score = {
-            'mse': mean_squared_error(self.df_test, predictions),
-            'differences': differences,
-            'rolling': rolling
-        }
-
-    def get_score(self):
+    def get_mse(self):
         '''
 
-        return scores generated via 'train_model'.
+        return mean squared error on trained arima model.
 
         '''
 
-        return(self.score)
+        return(self.mse)
+
+    def get_differences(self):
+        '''
+
+        return differences between prediction against corresponding actual.
+
+        '''
+
+        return(self.differences)
+
+    def get_rolling(self):
+        '''
+
+        return rolling predictions.
+
+        '''
+
+        return(self.rolling)
+
+    def get_history(self):
+        '''
+
+        return entire timeseries history including rolling predictions.
+
+        '''
+
+        return(self.history)
 
     def get_index(self):
         '''
