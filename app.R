@@ -270,10 +270,11 @@ server = function(input, output, session) {
     arima = Arima(df.arima, normalize_key='total')
 
     ##
-    ## @1, represents train
-    ## @2, represents test
+    ## @[[1]], represents train
+    ## @[[2]], represents test
     ##
-    iterations = length(arima$get_data('total')[2])
+    iterations = length(arima$get_data('total')[[2]])
+    print(paste0('iterations: ', iterations))
 
     ## train arima model
     arima$train_model(iterations)
@@ -418,8 +419,6 @@ server = function(input, output, session) {
     model = forecast.arima()
     print(paste0('differences: ', model$get_differences()))
 
-###    print(paste0('index: ', model$get_index()))
-###    print(paste0('scores: ', model$get_actual()))
 ###    plot_arima(model)
 ####    ggplotly(plot_arima(model))
   })
