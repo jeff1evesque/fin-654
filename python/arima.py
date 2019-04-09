@@ -108,7 +108,7 @@ class Arima():
                 self.history.append(obs)
                 rolling.append(obs)
 
-        self.differences = actuals##, predicted, differences)
+        self.differences = (actuals, predicted, differences)
 ###        self.mse = mean_squared_error(actuals, predicted)
         self.rolling = rolling
 
