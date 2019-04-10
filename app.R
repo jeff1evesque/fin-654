@@ -61,7 +61,8 @@ load_package(c(
 py_install(c(
   'pandas',
   'keras=2.1.2',
-  'scikit-learn'
+  'scikit-learn',
+  'statsmodels'
 ))
 
 ## dashboard
@@ -88,6 +89,7 @@ sidebar = dashboardSidebar(
       icon = icon('bar-chart-o'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
         menuSubItem('Markowitz Model', tabName = 'markowitz'),
+        menuSubItem('Arima Forecast', tabName = 'arima_forecast'),
         menuSubItem('RNN Forecast', tabName = 'rnn_forecast')
     ),
     menuItem(
@@ -125,6 +127,11 @@ body = dashboardBody(
       condition = 'input.tab == "rnn_forecast"',
       box(plotlyOutput('rnn_forecast_train'), width = 12),
       box(plotlyOutput('rnn_forecast_test'), width=12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "arima_forecast"',
+      box(plotlyOutput('arima_forecast_train'), width = 12),
+      box(plotlyOutput('arima_forecast_test'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -225,7 +232,7 @@ server = function(input, output, session) {
   ##
   forecast.rnn = reactive({
     ## initial dataframe
-    source_python(paste0(cwd, '/python/forecast.py'))
+    source_python(paste0(cwd, '/python/lstm.py'))
     df.rnn = data.df()
 
     ## column sum of all stocks
@@ -241,6 +248,37 @@ server = function(input, output, session) {
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
     return(lstm)
+  })
+
+  ##
+  ## implement arima prediction
+  ##
+  forecast.arima = reactive({
+    ## initial dataframe
+    source_python(paste0(cwd, '/python/arima.py'))
+    df.arima = data.df()
+    
+    ## column sum of all stocks
+    col_size = seq(2, ncol(df.arima))
+    df.arima[['total']] = rowSums(df.arima[, col_size], na.rm=TRUE)
+    df.arima = df.arima[, -col_size]
+
+    ##
+    ## create arima model
+    ##
+    ## @normalize_key, must match the above 'df.rnn' key.
+    ##
+    arima = Arima(df.arima, normalize_key='total')
+
+    ##
+    ## @[[1]], represents train
+    ## @[[2]], represents test
+    ##
+    iterations = length(arima$get_data('total')[[2]])
+
+    ## train arima model
+    arima$train_model(iterations)
+    return(arima)
   })
 
   ##
@@ -372,6 +410,19 @@ server = function(input, output, session) {
   output$markowitz = renderPlotly({
     r.markowitz = compute_markowitz(data.df(), weights, length(df.ts))
     ggplotly(plot_markowitz(r.markowitz, length(df.ts)))
+  })
+
+  ##
+  ## arima: regression timeseries predictions
+  ##
+  output$arima_forecast_train = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(model, 1))
+  })
+
+  output$arima_forecast_test = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(model, 2))
   })
 
   ##
