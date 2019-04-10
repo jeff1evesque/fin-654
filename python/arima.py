@@ -26,6 +26,10 @@ class Arima():
 
         self.normalize_key = normalize_key
         self.row_length = len(self.data)
+
+        # sort dataframe by date
+        self.data['date'] = pd.to_datetime(self.data.date)
+        self.data.sort_values(by=['date'], inplace=True)
         
         # convert column to dataframe index
         self.data.set_index('date', inplace=True)
