@@ -70,7 +70,8 @@ class Lstm():
 
         '''
 
-        self.train, self.test = train_test_split(self.data, test_size=test_size)
+        # split without shuffling timeseries
+        self.train, self.test = train_test_split(self.data, test_size=test_size, shuffle=False)
         train_set = self.train
         test_set = self.test
 
