@@ -5,7 +5,9 @@
 plot_arima = function(model) {
   dates = model$get_index()
   actual = model$get_differences()[[1]]
-  predicted = model$get_differences()[[1]]
+  predicted = model$get_differences()[[2]]
+
+  print(paste0('dates: ', dates, ' actual: ', actual, ' predicted: ', predicted))
 
   ## dataframes for multi-timeseries plot
   df = data.frame(
