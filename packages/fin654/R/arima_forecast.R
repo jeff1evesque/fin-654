@@ -30,7 +30,7 @@ plot_arima = function(model, index) {
 
     ## dataframes for multi-timeseries plot
     df = data.frame(
-      date=head(c(dates), length(actual)),
+      date=tail(c(dates), length(actual)),
       predicted=predicted,
       actual=actual
     )
