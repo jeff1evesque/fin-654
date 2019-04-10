@@ -100,7 +100,6 @@ class Arima():
             try:
                 obs = float(self.df_test[self.normalize_key].tolist()[t])
                 actuals.append(obs)
-                predicted.append(yhat)
                 differences.append(abs(1-(yhat/obs)))
 
             except:
@@ -109,7 +108,7 @@ class Arima():
                 rolling.append(obs)
 
         self.differences = (actuals, predicted, differences)
-###        self.mse = mean_squared_error(actuals, predicted)
+        self.mse = mean_squared_error(actuals, predicted)
         self.rolling = rolling
 
     def get_mse(self):
