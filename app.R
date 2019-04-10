@@ -89,7 +89,7 @@ sidebar = dashboardSidebar(
       icon = icon('bar-chart-o'),
         menuSubItem('General Pareto Distribution', tabName = 'gpd'),
         menuSubItem('Markowitz Model', tabName = 'markowitz'),
-        menuSubItem('Arima Forecast', tabName = 'arima'),
+        menuSubItem('Arima Forecast', tabName = 'arima_forecast'),
         menuSubItem('RNN Forecast', tabName = 'rnn_forecast')
     ),
     menuItem(
