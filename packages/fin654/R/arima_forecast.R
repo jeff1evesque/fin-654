@@ -2,14 +2,10 @@
 ## arima_forecast.R, generate arima model plot.
 ##
 
-plot_arima = function(model, index) {
-  ## local variables
+plot_arima = function(model) {
   dates = model$get_index()
-  scores = model$get_data()
-
-  print(paste0('scores: ', scores))
-#  predicted = scores
-#  actual = scores
+  actual = model$get_differences()[[1]]
+  predicted = model$get_differences()[[1]]
 
   ## dataframes for multi-timeseries plot
   df = data.frame(
