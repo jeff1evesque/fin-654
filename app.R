@@ -274,7 +274,6 @@ server = function(input, output, session) {
     ## @[[2]], represents test
     ##
     iterations = length(arima$get_data('total')[[2]])
-    print(paste0('iterations: ', iterations))
 
     ## train arima model
     arima$train_model(iterations)
@@ -417,8 +416,7 @@ server = function(input, output, session) {
   ##
   output$arima_forecast = renderPlotly({
     model = forecast.arima()
-    plot_arima(model)
-####    ggplotly(plot_arima(model))
+    ggplotly(plot_arima(model))
   })
 
   ##
