@@ -3,25 +3,33 @@
 ##
 
 plot_lstm = function(model, index) {
+  ## local variables
+  dates = model$get_index()
+  actual = model$get_actual()[[index]]
+  predicted = model$predict_test()[[index]]
+
   ##
   ## @index, 1 indicates train, 2 indicates test.
   ##
   if (index == 1) {
     title = 'Train'
+
+    ## dataframes for multi-timeseries plot
+    df = data.frame(
+      date=head(c(dates), length(predicted)),
+      predicted=predicted,
+      actual=t(actual)
+    )
   } else {
     title = 'Test'
-  }
 
-  dates = model$get_index()
-  actual = model$get_actual()[[index]]
-  predicted = model$predict_test()[[index]]
-  
-  ## dataframes for multi-timeseries plot
-  df = data.frame(
-    date=head(c(dates), length(predicted)),
-    predicted=predicted,
-    actual=t(actual)
-  )
+    ## dataframes for multi-timeseries plot
+    df = data.frame(
+      date=tail(c(dates), length(predicted)),
+      predicted=predicted,
+      actual=t(actual)
+    )
+  }
   
   ## generate plots
   g = ggplot(df, aes(x=date)) +
