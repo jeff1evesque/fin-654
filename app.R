@@ -130,7 +130,7 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
-      box(plotlyOutput('arima_forecast'), width = 12)
+      box(plotlyOutput('arima_forecast_train'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
@@ -414,9 +414,9 @@ server = function(input, output, session) {
   ##
   ## arima: regression timeseries predictions
   ##
-  output$arima_forecast = renderPlotly({
+  output$arima_forecast_train = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model))
+    ggplotly(plot_arima(model, 1))
   })
 
   ##
