@@ -55,11 +55,8 @@ class Arima():
 
         # split without shuffling timeseries
         self.train, self.test = train_test_split(self.data, test_size=test_size, shuffle=False)
-        train_set = self.train
-        test_set = self.test
-
-        self.df_train = pd.DataFrame(train_set)
-        self.df_test = pd.DataFrame(test_set)
+        self.df_train = pd.DataFrame(self.train)
+        self.df_test = pd.DataFrame(self.test)
 
     def get_data(self, key=None):
         '''
