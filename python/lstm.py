@@ -65,7 +65,7 @@ class Lstm():
             self.train()
             self.predict_test()
 
-    def split_data(self, test_size=0.20):
+    def split_data(self, test_size=0.2):
         '''
 
         split data into train and test.
@@ -79,7 +79,7 @@ class Lstm():
         self.df_train = pd.DataFrame(self.train)
         self.df_test = pd.DataFrame(self.test)
 
-    def get_data(self):
+    def get_data(self, key):
         '''
 
         get current train and test data.
@@ -164,7 +164,7 @@ class Lstm():
         self.regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 
         # Fitting the RNN to the Training set
-        self.regressor.fit(
+        self.fit_history = self.regressor.fit(
             self.trainX,
             self.trainY,
             epochs = epochs,
@@ -216,7 +216,7 @@ class Lstm():
             return(train_score, test_score)
 
         except:
-            return(None)
+            return('No score available')
 
     def get_model(self):
         '''
@@ -226,6 +226,24 @@ class Lstm():
         '''
 
         return(self.regressor)
+
+    def get_fit_history(self, history_key=None):
+        '''
+
+        return model history object:
+
+            {
+                'acc': [0.9843952109499714],
+                'loss': [0.050826362343496051],
+                'val_acc': [0.98403786838658314],
+                'val_loss': [0.0502210383056177]
+            }
+
+        '''
+
+        if history_key:
+            return(self.fit_history.history[history_key])
+        return(self.fit_history.history)
 
     def get_index(self):
         '''
