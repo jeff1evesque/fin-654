@@ -55,13 +55,10 @@ class Arima():
 
         # split without shuffling timeseries
         self.train, self.test = train_test_split(self.data, test_size=test_size, shuffle=False)
-        train_set = self.train
-        test_set = self.test
+        self.df_train = pd.DataFrame(self.train)
+        self.df_test = pd.DataFrame(self.test)
 
-        self.df_train = pd.DataFrame(train_set)
-        self.df_test = pd.DataFrame(test_set)
-
-    def get_data(self, key=None):
+    def get_data(self, key=None, key_to_list=False):
         '''
 
         get current train and test data.
@@ -69,6 +66,8 @@ class Arima():
         '''
 
         if key:
+            if key_to_list:
+                return(self.df_train[key].tolist(), self.df_test[key].tolist())
             return(self.df_train[key], self.df_test[key])
         else:
             return(self.df_train, self.df_test)
