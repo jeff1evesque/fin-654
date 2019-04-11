@@ -125,6 +125,8 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
+      box(htmlOutput('rnn_forecast_train_loss'), width = 6),
+      box(htmlOutput('rnn_forecast_test_loss'), width = 6),
       box(plotlyOutput('rnn_forecast_train'), width = 12),
       box(plotlyOutput('rnn_forecast_test'), width=12)
     ),
@@ -428,6 +430,17 @@ server = function(input, output, session) {
   ##
   ## rnn: use lstm for timeseries predictions
   ##
+  output$rnn_forecast_train_loss = renderUI({
+    model = forecast.rnn()
+    loss = model$get_test_score()[0]
+    HTML(paste0(loss))
+  })
+  output$rnn_forecast_test_loss = renderUI({
+    model = forecast.rnn()
+    val_loss = model$get_test_score()[1]
+    HTML(paste0(val_loss))
+  })
+
   output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
     ggplotly(plot_lstm(model, 1))
