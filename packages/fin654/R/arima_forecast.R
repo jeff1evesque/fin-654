@@ -10,7 +10,7 @@ plot_arima = function(model, index) {
   ##
   if (index == 1) {
     title = 'Train'
-    actual = model$get_differences()[[1]]
+    actual = model$get_data(key='total', key_to_list='True')[[1]]
 
     ## dataframes for multi-timeseries plot
     df = data.frame(
@@ -34,7 +34,7 @@ plot_arima = function(model, index) {
       predicted=predicted,
       actual=actual
     )
-
+    
     ## initialize ggplot
     g = ggplot(df, aes(x=date)) +
       geom_line(aes(y=predicted, group=1), color='#00AFBB') +

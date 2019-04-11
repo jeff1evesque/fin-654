@@ -58,7 +58,7 @@ class Arima():
         self.df_train = pd.DataFrame(self.train)
         self.df_test = pd.DataFrame(self.test)
 
-    def get_data(self, key=None):
+    def get_data(self, key=None, key_to_list=False):
         '''
 
         get current train and test data.
@@ -66,6 +66,8 @@ class Arima():
         '''
 
         if key:
+            if key_to_list:
+                return(self.df_train[key].tolist(), self.df_test[key].tolist())
             return(self.df_train[key], self.df_test[key])
         else:
             return(self.df_train, self.df_test)
