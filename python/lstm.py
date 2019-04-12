@@ -18,12 +18,14 @@ class Lstm():
 
     '''
 
-    def __init__(self, data, train=False, normalize_key=None):
+    def __init__(self, data, look_back=1, train=False, normalize_key=None):
         '''
 
         define class variables.
 
         '''
+
+        self.look_back = look_back
 
         if isinstance(data, dict):
             self.data = pd.DataFrame(data)
@@ -92,7 +94,7 @@ class Lstm():
             return(self.df_train[key], self.df_test[key])
         return(self.df_train, self.df_test)
 
-    def normalize(self, data, look_back=2):
+    def normalize(self, data):
         '''
 
         given a vector [x], a matrix [x, y] is returned:
@@ -113,19 +115,19 @@ class Lstm():
         dataset = self.scaler.fit_transform(data[[self.normalize_key]])
 
         # eliminate edge cases
-        if (look_back >= self.row_length):
-            look_back = math.ceil(self.row_length / 4)
+        if (self.look_back >= self.row_length):
+            self.look_back = math.ceil(self.row_length / 4)
 
         # convert array of values into dataset matrix
         X_train, y_train = [], []
-        for i in range(len(dataset) - look_back - 1):
-            a = dataset[i:(i+look_back), 0]
+        for i in range(len(dataset) - self.look_back - 1):
+            a = dataset[i:(i+self.look_back), 0]
             X_train.append(a)
-            y_train.append(dataset[i + look_back, 0])
+            y_train.append(dataset[i + self.look_back, 0])
 
         return(np.array(X_train), np.array(y_train))
 
-    def train_model(self, look_back=2, epochs=100):
+    def train_model(self, epochs=100):
         '''
 
         train lstm model.
@@ -139,7 +141,7 @@ class Lstm():
         self.regressor.add(LSTM(
             units = 50,
             return_sequences = True,
-            input_shape = (1, look_back)
+            input_shape = (1, self.look_back)
         ))
         self.regressor.add(Dropout(0.2))
 
