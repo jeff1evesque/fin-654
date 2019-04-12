@@ -435,13 +435,13 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast_train_loss = renderUI({
     model = forecast.rnn()
-    loss = model$get_test_score()
-    HTML(paste0(loss))
+    loss = model$get_score()[[1]]
+    HTML(paste0('Train MSE: ', loss))
   })
   output$rnn_forecast_test_loss = renderUI({
     model = forecast.rnn()
-    val_loss = model$get_test_score()
-    HTML(paste0(val_loss))
+    val_loss = model$get_score()[[2]]
+    HTML(paste0('Test MSE: ', val_loss))
   })
 
   output$rnn_forecast_train = renderPlotly({
