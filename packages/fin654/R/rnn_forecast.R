@@ -15,7 +15,7 @@ plot_lstm = function(model, act, pred, index) {
     ## dataframes for multi-timeseries plot
     df = data.frame(
       date=head(c(dates), length(act)),
-      actual=act
+      predicted=act
     )
 
     ## generate plots
@@ -35,8 +35,8 @@ plot_lstm = function(model, act, pred, index) {
 
     ## generate plots
     g = ggplot(df, aes(x=date)) +
-      geom_line(aes(y=predicted, group=1), color='#00AFBB') +
       geom_line(aes(y=actual, group=1), color='#FC4E07') +
+      geom_line(aes(y=predicted, group=1), color='#00AFBB') +
       ggtitle(paste0(title, 'ing Data')) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }
