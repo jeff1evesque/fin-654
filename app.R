@@ -126,11 +126,13 @@ body = dashboardBody(
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
       box(plotlyOutput('rnn_forecast_train'), width = 12),
+      box(htmlOutput('rnn_forecast_test_loss'), width = 3),
       box(plotlyOutput('rnn_forecast_test'), width=12)
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
       box(plotlyOutput('arima_forecast_train'), width = 12),
+      box(htmlOutput('arima_forecast_test_loss'), width = 3),
       box(plotlyOutput('arima_forecast_test'), width = 12)
     ),
     conditionalPanel(
@@ -209,9 +211,9 @@ server = function(input, output, session) {
     })
   })
 
-   ##
-   ## convert list of dataframe to single dataframe
-   ##
+  ##
+  ## convert list of dataframe to single dataframe
+  ##
   data.df = reactive({
     ## flatten nested lists
     df.long = do.call(rbind, df.ts)
@@ -247,6 +249,9 @@ server = function(input, output, session) {
     ##
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
+
+    ## assess accuracy
+    lstm$predict_test()
     return(lstm)
   })
 
@@ -415,6 +420,12 @@ server = function(input, output, session) {
   ##
   ## arima: regression timeseries predictions
   ##
+  output$arima_forecast_test_loss = renderUI({
+    model = forecast.arima()
+    val_loss = model$get_mse()
+    HTML(paste0('Test MSE: ', val_loss))
+  })
+
   output$arima_forecast_train = renderPlotly({
     model = forecast.arima()
     ggplotly(plot_arima(model, 1))
@@ -428,14 +439,24 @@ server = function(input, output, session) {
   ##
   ## rnn: use lstm for timeseries predictions
   ##
+  output$rnn_forecast_test_loss = renderUI({
+    model = forecast.rnn()
+    val_loss = model$get_mse()[[2]]
+    HTML(paste0('Test MSE: ', val_loss))
+  })
+
   output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
-    ggplotly(plot_lstm(model, 1))
+    actual = model$get_data('total', key_to_list='True')[[1]]
+    predicted = model$get_predict_test()[[1]]
+    ggplotly(plot_lstm(model, actual, predicted, 1))
   })
 
   output$rnn_forecast_test = renderPlotly({
     model = forecast.rnn()
-    ggplotly(plot_lstm(model, 2))
+    actual = model$get_data('total', key_to_list='True')[[2]]
+    predicted = model$get_predict_test()[[2]]
+    ggplotly(plot_lstm(model, actual, predicted, 2))
   })
 }
 

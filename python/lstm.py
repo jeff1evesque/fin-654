@@ -18,12 +18,14 @@ class Lstm():
 
     '''
 
-    def __init__(self, data, train=False, normalize_key=None):
+    def __init__(self, data, look_back=1, train=False, normalize_key=None):
         '''
 
         define class variables.
 
         '''
+
+        self.look_back = look_back
 
         if isinstance(data, dict):
             self.data = pd.DataFrame(data)
@@ -65,7 +67,7 @@ class Lstm():
             self.train()
             self.predict_test()
 
-    def split_data(self, test_size=0.20):
+    def split_data(self, test_size=0.2):
         '''
 
         split data into train and test.
@@ -79,16 +81,20 @@ class Lstm():
         self.df_train = pd.DataFrame(self.train)
         self.df_test = pd.DataFrame(self.test)
 
-    def get_data(self):
+    def get_data(self, key=None, key_to_list=False):
         '''
 
         get current train and test data.
 
         '''
 
+        if key:
+            if key_to_list:
+                return(self.df_train[key].tolist(), self.df_test[key].tolist())
+            return(self.df_train[key], self.df_test[key])
         return(self.df_train, self.df_test)
 
-    def normalize(self, data, look_back=2):
+    def normalize(self, data):
         '''
 
         given a vector [x], a matrix [x, y] is returned:
@@ -109,19 +115,19 @@ class Lstm():
         dataset = self.scaler.fit_transform(data[[self.normalize_key]])
 
         # eliminate edge cases
-        if (look_back >= self.row_length):
-            look_back = math.ceil(self.row_length / 4)
+        if (self.look_back >= self.row_length):
+            self.look_back = math.ceil(self.row_length / 4)
 
         # convert array of values into dataset matrix
         X_train, y_train = [], []
-        for i in range(len(dataset) - look_back - 1):
-            a = dataset[i:(i+look_back), 0]
+        for i in range(len(dataset) - self.look_back - 1):
+            a = dataset[i:(i+self.look_back), 0]
             X_train.append(a)
-            y_train.append(dataset[i + look_back, 0])
+            y_train.append(dataset[i + self.look_back, 0])
 
         return(np.array(X_train), np.array(y_train))
 
-    def train_model(self, look_back=2, epochs=100):
+    def train_model(self, epochs=100):
         '''
 
         train lstm model.
@@ -135,7 +141,7 @@ class Lstm():
         self.regressor.add(LSTM(
             units = 50,
             return_sequences = True,
-            input_shape = (1, look_back)
+            input_shape = (1, self.look_back)
         ))
         self.regressor.add(Dropout(0.2))
 
@@ -164,7 +170,7 @@ class Lstm():
         self.regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 
         # Fitting the RNN to the Training set
-        self.regressor.fit(
+        self.fit_history = self.regressor.fit(
             self.trainX,
             self.trainY,
             epochs = epochs,
@@ -201,10 +207,19 @@ class Lstm():
 
         return(self.train_predict, self.test_predict)
 
-    def get_test_score(self):
+    def get_predict_test(self):
         '''
 
-        return root mean sqaured error.
+        return previous prediction result.
+
+        '''
+
+        return(self.train_predict, self.test_predict)
+
+    def get_mse(self):
+        '''
+
+        return mean squared error.
 
         '''
 
@@ -216,7 +231,7 @@ class Lstm():
             return(train_score, test_score)
 
         except:
-            return(None)
+            return('No score available')
 
     def get_model(self):
         '''
@@ -226,6 +241,24 @@ class Lstm():
         '''
 
         return(self.regressor)
+
+    def get_fit_history(self, history_key=None):
+        '''
+
+        return model history object:
+
+            {
+                'acc': [0.9843952109499714],
+                'loss': [0.050826362343496051],
+                'val_acc': [0.98403786838658314],
+                'val_loss': [0.0502210383056177]
+            }
+
+        '''
+
+        if history_key:
+            return(self.fit_history.history[history_key])
+        return(self.fit_history.history)
 
     def get_index(self):
         '''
