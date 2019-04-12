@@ -15,7 +15,7 @@ plot_lstm = function(model, act, pred, index) {
     ## dataframes for multi-timeseries plot
     df = data.frame(
       date=head(c(dates), length(act)),
-      predicted=act
+      actual=act
     )
 
     ## generate plots
