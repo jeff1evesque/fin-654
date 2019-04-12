@@ -214,10 +214,10 @@ class Lstm():
 
         return(self.train_predict, self.test_predict)
 
-    def get_test_score(self):
+    def get_score(self):
         '''
 
-        return root mean sqaured error.
+        return mean squared error.
 
         '''
 
