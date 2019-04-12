@@ -132,6 +132,7 @@ body = dashboardBody(
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
+      box(htmlOutput('arima_forecast_test_loss'), width = 6),
       box(plotlyOutput('arima_forecast_train'), width = 12),
       box(plotlyOutput('arima_forecast_test'), width = 12)
     ),
@@ -420,6 +421,12 @@ server = function(input, output, session) {
   ##
   ## arima: regression timeseries predictions
   ##
+  output$arima_forecast_test_loss = renderUI({
+    model = forecast.arima()
+    val_loss = model$get_mse()
+    HTML(paste0('Test MSE: ', val_loss))
+  })
+
   output$arima_forecast_train = renderPlotly({
     model = forecast.arima()
     ggplotly(plot_arima(model, 1))
@@ -435,12 +442,13 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast_train_loss = renderUI({
     model = forecast.rnn()
-    loss = model$get_score()[[1]]
+    loss = model$get_mse()[[1]]
     HTML(paste0('Train MSE: ', loss))
   })
+
   output$rnn_forecast_test_loss = renderUI({
     model = forecast.rnn()
-    val_loss = model$get_score()[[2]]
+    val_loss = model$get_mse()[[2]]
     HTML(paste0('Test MSE: ', val_loss))
   })
 
