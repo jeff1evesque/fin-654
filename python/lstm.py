@@ -214,7 +214,7 @@ class Lstm():
 
         return(self.train_predict, self.test_predict)
 
-    def get_score(self):
+    def get_mse(self):
         '''
 
         return mean squared error.
