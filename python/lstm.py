@@ -79,13 +79,17 @@ class Lstm():
         self.df_train = pd.DataFrame(self.train)
         self.df_test = pd.DataFrame(self.test)
 
-    def get_data(self, key):
+    def get_data(self, key=None, key_to_list=False):
         '''
 
         get current train and test data.
 
         '''
 
+        if key:
+            if key_to_list:
+                return(self.df_train[key].tolist(), self.df_test[key].tolist())
+            return(self.df_train[key], self.df_test[key])
         return(self.df_train, self.df_test)
 
     def normalize(self, data, look_back=2):
@@ -198,6 +202,15 @@ class Lstm():
         #
         self.train_predict = self.scaler.inverse_transform(train_predict)
         self.test_predict = self.scaler.inverse_transform(test_predict)
+
+        return(self.train_predict, self.test_predict)
+
+    def get_predict_test(self):
+        '''
+
+        return previous prediction result.
+
+        '''
 
         return(self.train_predict, self.test_predict)
 

@@ -211,9 +211,9 @@ server = function(input, output, session) {
     })
   })
 
-   ##
-   ## convert list of dataframe to single dataframe
-   ##
+  ##
+  ## convert list of dataframe to single dataframe
+  ##
   data.df = reactive({
     ## flatten nested lists
     df.long = do.call(rbind, df.ts)
@@ -249,6 +249,9 @@ server = function(input, output, session) {
     ##
     lstm = Lstm(df.rnn, normalize_key='total')
     lstm$train_model()
+
+    ## assess accuracy
+    lstm$predict_test()
     return(lstm)
   })
 
@@ -432,23 +435,27 @@ server = function(input, output, session) {
   ##
   output$rnn_forecast_train_loss = renderUI({
     model = forecast.rnn()
-    loss = model$get_test_score()[0]
+    loss = model$get_test_score()
     HTML(paste0(loss))
   })
   output$rnn_forecast_test_loss = renderUI({
     model = forecast.rnn()
-    val_loss = model$get_test_score()[1]
+    val_loss = model$get_test_score()
     HTML(paste0(val_loss))
   })
 
   output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
-    ggplotly(plot_lstm(model, 1))
+    actual = model$get_data('total', key_to_list='True')[[1]]
+    predicted = model$get_predict_test()[[1]]
+    ggplotly(plot_lstm(model, actual, predicted, 1))
   })
 
   output$rnn_forecast_test = renderPlotly({
     model = forecast.rnn()
-    ggplotly(plot_lstm(model, 2))
+    actual = model$get_data('total', key_to_list='True')[[2]]
+    predicted = model$get_predict_test()[[2]]
+    ggplotly(plot_lstm(model, actual, predicted, 2))
   })
 }
 
