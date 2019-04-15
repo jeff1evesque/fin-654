@@ -239,7 +239,7 @@ body = dashboardBody(
       box(
         plotlyOutput('arima_forecast_train'),
         width = 12,
-        title = 'Test Data',
+        title = 'Train Data',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
