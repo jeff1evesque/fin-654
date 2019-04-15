@@ -103,12 +103,13 @@ body = dashboardBody(
   fluidRow(
     tags$style(HTML('
       .panel-title {
+        display: inline-block;
         font-family: "Source Sans Pro, sans-serif";
         font-size: 30px;
-        padding:0 0 1rem 1.25rem;
-        text-decoration:underline;
-        text-decoration-color: #d1d1d1;
-        margin-top:-1rem;
+        border-bottom: 1px solid #d1d1d1;
+        margin: 0 0 1rem 1.25rem;
+        position: relative;
+        top: -0.7rem;
       }
     ')),
     conditionalPanel(
