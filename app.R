@@ -212,9 +212,23 @@ body = dashboardBody(
         div(class='panel-title', 'Overall RNN Forecast'),
         windowTitle='Overall RNN Forecast'
       ),
-      box(plotlyOutput('rnn_forecast_train'), width = 12),
+      box(
+        plotlyOutput('rnn_forecast_train'),
+        width = 12,
+        title = 'Train Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
       box(htmlOutput('rnn_forecast_test_loss'), width = 3),
-      box(plotlyOutput('rnn_forecast_test'), width=12)
+      box(
+        plotlyOutput('rnn_forecast_test'),
+        width=12,
+        title = 'Test Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
@@ -222,9 +236,23 @@ body = dashboardBody(
         div(class='panel-title', 'Overall Arima Forecast'),
         windowTitle='Overall Arima Forecast'
       ),
-      box(plotlyOutput('arima_forecast_train'), width = 12),
+      box(
+        plotlyOutput('arima_forecast_train'),
+        width = 12,
+        title = 'Test Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
       box(htmlOutput('arima_forecast_test_loss'), width = 3),
-      box(plotlyOutput('arima_forecast_test'), width = 12)
+      box(
+        plotlyOutput('arima_forecast_test'),
+        width = 12,
+        title = 'Test Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     )
   )
 )
