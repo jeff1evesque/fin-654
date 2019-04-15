@@ -344,6 +344,7 @@ server = function(input, output, session) {
         data[['fb']]['open'],
         data[['mar']]['open']
       ))
+      return(compute_gpd(data.cbind, weights))
     })
   })
 
