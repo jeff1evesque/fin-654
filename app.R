@@ -101,6 +101,14 @@ sidebar = dashboardSidebar(
 )
 body = dashboardBody(
   fluidRow(
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      valueBoxOutput('dashboard_highlight_1'),
+      valueBoxOutput('dashboard_highlight_2'),
+      valueBoxOutput('dashboard_highlight_3')
+    )
+  ),
+  fluidRow(
     tags$style(HTML('
       .panel-title {
         display: inline-block;
@@ -121,12 +129,6 @@ body = dashboardBody(
         background-color: #222d32;
       }
     ')),
-    conditionalPanel(
-      condition = 'input.tab == "dashboard"',
-      box(plotOutput('highlight_1'), width=4),
-      box(plotOutput('highlight_2'), width=4),
-      box(plotOutput('highlight_3'), width=4)
-    ),
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
       titlePanel(
@@ -406,6 +408,33 @@ server = function(input, output, session) {
       ))
       return(compute_gpd(data.cbind, weights))
     })
+  })
+
+  ##
+  ## generate top values: open, close, volume
+  ##
+  output$dashboard_highlight_1 = renderValueBox({
+    valueBox(
+      formatC(7, format='d', big.mark=','),
+      paste('Top Open: ', 'REPLACE-WITH-VARIABLE'),
+      icon = icon('stats', lib='glyphicon'),
+      color = 'purple'
+    )  
+  })
+  output$dashboard_highlight_2 = renderValueBox({ 
+    valueBox(
+      formatC(7, format='d', big.mark=','),
+      paste('Top Close: ', 'REPLACE-WITH-VARIABLE'),
+      icon = icon('usd', lib='glyphicon'),
+      color = 'blue'
+    )  
+  })
+  output$dashboard_highlight_3 = renderValueBox({
+    valueBox(
+      formatC(7, format='d', big.mark=','),
+      paste('Top Product:', 'REPLACE-WITH-VARIABLE'),
+      icon = icon('menu-hamburger', lib='glyphicon'),
+      color = 'yellow')   
   })
 
   ##
