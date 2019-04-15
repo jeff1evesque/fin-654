@@ -101,43 +101,62 @@ sidebar = dashboardSidebar(
 )
 body = dashboardBody(
   fluidRow(
+    tags$style(HTML('
+      .panel-title {
+        padding:0 0 1rem 1.25rem;
+        text-decoration:underline;
+        text-decoration-color: #d1d1d1;
+        margin-top:-1rem;
+      }
+    ')),
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      titlePanel('Portfolio Analysis', windowTitle='Portfolio Analysis'),
+      box(plotOutput('ts1', height = 250))
+    ),
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
+      titlePanel(
+        div(class='panel-title', 'Individual Time Series'),
+        windowTitle='Individual Time Series'
+      ),
       box(uiOutput('ts'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "acf"',
+      titlePanel('Individual Autocorrelation', windowTitle='Individual Autocorrelation'),
       box(uiOutput('acf'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "pacf"',
+      titlePanel('Individual Partial-Autocorrelation', windowTitle='Individual Partial-Autocorrelation'),
       box(uiOutput('pacf'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "gpd"',
+      titlePanel('Overall General Pareto Distribution', windowTitle='Overall General Pareto Distribution'),
       box(plotlyOutput('gpdOverallOpen'), width = 12),
       box(plotlyOutput('gpdOverallClose'), width = 12),
       box(plotlyOutput('gpdOverallVolume'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "markowitz"',
+      titlePanel('Overall Markowitz Model', windowTitle='Overall Markowitz Model'),
       box(plotlyOutput('markowitz'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
+      titlePanel('Overall RNN Forecast', windowTitle='Overall RNN Forecast'),
       box(plotlyOutput('rnn_forecast_train'), width = 12),
       box(htmlOutput('rnn_forecast_test_loss'), width = 3),
       box(plotlyOutput('rnn_forecast_test'), width=12)
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
+      titlePanel('Overall Arima Forecast', windowTitle='Overall Arima Forecast'),
       box(plotlyOutput('arima_forecast_train'), width = 12),
       box(htmlOutput('arima_forecast_test_loss'), width = 3),
       box(plotlyOutput('arima_forecast_test'), width = 12)
-    ),
-    conditionalPanel(
-      condition = 'input.tab == "dashboard"',
-      box(plotOutput('ts1', height = 250))
     )
   )
 )
@@ -301,7 +320,6 @@ server = function(input, output, session) {
         data[['fb']]['open'],
         data[['mar']]['open']
       ))
-      return(compute_gpd(data.cbind, weights))
     })
   })
 
