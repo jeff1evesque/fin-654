@@ -101,14 +101,6 @@ sidebar = dashboardSidebar(
 )
 body = dashboardBody(
   fluidRow(
-    conditionalPanel(
-      condition = 'input.tab == "dashboard"',
-      valueBoxOutput('dashboard_highlight_1'),
-      valueBoxOutput('dashboard_highlight_2'),
-      valueBoxOutput('dashboard_highlight_3')
-    )
-  ),
-  fluidRow(
     tags$style(HTML('
       .panel-title {
         display: inline-block;
@@ -129,6 +121,28 @@ body = dashboardBody(
         background-color: #222d32;
       }
     ')),
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      valueBoxOutput('dashboard_highlight_1'),
+      valueBoxOutput('dashboard_highlight_2'),
+      valueBoxOutput('dashboard_highlight_3'),
+      box(
+        plotOutput('dashboard_stock_price', height = '400px'),
+        width = 6,
+        title = 'Stock Price',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotOutput('dashboard_stock_volume', height = '400px'),
+        width = 6,
+        title = 'Stock Volume',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
+    ),
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
       titlePanel(
@@ -435,6 +449,39 @@ server = function(input, output, session) {
       paste('Top Product:', 'REPLACE-WITH-VARIABLE'),
       icon = icon('menu-hamburger', lib='glyphicon'),
       color = 'yellow')   
+  })
+
+  ##
+  ## bargraph: price (open + close) and volume
+  ##
+  output$dashboard_stock_price = renderPlot({
+#    ggplot(
+#      data = DF-REPLACE, 
+#      aes(x=STOCK-REPLACE, y=PRICE-REPLACE, fill=factor(SOMETHING-REPLACE))) + 
+#      geom_bar(position = 'dodge', stat = 'identity') +
+#      ylab('Price') + 
+#      xlab('Stock') +
+#      theme(
+#        legend.position='bottom',
+#        plot.title = element_text(size=15, face='bold')
+#      ) + 
+#      ggtitle('Price vs Stock') +
+#      labs(fill = 'SOMETHING-REPLACE')
+  })
+
+  output$dashboard_stock_volume = renderPlot({
+#    ggplot(
+#      data = DF-REPLACE, 
+#      aes(x=STOCK-REPLACE, y=PRICE-REPLACE, fill=factor(SOMETHING-REPLACE))) + 
+#      geom_bar(position = 'dodge', stat = 'identity') +
+#      ylab('Price') + 
+#      xlab('Stock') +
+#      theme(
+#        legend.position='bottom',
+#        plot.title = element_text(size=15, face='bold')
+#      ) + 
+#      ggtitle('Price vs Stock') +
+#      labs(fill = 'SOMETHING-REPLACE')
   })
 
   ##
