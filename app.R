@@ -111,14 +111,21 @@ body = dashboardBody(
         position: relative;
         top: -0.7rem;
       }
+
+      .box.box-solid.box-primary {
+        border: 1px solid #222d32;
+      }
+
+      .box.box-solid.box-primary > .box-header {
+        background: #222d32;
+        background-color: #222d32;
+      }
     ')),
     conditionalPanel(
       condition = 'input.tab == "dashboard"',
-      titlePanel(
-        div(class='panel-title', 'Portfolio Analysis'),
-        windowTitle='Portfolio Analysis'
-      ),
-      box(plotOutput('ts1', height = 250))
+      box(plotOutput('highlight_1'), width=4),
+      box(plotOutput('highlight_2'), width=4),
+      box(plotOutput('highlight_3'), width=4)
     ),
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
@@ -150,9 +157,30 @@ body = dashboardBody(
         div(class='panel-title', 'Overall General Pareto Distribution'),
         windowTitle='Overall General Pareto Distribution'
       ),
-      box(plotlyOutput('gpdOverallOpen'), width = 12),
-      box(plotlyOutput('gpdOverallClose'), width = 12),
-      box(plotlyOutput('gpdOverallVolume'), width = 12)
+      box(
+        plotlyOutput('gpdOverallOpen'),
+        width = 12,
+        title = 'GPD Open',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('gpdOverallClose'),
+        width = 12,
+        title = 'GPD Close',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('gpdOverallVolume'),
+        width = 12,
+        title = 'GPD Volume',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "markowitz"',
