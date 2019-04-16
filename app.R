@@ -177,7 +177,7 @@ body = dashboardBody(
       box(
         plotlyOutput('gpdOverallOpen'),
         width = 12,
-        title = 'GPD Open',
+        title = 'Opening',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -185,7 +185,7 @@ body = dashboardBody(
       box(
         plotlyOutput('gpdOverallClose'),
         width = 12,
-        title = 'GPD Close',
+        title = 'Closing',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -193,7 +193,7 @@ body = dashboardBody(
       box(
         plotlyOutput('gpdOverallVolume'),
         width = 12,
-        title = 'GPD Volume',
+        title = 'Volume',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -205,7 +205,14 @@ body = dashboardBody(
         div(class='panel-title', 'Overall Markowitz Model'),
         windowTitle='Overall Markowitz Model'
       ),
-      box(plotlyOutput('markowitz'), width = 12)
+      box(
+        plotlyOutput('markowitz'),
+        width = 12,
+        title = 'Efficient Frontier',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
@@ -556,11 +563,11 @@ server = function(input, output, session) {
   output$dashboard_stock_price = renderPlot({
     open_variance = colVars(data.volume())
     melt.open_variance = melt(open_variance)
-    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Open Variance')
+    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Opening Variance')
 
     close_variance = colVars(data.volume())
     melt.close_variance = melt(close_variance)
-    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Close Variance')
+    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Closing Variance')
 
     plot_grid(p1, p2)
   })
