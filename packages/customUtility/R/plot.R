@@ -27,7 +27,7 @@ plot_bar_graph = function(df, y_label, x_label, title) {
         plot.title = element_text(size=15, face='bold')
       ) + 
       ggtitle(title) +
-      labs(fill=rownames(melt.col_sum)) +
+      labs(fill=rownames(df)) +
       guides(fill=guide_legend(title=x_label)
     )
   )
