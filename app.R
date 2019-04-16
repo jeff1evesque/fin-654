@@ -568,18 +568,9 @@ server = function(input, output, session) {
   })
 
   output$dashboard_stock_volume = renderPlot({
-#    ggplot(
-#      data = DF-REPLACE, 
-#      aes(x=STOCK-REPLACE, y=PRICE-REPLACE, fill=factor(SOMETHING-REPLACE))) + 
-#      geom_bar(position = 'dodge', stat = 'identity') +
-#      ylab('Price') + 
-#      xlab('Stock') +
-#      theme(
-#        legend.position='bottom',
-#        plot.title = element_text(size=15, face='bold')
-#      ) + 
-#      ggtitle('Price vs Stock') +
-#      labs(fill = 'SOMETHING-REPLACE')
+    col_sum = colVars(data.volume())
+    melt.col_sum = melt(col_sum)
+    plot_bar_graph(melt.col_sum, 'Volume', 'Stock', 'Volume Variance vs. Stock')
   })
 
   ##
