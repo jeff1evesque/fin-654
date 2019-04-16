@@ -50,7 +50,8 @@ load_package(c(
   'QRM',
   'plotly',
   'reshape2',
-  'quadprog'
+  'quadprog',
+  'cowplot'
 ))
 
 ##
@@ -553,18 +554,15 @@ server = function(input, output, session) {
   ## bargraph: price (open + close) and volume
   ##
   output$dashboard_stock_price = renderPlot({
-#    ggplot(
-#      data = DF-REPLACE, 
-#      aes(x=STOCK-REPLACE, y=PRICE-REPLACE, fill=factor(SOMETHING-REPLACE))) + 
-#      geom_bar(position = 'dodge', stat = 'identity') +
-#      ylab('Price') + 
-#      xlab('Stock') +
-#      theme(
-#        legend.position='bottom',
-#        plot.title = element_text(size=15, face='bold')
-#      ) + 
-#      ggtitle('Price vs Stock') +
-#      labs(fill = 'SOMETHING-REPLACE')
+    open_variance = colVars(data.volume())
+    melt.open_variance = melt(open_variance)
+    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Open Variance vs. Stock')
+
+    close_variance = colVars(data.volume())
+    melt.close_variance = melt(close_variance)
+    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Close Variance vs. Stock')
+
+    plot_grid(p1, p2)
   })
 
   output$dashboard_stock_volume = renderPlot({
