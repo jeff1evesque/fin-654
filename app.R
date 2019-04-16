@@ -50,7 +50,8 @@ load_package(c(
   'QRM',
   'plotly',
   'reshape2',
-  'quadprog'
+  'quadprog',
+  'cowplot'
 ))
 
 ##
@@ -101,43 +102,165 @@ sidebar = dashboardSidebar(
 )
 body = dashboardBody(
   fluidRow(
+    tags$style(HTML('
+      .panel-title {
+        display: inline-block;
+        font-family: "Source Sans Pro, sans-serif";
+        font-size: 30px;
+        border-bottom: 1px solid #d1d1d1;
+        margin: 0 0 1rem 1.25rem;
+        position: relative;
+        top: -0.7rem;
+      }
+
+      .box.box-solid.box-primary {
+        border: 1px solid #222d32;
+      }
+
+      .box.box-solid.box-primary > .box-header {
+        background: #222d32;
+        background-color: #222d32;
+      }
+    ')),
+    conditionalPanel(
+      condition = 'input.tab == "dashboard"',
+      valueBoxOutput('dashboard_highlight_1'),
+      valueBoxOutput('dashboard_highlight_2'),
+      valueBoxOutput('dashboard_highlight_3'),
+      box(
+        plotOutput('dashboard_stock_price', height = '400px'),
+        width = 6,
+        title = 'Stock Price',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotOutput('dashboard_stock_volume', height = '400px'),
+        width = 6,
+        title = 'Stock Volume',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
+    ),
     conditionalPanel(
       condition = 'input.tab == "stock-time-series"',
+      titlePanel(
+        div(class='panel-title', 'Individual Time Series'),
+        windowTitle='Individual Time Series'
+      ),
       box(uiOutput('ts'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "acf"',
+      titlePanel(
+        div(class='panel-title', 'Individual Autocorrelation'),
+        windowTitle='Individual Autocorrelation'
+      ),
       box(uiOutput('acf'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "pacf"',
+      titlePanel(
+        div(class='panel-title', 'Individual Partial-Autocorrelation'),
+        windowTitle='Individual Partial-Autocorrelation'
+      ),
       box(uiOutput('pacf'), width = 12)
     ),
     conditionalPanel(
       condition = 'input.tab == "gpd"',
-      box(plotlyOutput('gpdOverallOpen'), width = 12),
-      box(plotlyOutput('gpdOverallClose'), width = 12),
-      box(plotlyOutput('gpdOverallVolume'), width = 12)
+      titlePanel(
+        div(class='panel-title', 'Overall General Pareto Distribution'),
+        windowTitle='Overall General Pareto Distribution'
+      ),
+      box(
+        plotlyOutput('gpdOverallOpen'),
+        width = 12,
+        title = 'Opening',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('gpdOverallClose'),
+        width = 12,
+        title = 'Closing',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('gpdOverallVolume'),
+        width = 12,
+        title = 'Volume',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "markowitz"',
-      box(plotlyOutput('markowitz'), width = 12)
+      titlePanel(
+        div(class='panel-title', 'Overall Markowitz Model'),
+        windowTitle='Overall Markowitz Model'
+      ),
+      box(
+        plotlyOutput('markowitz'),
+        width = 12,
+        title = 'Efficient Frontier',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "rnn_forecast"',
-      box(plotlyOutput('rnn_forecast_train'), width = 12),
+      titlePanel(
+        div(class='panel-title', 'Overall RNN Forecast'),
+        windowTitle='Overall RNN Forecast'
+      ),
+      box(
+        plotlyOutput('rnn_forecast_train'),
+        width = 12,
+        title = 'Train Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
       box(htmlOutput('rnn_forecast_test_loss'), width = 3),
-      box(plotlyOutput('rnn_forecast_test'), width=12)
+      box(
+        plotlyOutput('rnn_forecast_test'),
+        width=12,
+        title = 'Test Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "arima_forecast"',
-      box(plotlyOutput('arima_forecast_train'), width = 12),
+      titlePanel(
+        div(class='panel-title', 'Overall Arima Forecast'),
+        windowTitle='Overall Arima Forecast'
+      ),
+      box(
+        plotlyOutput('arima_forecast_train'),
+        width = 12,
+        title = 'Train Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
       box(htmlOutput('arima_forecast_test_loss'), width = 3),
-      box(plotlyOutput('arima_forecast_test'), width = 12)
-    ),
-    conditionalPanel(
-      condition = 'input.tab == "dashboard"',
-      box(plotOutput('ts1', height = 250))
+      box(
+        plotlyOutput('arima_forecast_test'),
+        width = 12,
+        title = 'Test Data',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     )
   )
 )
@@ -335,6 +458,124 @@ server = function(input, output, session) {
       ))
       return(compute_gpd(data.cbind, weights))
     })
+  })
+
+  ## select companies
+  symbols = c('blw', 'gpn', 'ms', 'dal', 'sti', 'fb', 'mar')
+
+  ##
+  ## aggregated: open, close, volume
+  ##
+  data.open = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['open'],
+        data[['gpn']]['open'],
+        data[['ms']]['open'],
+        data[['dal']]['open'],
+        data[['sti']]['open'],
+        data[['fb']]['open'],
+        data[['mar']]['open']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+  
+  data.close = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['close'],
+        data[['gpn']]['close'],
+        data[['ms']]['close'],
+        data[['dal']]['close'],
+        data[['sti']]['close'],
+        data[['fb']]['close'],
+        data[['mar']]['close']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+  
+  data.volume = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['volume'],
+        data[['gpn']]['volume'],
+        data[['ms']]['volume'],
+        data[['dal']]['volume'],
+        data[['sti']]['volume'],
+        data[['fb']]['volume'],
+        data[['mar']]['volume']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+
+  ##
+  ## generate top values: minimum variance equates to less risk
+  ##
+  output$dashboard_highlight_1 = renderValueBox({
+    col_sum = colVars(data.open())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
+    valueBox(
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Open: ', min_name),
+      icon = icon('stats', lib='glyphicon'),
+      color = 'purple'
+    )  
+  })
+  output$dashboard_highlight_2 = renderValueBox({
+    col_sum = colVars(data.close())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
+    valueBox(
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Close: ', min_name),
+      icon = icon('usd', lib='glyphicon'),
+      color = 'blue'
+    )  
+  })
+  output$dashboard_highlight_3 = renderValueBox({
+    col_sum = colVars(data.volume())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
+    valueBox(
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Volume: ', min_name),
+      icon = icon('menu-hamburger', lib='glyphicon'),
+      color = 'yellow'
+    )   
+  })
+
+  ##
+  ## bargraph: price (open + close) and volume
+  ##
+  output$dashboard_stock_price = renderPlot({
+    open_variance = colVars(data.volume())
+    melt.open_variance = melt(open_variance)
+    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Opening Variance')
+
+    close_variance = colVars(data.volume())
+    melt.close_variance = melt(close_variance)
+    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Closing Variance')
+
+    plot_grid(p1, p2)
+  })
+
+  output$dashboard_stock_volume = renderPlot({
+    col_sum = colVars(data.volume())
+    melt.col_sum = melt(col_sum)
+    plot_bar_graph(melt.col_sum, 'Volume', 'Stock', 'Volume Variance')
   })
 
   ##
