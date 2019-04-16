@@ -452,31 +452,101 @@ server = function(input, output, session) {
     })
   })
 
+  ## select companies
+  symbols = c('blw', 'gpn', 'ms', 'dal', 'sti', 'fb', 'mar')
+
   ##
-  ## generate top values: open, close, volume
+  ## aggregated: open, close, volume
+  ##
+  data.open = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['open'],
+        data[['gpn']]['open'],
+        data[['ms']]['open'],
+        data[['dal']]['open'],
+        data[['sti']]['open'],
+        data[['fb']]['open'],
+        data[['mar']]['open']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+  
+  data.close = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['close'],
+        data[['gpn']]['close'],
+        data[['ms']]['close'],
+        data[['dal']]['close'],
+        data[['sti']]['close'],
+        data[['fb']]['close'],
+        data[['mar']]['close']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+  
+  data.volume = reactive({
+    local({
+      data = na.omit(df.ts)
+      data.cbind = custom_bind(c(
+        data[['blw']]['volume'],
+        data[['gpn']]['volume'],
+        data[['ms']]['volume'],
+        data[['dal']]['volume'],
+        data[['sti']]['volume'],
+        data[['fb']]['volume'],
+        data[['mar']]['volume']
+      ))
+      colnames(data.cbind) = symbols
+      return(data.cbind)
+    })
+  })
+
+  ##
+  ## generate top values: minimum variance equates to less risk
   ##
   output$dashboard_highlight_1 = renderValueBox({
+    col_sum = colVars(data.open())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
     valueBox(
-      formatC(7, format='d', big.mark=','),
-      paste('Top Open: ', 'REPLACE-WITH-VARIABLE'),
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Open: ', min_name),
       icon = icon('stats', lib='glyphicon'),
       color = 'purple'
     )  
   })
-  output$dashboard_highlight_2 = renderValueBox({ 
+  output$dashboard_highlight_2 = renderValueBox({
+    col_sum = colVars(data.close())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
     valueBox(
-      formatC(7, format='d', big.mark=','),
-      paste('Top Close: ', 'REPLACE-WITH-VARIABLE'),
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Close: ', min_name),
       icon = icon('usd', lib='glyphicon'),
       color = 'blue'
     )  
   })
   output$dashboard_highlight_3 = renderValueBox({
+    col_sum = colVars(data.volume())
+    min_value = min(col_sum)
+    min_name = names(col_sum[which.min(col_sum)])
+
     valueBox(
-      formatC(7, format='d', big.mark=','),
-      paste('Top Product:', 'REPLACE-WITH-VARIABLE'),
+      formatC(min_value, format='f', big.mark=','),
+      paste('Top Volume: ', min_name),
       icon = icon('menu-hamburger', lib='glyphicon'),
-      color = 'yellow')   
+      color = 'yellow'
+    )   
   })
 
   ##
