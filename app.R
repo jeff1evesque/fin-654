@@ -556,11 +556,11 @@ server = function(input, output, session) {
   output$dashboard_stock_price = renderPlot({
     open_variance = colVars(data.volume())
     melt.open_variance = melt(open_variance)
-    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Open Variance vs. Stock')
+    p1 = plot_bar_graph(melt.open_variance, 'Open', 'Stock', 'Open Variance')
 
     close_variance = colVars(data.volume())
     melt.close_variance = melt(close_variance)
-    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Close Variance vs. Stock')
+    p2 = plot_bar_graph(melt.close_variance, 'Close', 'Stock', 'Close Variance')
 
     plot_grid(p1, p2)
   })
