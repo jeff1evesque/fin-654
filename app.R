@@ -575,7 +575,7 @@ server = function(input, output, session) {
   output$dashboard_stock_volume = renderPlot({
     col_sum = colVars(data.volume())
     melt.col_sum = melt(col_sum)
-    plot_bar_graph(melt.col_sum, 'Volume', 'Stock', 'Volume Variance vs. Stock')
+    plot_bar_graph(melt.col_sum, 'Volume', 'Stock', 'Volume Variance')
   })
 
   ##
