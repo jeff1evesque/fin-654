@@ -39,7 +39,7 @@ A general [arima model](https://machinelearningmastery.com/arima-for-time-series
 
 ![arima](https://user-images.githubusercontent.com/2907085/56251496-d9a49380-6081-11e9-8e7a-68c598532104.PNG)
 
-Due to simplicity, [stationarity](https://www.youtube.com/watch?v=ZIWyGjrAlks) was not tested, and the arima arguments were not defined on the basis of ACF and PACF measures. This could likely be the reason for a relatively higher [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) (MSE) compared to the below LSTM implementation.
+A [stationarity](https://www.youtube.com/watch?v=ZIWyGjrAlks) test using the [augmented dickey fuller test](https://www.youtube.com/watch?v=X8nGZ2UCJsk) was implemented. This methodology provides insight whether the implemented arima arguments produced a stationary time series. Otherwise, ACF and PACF measures provides suggestive values for the corresponding AR and MA arguments. Furthermore, a general [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) (MSE) was computed to allow comparison with the below recurrent neural network.
 
 **Note:** the training data was minimized, and identical to the below RNN variant.
 
