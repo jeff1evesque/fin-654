@@ -1,6 +1,6 @@
 # fin-654
 
-This project was originally desired to analyze companies recently hacked, otherwise made vulnerable. However, as the course progressed, the analysis mainly focused on the general portfolio. Furthermore, the data covers a span less than 1.5 years, a constraint of the collected data:
+This project originally desired to study companies recently hacked, otherwise made vulnerable. However, as the course progressed, the analysis mainly focused on the general portfolio. Furthermore, the data covers a span less than 1.5 years, a constraint of the original data and original project aspiration:
 
 * [Privacy Rights Clearinghouse](https://www.privacyrights.org/data-breaches)
 * [World's Biggest Data Breaches & Hacks](https://informationisbeautiful.net/visualizations/worlds-biggest-data-breaches-hacks/)
