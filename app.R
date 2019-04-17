@@ -103,6 +103,10 @@ sidebar = dashboardSidebar(
 body = dashboardBody(
   fluidRow(
     tags$style(HTML('
+      .bold {
+        font-weight: 900;
+      }
+
       .panel-title {
         display: inline-block;
         font-family: "Source Sans Pro, sans-serif";
@@ -244,6 +248,8 @@ body = dashboardBody(
         div(class='panel-title', 'Overall Arima Forecast'),
         windowTitle='Overall Arima Forecast'
       ),
+      box(htmlOutput('arima_adf_statistic', width = 3)),
+      box(htmlOutput('arima_adf_pvalue', width = 3)),
       box(
         plotlyOutput('arima_forecast_train'),
         width = 12,
@@ -253,8 +259,6 @@ body = dashboardBody(
         collapsible = TRUE
       ),
       box(htmlOutput('arima_forecast_test_loss'), width = 3),
-      box(htmlOutput('arima_adf_statistic', width = 3)),
-      box(htmlOutput('arima_adf_pvalue', width = 3)),
       box(
         plotlyOutput('arima_forecast_test'),
         width = 12,
@@ -666,19 +670,19 @@ server = function(input, output, session) {
   output$arima_forecast_test_loss = renderUI({
     model = forecast.arima()
     val_loss = model$get_mse()
-    HTML(paste0('Test MSE: ', val_loss))
+    HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
   })
 
   output$arima_adf_statistic = renderUI({
     model = forecast.arima()
-    adf = model$get_adf()[[0]]
-    HTML(paste0('ADF Statistic: ', adf))
+    adf = model$get_adf()[[1]]
+    HTML(paste0(tags$span(class='bold', 'ADF Statistic: '), adf))
   })
 
   output$arima_adf_pvalue = renderUI({
     model = forecast.arima()
-    p_value = model$get_adf()[[1]]
-    HTML(paste0('P-value: ', p_value))
+    p_value = model$get_adf()[[2]]
+    HTML(paste0(tags$span(class='bold', 'P-value: '), p_value))
   })
 
   output$arima_forecast_train = renderPlotly({
@@ -697,7 +701,7 @@ server = function(input, output, session) {
   output$rnn_forecast_test_loss = renderUI({
     model = forecast.rnn()
     val_loss = model$get_mse()[[2]]
-    HTML(paste0('Test MSE: ', val_loss))
+    HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
   })
 
   output$rnn_forecast_train = renderPlotly({
