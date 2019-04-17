@@ -41,12 +41,8 @@ A general [arima model](https://machinelearningmastery.com/arima-for-time-series
 
 A [stationarity](https://www.youtube.com/watch?v=ZIWyGjrAlks) test using the [augmented dickey fuller test](https://www.youtube.com/watch?v=X8nGZ2UCJsk) was implemented. Moreover, ACF and PACF measures provide suggestive values for the AR and MA arguments as an approach to reduce [seasonal patterns](https://github.com/jeff1evesque/fin-654/blob/master/resources/Slides_on_ARIMA_models--Robert_Nau.pdf). Furthermore, a general [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) (MSE) was computed to allow comparison with the below recurrent neural network.
 
-**Note:** the training data was minimized, and identical to the below RNN variant if no integrated difference was used.
-
 ## Recurrent Neural Network
 
 A [long-short-term-memory](https://www.youtube.com/watch?v=QuELiw8tbx8) (LSTM) recurrent neural network was created:
 
 ![lstm](https://user-images.githubusercontent.com/2907085/56322879-3bbfd000-6138-11e9-9b64-9127e21fc4d0.PNG)
-
-**Note:** the training data was minimized, and identical to the above Arima model variant.
