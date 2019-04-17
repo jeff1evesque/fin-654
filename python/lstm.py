@@ -127,12 +127,16 @@ class Lstm():
 
         return(np.array(X_train), np.array(y_train))
 
-    def train_model(self, epochs=100):
+    def train_model(self, epochs=100, batch_size=32):
         '''
 
         train lstm model.
 
         '''
+
+        # class variables
+        self.epochs = epochs
+        self.batch_size = batch_size
 
         # Initialize RNN
         self.regressor = Sequential()
@@ -173,14 +177,23 @@ class Lstm():
         self.fit_history = self.regressor.fit(
             self.trainX,
             self.trainY,
-            epochs = epochs,
-            batch_size = 32
+            epochs = self.epochs,
+            batch_size = self.batch_size
         )
+
+    def get_lstm_params(self):
+        '''
+
+        return lstm parameters used during train.
+
+        '''
+
+        return(self.epochs, self.batch_size)
 
     def get_actual(self):
         '''
 
-        get actual lagged values.
+        return actual lagged values.
 
         '''
 

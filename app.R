@@ -103,6 +103,18 @@ sidebar = dashboardSidebar(
 body = dashboardBody(
   fluidRow(
     tags$style(HTML('
+      .bold {
+        font-weight: 900;
+      }
+
+      .good {
+        color: #00a65a;
+      }
+
+      .bad {
+        color: #B22222;
+      }
+
       .panel-title {
         display: inline-block;
         font-family: "Source Sans Pro, sans-serif";
@@ -229,6 +241,8 @@ body = dashboardBody(
         collapsible = TRUE
       ),
       box(htmlOutput('rnn_forecast_test_loss'), width = 3),
+      box(htmlOutput('rnn_epochs'), width = 3),
+      box(htmlOutput('rnn_batch_size'), width = 3),
       box(
         plotlyOutput('rnn_forecast_test'),
         width=12,
@@ -244,6 +258,9 @@ body = dashboardBody(
         div(class='panel-title', 'Overall Arima Forecast'),
         windowTitle='Overall Arima Forecast'
       ),
+      box(htmlOutput('arima_adf_statistic'), width = 3),
+      box(htmlOutput('arima_adf_pvalue'), width = 3),
+      box(htmlOutput('arima_args'), width = 3),
       box(
         plotlyOutput('arima_forecast_train'),
         width = 12,
@@ -404,8 +421,8 @@ server = function(input, output, session) {
     ##
     iterations = length(arima$get_data('total')[[2]])
 
-    ## train arima model
-    arima$train_model(iterations)
+    ## train model: use 1 step difference
+    arima$train_model(iterations, order=c(1,1,0))
     return(arima)
   })
 
@@ -664,7 +681,54 @@ server = function(input, output, session) {
   output$arima_forecast_test_loss = renderUI({
     model = forecast.arima()
     val_loss = model$get_mse()
-    HTML(paste0('Test MSE: ', val_loss))
+    HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
+  })
+
+  output$arima_adf_statistic = renderUI({
+    model = forecast.arima()
+    adf = model$get_adf()[[1]]
+    HTML(paste0(tags$span(class='bold', 'ADF Statistic: '), adf))
+  })
+
+  output$arima_adf_pvalue = renderUI({
+    model = forecast.arima()
+    p_value = model$get_adf()[[2]]
+
+    if (p_value > 0.05) {
+      HTML(
+        paste0(
+          tags$span(class='bold', 'P-value: '),
+          p_value,
+          tags$span(class='bad', ' (not stationary)')
+        )
+      )
+    } else {
+      HTML(
+        paste0(
+          tags$span(class='bold', 'P-value: '),
+          p_value,
+          tags$span(class='good', ' (stationary)')
+        )
+      )
+    }
+  })
+
+  output$arima_args = renderUI({
+    model = forecast.arima()
+    autoregressive = model$get_order()[[1]]
+    integrated = model$get_order()[[2]]
+    moving_average = model$get_order()[[3]]
+
+    HTML(
+      paste0(
+        tags$span(class='bold', '(p,d,q) = '),
+        autoregressive,
+        ', ',
+        integrated,
+        ', ',
+        moving_average
+      )
+    )
   })
 
   output$arima_forecast_train = renderPlotly({
@@ -683,9 +747,22 @@ server = function(input, output, session) {
   output$rnn_forecast_test_loss = renderUI({
     model = forecast.rnn()
     val_loss = model$get_mse()[[2]]
-    HTML(paste0('Test MSE: ', val_loss))
+    HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
   })
 
+  output$rnn_epochs = renderUI({
+    model = forecast.rnn()
+    epochs = model$get_lstm_params()[[1]]
+    HTML(paste0(tags$span(class='bold', 'Epochs: '), epochs))
+  })
+
+  output$rnn_batch_size = renderUI({
+    model = forecast.rnn()
+    batch_size = model$get_lstm_params()[[2]]
+    HTML(paste0(tags$span(class='bold', 'Batch Size: '), batch_size))
+  })
+
+  # transform actual train with difference factor
   output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
     actual = model$get_data('total', key_to_list='True')[[1]]
