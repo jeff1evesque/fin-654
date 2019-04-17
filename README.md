@@ -1,6 +1,11 @@
 # fin-654
 
-This project was originally motivated on the analysis of stocks who have recently been hacked, otherwise made vulnerable. However, as the course progressed, the analysis focused mainly on general portfolio measures.
+This project was originally desired to analyze companies who have recently been hacked, otherwise made vulnerable. However, as the course progressed, the analysis mainly focused on the general portfolio. Furthermore, the data covers a span less than 1.5 years, a constraint of the collected data:
+
+* [Privacy Rights Clearinghouse](https://www.privacyrights.org/data-breaches)
+* [World's Biggest Data Breaches & Hacks](https://informationisbeautiful.net/visualizations/worlds-biggest-data-breaches-hacks/)
+
+Specifically, the above data was merged with historical stock prices. To reduce development, corresponding [stock data](https://github.com/jeff1evesque/fin-654/tree/master/data) was collected locally. However, an [untested feature](https://github.com/jeff1evesque/fin-654/blob/8d3606fee63c0b4c9ad16f633c73c6287211a94b/app.R#L315) was coded, allowing stock prices to be collected from [quandl](https://www.quandl.com/).
 
 ## Dashboard
 
