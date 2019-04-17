@@ -1,6 +1,6 @@
 # fin-654
 
-This project was originally desired to analyze companies who have recently been hacked, otherwise made vulnerable. However, as the course progressed, the analysis mainly focused on the general portfolio. Furthermore, the data covers a span less than 1.5 years, a constraint of the collected data:
+This project was originally desired to analyze companies recently hacked, otherwise made vulnerable. However, as the course progressed, the analysis mainly focused on the general portfolio. Furthermore, the data covers a span less than 1.5 years, a constraint of the collected data:
 
 * [Privacy Rights Clearinghouse](https://www.privacyrights.org/data-breaches)
 * [World's Biggest Data Breaches & Hacks](https://informationisbeautiful.net/visualizations/worlds-biggest-data-breaches-hacks/)
@@ -9,13 +9,13 @@ Specifically, the above data was merged with historical stock prices. To reduce 
 
 ## Dashboard
 
-The dashboard shows from the select companies, which contains the least variance:
+The dashboard shows from the select companies with corresponding overall variance. Since variance is a measure of risk, the smallest overall variance is preferred:
 
 ![dashboard](https://user-images.githubusercontent.com/2907085/56251148-63ebf800-6080-11e9-9fdb-d7e7f65551bb.PNG)
 
 ## Exploratory
 
-Some exploratory analysis was conducted on individual company stock. Specifically, timeseries plots were made, as well as [autocorrelation function](https://en.wikipedia.org/wiki/Autocorrelation) (ACF), and [partial autocorrelation function](https://people.duke.edu/~rnau/411arim3.htm) (PACF) plots. However, later analysis focused on the collective portfolio, rather than individual timeseries. Furthermore, if more time were to be allocated to this project, an overall ACF and PACF would be computed, and would [determine](https://www.youtube.com/watch?v=R-oWTWdS1Jg) autoregression (AR), and the moving average (MA), and components to the below Arima model.
+Some exploratory analysis was conducted on individual company stock. Specifically, timeseries plots were made, as well as [autocorrelation function](https://en.wikipedia.org/wiki/Autocorrelation) (ACF), and [partial autocorrelation function](https://people.duke.edu/~rnau/411arim3.htm) (PACF) plots. However, later analysis focused on the collective portfolio, rather than individual timeseries. Furthermore, if more time were to be allocated to this project, an overall ACF and PACF would be computed, and would [determine](https://www.youtube.com/watch?v=R-oWTWdS1Jg) autoregression (AR), and the moving average (MA) components to the below Arima model.
 
 ## General Pareto Distribution
 
@@ -23,7 +23,7 @@ A [general pareto distribution](https://www.mathworks.com/help/stats/examples/mo
 
 ![gpd](https://user-images.githubusercontent.com/2907085/56251301-13c16580-6081-11e9-8454-b964cae7a88e.PNG)
 
-Since this project made some great simplifications, the portfolio was equally distributed with one stock. Therefore, corresponding risk measures are significantly small.
+Since this project made some great simplifications, the portfolio was equally distributed among the selected stocks. Therefore, corresponding risk measures are significantly small.
 
 **Note:** the user-interface allows different segments to be toggled. Additionally, content on the above VAR was borrowed from [Professor Damodaran](http://people.stern.nyu.edu/adamodar/), from the Stern School of Business at New York University.
 
