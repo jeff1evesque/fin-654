@@ -9,7 +9,7 @@ Specifically, the above data was merged with historical stock prices. To reduce 
 
 ## Dashboard
 
-The dashboard shows from the select companies with corresponding overall variance. Since variance is a measure of risk, the smallest overall variance is preferred:
+The dashboard shows the overall variance for selected companies within the portfolio. Since variance is a measure of risk, the smallest overall variance is preferred:
 
 ![dashboard](https://user-images.githubusercontent.com/2907085/56251148-63ebf800-6080-11e9-9fdb-d7e7f65551bb.PNG)
 
