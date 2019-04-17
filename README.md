@@ -19,7 +19,7 @@ Some exploratory analysis was conducted on individual company stock. Specificall
 
 ## General Pareto Distribution
 
-A [general pareto distribution](https://www.mathworks.com/help/stats/examples/modelling-tail-data-with-the-generalized-pareto-distribution.html) (GPD) was computed as a risk measure for the overall portfolio. Though some components were minimized, the GPD was computed for the overall opening, closing, and general volume. Moreover, the [value at risk](https://github.com/jeff1evesque/fin-654/blob/master/resources/VAR.pdf) (VaR) is a measure of potential loss for a given portfolio, while the [expected shortfall](https://en.wikipedia.org/wiki/Expected_shortfall) (ES) is the average of all losses greater than the VaR. Both measures, are provided with the below GPD distributions:
+A [general pareto distribution](https://www.mathworks.com/help/stats/examples/modelling-tail-data-with-the-generalized-pareto-distribution.html) (GPD) was computed as a risk measure for the overall portfolio. Though some components were visually minimized, the GPD was computed for the overall opening, closing, and general volume. Moreover, the [value at risk](https://github.com/jeff1evesque/fin-654/blob/master/resources/VAR.pdf) (VaR) is a measure of potential loss for a given portfolio, while the [expected shortfall](https://en.wikipedia.org/wiki/Expected_shortfall) (ES) is the average of all losses greater than the VaR. Both measures, are provided with the below GPD distributions:
 
 ![gpd](https://user-images.githubusercontent.com/2907085/56251301-13c16580-6081-11e9-8454-b964cae7a88e.PNG)
 
