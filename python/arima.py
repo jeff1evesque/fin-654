@@ -125,6 +125,15 @@ class Arima():
         self.mse = mean_squared_error(actuals, predicted)
         self.rolling = rolling
 
+    def get_order(self):
+        '''
+
+        return arima (p,d,q) parameters.
+
+        '''
+
+        return(self.order)
+
     def get_mse(self):
         '''
 
@@ -133,6 +142,38 @@ class Arima():
         '''
 
         return(self.mse)
+
+    def get_difference(self, data=None, diff=0):
+        '''
+
+        return differenced timeseries.
+
+        '''
+
+        # default to arima (p,d,q) parameters
+        if self.order:
+            d  = self.order[1]
+        else:
+            d = diff
+
+        # fallback on train/test split
+        if data:
+            original = data
+        else:
+            original = self.df_test[self.normalize_key].values
+
+        # determine difference
+        if int(diff) > 0:
+            interval = int(d)
+            differenced = []
+
+            for i in range(interval, len(original)):
+                value = original[i] - original[i - interval]
+                differenced.append(value)
+
+            return(differenced)
+
+        return(original)
 
     def get_adf(self, data=None):
         '''
@@ -150,12 +191,7 @@ class Arima():
         if not data and self.normalize_key:
             # ensure adf matches arima integrated difference
             if self.order:
-                data = []
-                interval = int(self.order[1])
-                original = self.df_test[self.normalize_key].values
-                for i in range(interval, len(original)):
-                    value = original[i] - original[i - interval]
-                    data.append(value)
+                data = self.get_difference()
 
             else:
                 data = self.df_test[self.normalize_key].values
