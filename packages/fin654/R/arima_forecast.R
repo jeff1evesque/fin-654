@@ -10,7 +10,10 @@ plot_arima = function(model, index) {
   ##
   if (index == 1) {
     title = 'Train'
-    actual = model$get_data(key='total', key_to_list='True')[[1]]
+    actual = model$get_difference(
+      data=model$get_data(key='total', key_to_list='True')[[1]],
+      diff=1
+    )
 
     ## dataframes for multi-timeseries plot
     df = data.frame(
