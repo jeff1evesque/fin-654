@@ -107,6 +107,14 @@ body = dashboardBody(
         font-weight: 900;
       }
 
+      .good {
+        color: #00a65a;
+      }
+
+      .bad {
+        color: #B22222;
+      }
+
       .panel-title {
         display: inline-block;
         font-family: "Source Sans Pro, sans-serif";
@@ -682,7 +690,22 @@ server = function(input, output, session) {
   output$arima_adf_pvalue = renderUI({
     model = forecast.arima()
     p_value = model$get_adf()[[2]]
-    HTML(paste0(tags$span(class='bold', 'P-value: '), p_value))
+
+    if (p_value > 0.05) {
+      HTML(
+        paste0(
+          tags$span(class='bold', 'P-value: '),
+          p_value,
+          tags$span(class='bad', ' (not stationary)')
+        )
+      )
+    } else {
+      paste0(
+        tags$span(class='bold', 'P-value: '),
+        p_value,
+        tags$span(class='good', ' (stationary)')
+      )
+    }
   })
 
   output$arima_forecast_train = renderPlotly({
