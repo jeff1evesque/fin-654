@@ -253,6 +253,8 @@ body = dashboardBody(
         collapsible = TRUE
       ),
       box(htmlOutput('arima_forecast_test_loss'), width = 3),
+      box(htmlOutput('arima_adf_statistic', width = 3)),
+      box(htmlOutput('arima_adf_pvalue', width = 3)),
       box(
         plotlyOutput('arima_forecast_test'),
         width = 12,
@@ -665,6 +667,18 @@ server = function(input, output, session) {
     model = forecast.arima()
     val_loss = model$get_mse()
     HTML(paste0('Test MSE: ', val_loss))
+  })
+
+  output$arima_adf_statistic = renderUI({
+    model = forecast.arima()
+    adf = model$get_adf()[[0]]
+    HTML(paste0('ADF Statistic: ', adf))
+  })
+
+  output$arima_adf_pvalue = renderUI({
+    model = forecast.arima()
+    p_value = model$get_adf()[[1]]
+    HTML(paste0('P-value: ', p_value))
   })
 
   output$arima_forecast_train = renderPlotly({
