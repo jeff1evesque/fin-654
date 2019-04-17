@@ -23,7 +23,7 @@ A [general pareto distribution](https://www.mathworks.com/help/stats/examples/mo
 
 ![gpd](https://user-images.githubusercontent.com/2907085/56251301-13c16580-6081-11e9-8454-b964cae7a88e.PNG)
 
-Since this project made some great simplifications, the portfolio was equally distributed among the selected stocks. Therefore, corresponding risk measures are significantly small.
+Since this project made some great simplifications, the portfolio was equally distributed (one share) among the selected stocks. Therefore, corresponding risk measures are significantly small.
 
 **Note:** the user-interface allows different segments to be toggled. Additionally, content on the above VAR was borrowed from [Professor Damodaran](http://people.stern.nyu.edu/adamodar/), from the Stern School of Business at New York University.
 
