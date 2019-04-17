@@ -154,8 +154,8 @@ class Arima():
                 interval = int(self.order[1])
                 original = self.df_test[self.normalize_key].values
                 for i in range(interval, len(original)):
-		                value = original[i] - original[i - interval]
-		                data.append(value)
+                    value = original[i] - original[i - interval]
+                    data.append(value)
 
             else:
                 data = self.df_test[self.normalize_key].values
