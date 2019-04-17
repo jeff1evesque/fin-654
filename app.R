@@ -241,6 +241,8 @@ body = dashboardBody(
         collapsible = TRUE
       ),
       box(htmlOutput('rnn_forecast_test_loss'), width = 3),
+      box(htmlOutput('rnn_epochs'), width = 3),
+      box(htmlOutput('rnn_batch_size'), width = 3),
       box(
         plotlyOutput('rnn_forecast_test'),
         width=12,
@@ -746,6 +748,18 @@ server = function(input, output, session) {
     model = forecast.rnn()
     val_loss = model$get_mse()[[2]]
     HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
+  })
+
+  output$rnn_epochs = renderUI({
+    model = forecast.rnn()
+    epochs = model$get_lstm_params()[[1]]
+    HTML(paste0(tags$span(class='bold', 'Epochs: '), epochs))
+  })
+
+  output$rnn_batch_size = renderUI({
+    model = forecast.rnn()
+    batch_size = model$get_lstm_params()[[2]]
+    HTML(paste0(tags$span(class='bold', 'Batch Size: '), batch_size))
   })
 
   # transform actual train with difference factor
