@@ -39,7 +39,7 @@ A general [arima model](https://machinelearningmastery.com/arima-for-time-series
 
 ![arima](https://user-images.githubusercontent.com/2907085/56251496-d9a49380-6081-11e9-8e7a-68c598532104.PNG)
 
-A [stationarity](https://www.youtube.com/watch?v=ZIWyGjrAlks) test using the [augmented dickey fuller test](https://www.youtube.com/watch?v=X8nGZ2UCJsk) was implemented. Moreover, ACF and PACF measures provides suggestive values for the AR and MA arguments, to help reduce [seasonal patterns](https://github.com/jeff1evesque/fin-654/blob/master/resources/Slides_on_ARIMA_models--Robert_Nau.pdf). Furthermore, a general [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) (MSE) was computed to allow comparison with the below recurrent neural network.
+A [stationarity](https://www.youtube.com/watch?v=ZIWyGjrAlks) test using the [augmented dickey fuller test](https://www.youtube.com/watch?v=X8nGZ2UCJsk) was implemented. Moreover, ACF and PACF measures provide suggestive values for the AR and MA arguments as an approach to reduce [seasonal patterns](https://github.com/jeff1evesque/fin-654/blob/master/resources/Slides_on_ARIMA_models--Robert_Nau.pdf). Furthermore, a general [mean squared error](https://en.wikipedia.org/wiki/Mean_squared_error) (MSE) was computed to allow comparison with the below recurrent neural network.
 
 **Note:** the training data was minimized, and identical to the below RNN variant.
 
