@@ -73,7 +73,7 @@ class Arima():
         else:
             return(self.df_train, self.df_test)
 
-    def train_model(self, iterations, order=(1,0,0)):
+    def train_model(self, iterations, order=[1,0,0]):
         '''
 
         train arima model.
@@ -88,8 +88,15 @@ class Arima():
         actuals, predicted, rolling, differences = [], [], [], []
         self.history = self.df_train[self.normalize_key].tolist()
 
+        #
+        # @order, if supplied through R, elements will be interpretted as float.
+        #     For example c(1, 1, 0) will be interpretted as [1.0, 1.0, 0.0] in
+        #     python, which breaks iterable indices.
+        #
+        self.order = [int(i) for i in order]
+
         for t in range(iterations):
-            model = ARIMA(self.history, order=order)
+            model = ARIMA(self.history, order=self.order)
             model_fit = model.fit(disp=0)
             output = model_fit.forecast()
             yhat = float(output[0])
@@ -141,7 +148,18 @@ class Arima():
         '''
 
         if not data and self.normalize_key:
-            data = self.df_test[self.normalize_key].values
+            # ensure adf matches arima integrated difference
+            if self.order:
+                data = []
+                interval = int(self.order[1])
+                original = self.df_test[self.normalize_key].values
+                for i in range(interval, len(original)):
+		                value = original[i] - original[i - interval]
+		                data.append(value)
+
+            else:
+                data = self.df_test[self.normalize_key].values
+
         elif not data and not self.normalize_key:
             data = 'Provide valid list'
 
