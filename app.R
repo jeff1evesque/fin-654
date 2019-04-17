@@ -418,8 +418,8 @@ server = function(input, output, session) {
     ##
     iterations = length(arima$get_data('total')[[2]])
 
-    ## train arima model
-    arima$train_model(iterations)
+    ## train model: use 1 step difference
+    arima$train_model(iterations, order=c(1,1,0))
     return(arima)
   })
 
