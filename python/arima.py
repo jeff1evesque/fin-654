@@ -3,6 +3,7 @@
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
+from statsmodels.tsa.stattools import adfuller
 
 
 class Arima():
@@ -125,6 +126,26 @@ class Arima():
         '''
 
         return(self.mse)
+
+    def get_adf(self, data=None):
+        '''
+
+        return augmented dickey-fuller test:
+
+            p-value > 0.05, fail to reject the null hypothesis, data has a unit
+                unit root and is non-stationary.
+
+            p-value <= 0.05, reject the null hypothesis, data does not have a
+                unit root and is stationary.
+
+        '''
+
+        if not data and self.normalize_key:
+            data = self.df_test[self.normalize_key]
+        if not data and not self.normalize_key:
+            data = 'Please provide valid series'
+
+        return(adfuller(data))
 
     def get_differences(self):
         '''
