@@ -256,8 +256,9 @@ body = dashboardBody(
         div(class='panel-title', 'Overall Arima Forecast'),
         windowTitle='Overall Arima Forecast'
       ),
-      box(htmlOutput('arima_adf_statistic', width = 3)),
-      box(htmlOutput('arima_adf_pvalue', width = 3)),
+      box(htmlOutput('arima_adf_statistic'), width = 3),
+      box(htmlOutput('arima_adf_pvalue'), width = 3),
+      box(htmlOutput('arima_args'), width = 3),
       box(
         plotlyOutput('arima_forecast_train'),
         width = 12,
@@ -700,12 +701,32 @@ server = function(input, output, session) {
         )
       )
     } else {
-      paste0(
-        tags$span(class='bold', 'P-value: '),
-        p_value,
-        tags$span(class='good', ' (stationary)')
+      HTML(
+        paste0(
+          tags$span(class='bold', 'P-value: '),
+          p_value,
+          tags$span(class='good', ' (stationary)')
+        )
       )
     }
+  })
+
+  output$arima_args = renderUI({
+    model = forecast.arima()
+    autoregressive = model$get_order()[[1]]
+    integrated = model$get_order()[[2]]
+    moving_average = model$get_order()[[3]]
+
+    HTML(
+      paste0(
+        tags$span(class='bold', '(p,d,q) = '),
+        autoregressive,
+        ', ',
+        integrated,
+        ', ',
+        moving_average
+      )
+    )
   })
 
   output$arima_forecast_train = renderPlotly({
@@ -727,6 +748,7 @@ server = function(input, output, session) {
     HTML(paste0(tags$span(class='bold', 'Test MSE: '), val_loss))
   })
 
+  # transform actual train with difference factor
   output$rnn_forecast_train = renderPlotly({
     model = forecast.rnn()
     actual = model$get_data('total', key_to_list='True')[[1]]
