@@ -141,9 +141,9 @@ class Arima():
         '''
 
         if not data and self.normalize_key:
-            data = self.df_test[self.normalize_key]
-        if not data and not self.normalize_key:
-            data = 'Please provide valid series'
+            data = self.df_test[self.normalize_key].values
+        elif not data and not self.normalize_key:
+            data = 'Provide valid list'
 
         return(adfuller(data))
 
