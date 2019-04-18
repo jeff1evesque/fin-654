@@ -198,7 +198,7 @@ body = dashboardBody(
       box(
         plotlyOutput('overallTimeSeriesTrend'),
         width = 12,
-        title = 'Original',
+        title = 'Trend',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -206,7 +206,7 @@ body = dashboardBody(
       box(
         plotlyOutput('overallTimeSeriesSeasonality'),
         width = 12,
-        title = 'Original',
+        title = 'Seasonality',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -214,7 +214,7 @@ body = dashboardBody(
       box(
         plotlyOutput('overallTimeSeriesResidual'),
         width = 12,
-        title = 'Original',
+        title = 'Residual',
         status = 'primary',
         solidHeader = TRUE,
         collapsible = TRUE
@@ -693,22 +693,22 @@ server = function(input, output, session) {
   ##
   output$overallTimeSeries = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$decomposed()[[1]], 0))
+    ggplotly(plot_arima(model$get_decomposed()[[1]], 0))
   })
 
   output$overallTimeSeriesTrend = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$decomposed()[[2]], 0))
+    ggplotly(plot_arima(model$get_decomposed()[[2]], 0))
   })
 
   output$overallTimeSeriesSeasonality = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$decomposed()[[3]], 0))
+    ggplotly(plot_arima(model$get_decomposed()[[3]], 0))
   })
 
   output$overallTimeSeriesResidual = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$decomposed()[[4]], 0))
+    ggplotly(plot_arima(model$get_decomposed()[[4]], 0))
   })
 
   ##
