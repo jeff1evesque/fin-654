@@ -238,7 +238,7 @@ class Arima():
 
         return(self.data.index.values)
 
-    def get_decomposed(self, model='additive', series=None, freq=1):
+    def get_decomposed(self, series=None, model='additive', freq=1):
         '''
 
         decompose a time series into original, trend, seasonal, residual.
@@ -248,5 +248,5 @@ class Arima():
         if not series:
             series = self.data[self.normalize_key]
 
-        result = seasonal_decompose(series=series, model=model, freq=freq)
+        result = seasonal_decompose(series, model=model, freq=freq)
         return(result.observed, result.trend, result.seasonal, result.resid)
