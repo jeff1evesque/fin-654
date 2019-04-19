@@ -3,8 +3,6 @@
 ##
 
 plot_arima = function(model, index) {
-  dates = model$get_index()
-
   ##
   ## @index, possible values
   ##     0, plot model (should be series data) as is
@@ -13,16 +11,17 @@ plot_arima = function(model, index) {
   ##
   if (index == 0) {
     df = data.frame(
-      date=head(c(dates), length(actual)),
-      actual=model
+      date=model[0],
+      actual=model[1]
     )
 
-    g = ggplot(df, aes(x=date)) +
+    g = ggplot(model, aes(x=date)) +
       geom_line(aes(y=actual, group=1), color='#FC4E07') +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }
   else if (index == 1) {
     title = 'Train'
+    dates = model$get_index()
     actual = model$get_difference(
       data=model$get_data(key='total', key_to_list='True')[[1]],
       diff=1
@@ -41,6 +40,7 @@ plot_arima = function(model, index) {
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   } else {
     title = 'Test'
+    dates = model$get_index()
     actual = model$get_differences()[[1]]
     predicted = model$get_differences()[[2]]
 
