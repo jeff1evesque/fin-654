@@ -4,6 +4,7 @@ from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 
 class Arima():
@@ -236,3 +237,16 @@ class Arima():
         '''
 
         return(self.data.index.values)
+
+    def get_decomposed(self, series=None, model='additive', freq=1):
+        '''
+
+        decompose a time series into original, trend, seasonal, residual.
+
+        '''
+
+        if not series:
+            series = self.data[self.normalize_key]
+
+        result = seasonal_decompose(series, model=model, freq=freq)
+        return(result.observed, result.trend, result.seasonal, result.resid)

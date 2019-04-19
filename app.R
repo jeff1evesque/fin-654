@@ -82,7 +82,8 @@ sidebar = dashboardSidebar(
       icon = icon('bar-chart-o'),
         menuSubItem('Time series', tabName = 'stock-time-series'),
         menuSubItem('Autocorrelation (ACF)', tabName = 'acf'),
-        menuSubItem('Partial ACF', tabName = 'pacf')
+        menuSubItem('Partial ACF', tabName = 'pacf'),
+        menuSubItem('Overall Decomposed', tabName = 'overall-decomposed')
     ),
     menuItem(
       'Analysis',
@@ -179,6 +180,45 @@ body = dashboardBody(
         windowTitle='Individual Partial-Autocorrelation'
       ),
       box(uiOutput('pacf'), width = 12)
+    ),
+    conditionalPanel(
+      condition = 'input.tab == "overall-decomposed"',
+      titlePanel(
+        div(class='panel-title', 'Overall Decomposed Time Series'),
+        windowTitle='Overall Decomposed Time Series'
+      ),
+      box(
+        plotlyOutput('overallTimeSeries'),
+        width = 12,
+        title = 'Original',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('overallTimeSeriesTrend'),
+        width = 12,
+        title = 'Trend',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('overallTimeSeriesSeasonality'),
+        width = 12,
+        title = 'Seasonality',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      ),
+      box(
+        plotlyOutput('overallTimeSeriesResidual'),
+        width = 12,
+        title = 'Residual',
+        status = 'primary',
+        solidHeader = TRUE,
+        collapsible = TRUE
+      )
     ),
     conditionalPanel(
       condition = 'input.tab == "gpd"',
@@ -647,6 +687,41 @@ server = function(input, output, session) {
     })
   })
   output$pacf = renderUI(pacf_plot)
+
+  ##
+  ## plot overall decomposed timeseries
+  ##
+  output$overallTimeSeries = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[1]]['index']$tolist()),
+      value=model$get_decomposed()[[1]]['values']
+    ), 0))
+  })
+
+  output$overallTimeSeriesTrend = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[2]]['index']$tolist()),
+      value=model$get_decomposed()[[2]]['values']
+    ), 0))
+  })
+
+  output$overallTimeSeriesSeasonality = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[3]]['index']$tolist()),
+      value=model$get_decomposed()[[3]]['values']
+    ), 0))
+  })
+
+  output$overallTimeSeriesResidual = renderPlotly({
+    model = forecast.arima()
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[4]]['index']$tolist()),
+      value=model$get_decomposed()[[4]]['values']
+    ), 0))
+  })
 
   ##
   ## gpd: general pareto distribution showing value at risk and
