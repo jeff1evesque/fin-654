@@ -9,13 +9,26 @@ Specifically, the above data was merged with historical stock prices. To reduce 
 
 ## Dashboard
 
-The dashboard shows the overall variance for selected companies within the portfolio. Since variance is a measure of risk, the smallest overall variance is preferred:
+The dashboard shows the overall variance for selected companies within the portfolio. Since variance is a measure of risk, the smallest overall variance is preferred for less risk-averse investors:
 
 ![dashboard](https://user-images.githubusercontent.com/2907085/56251148-63ebf800-6080-11e9-9fdb-d7e7f65551bb.PNG)
 
+However, if the general time series displays a pattern of seasonality, and a model can be trained with good predictive abilities, then high volatility provides an investment opportunity.
+
 ## Exploratory
 
-Some exploratory analysis was conducted on individual company stock. Specifically, timeseries plots were made, as well as [autocorrelation function](https://en.wikipedia.org/wiki/Autocorrelation) (ACF), and [partial autocorrelation function](https://people.duke.edu/~rnau/411arim3.htm) (PACF) plots. However, later analysis focused on the collective portfolio, rather than individual timeseries. Furthermore, if more time were to be allocated to this project, an overall ACF and PACF would be computed, and would [determine](https://www.youtube.com/watch?v=R-oWTWdS1Jg) autoregression (AR), and the moving average (MA) components to the below Arima model.
+Some exploratory analysis was conducted on individual company stock. Specifically, timeseries plots were made, as well as [autocorrelation function](https://en.wikipedia.org/wiki/Autocorrelation) (ACF), and [partial autocorrelation function](https://people.duke.edu/~rnau/411arim3.htm) (PACF) plots. However, later analysis focused on the collective portfolio, rather than individual timeseries. An overall decomposed time series was generated:
+
+![decomposed](https://user-images.githubusercontent.com/2907085/56403796-0ba82800-6231-11e9-83c9-9405a22410eb.PNG)
+
+The decomposition consists of the following [components](https://machinelearningmastery.com/decompose-time-series-data-trend-seasonality/):
+
+* Level: The average value in the series.
+* Trend: The increasing or decreasing value in the series.
+* Seasonality: The repeating short-term cycle in the series.
+* Noise: The random variation in the series.
+
+If more time were to be allocated to this project, an overall ACF and PACF would be computed, and would [determine](https://www.youtube.com/watch?v=R-oWTWdS1Jg) autoregression (AR), and the moving average (MA) components to the below Arima model.
 
 ## General Pareto Distribution
 
