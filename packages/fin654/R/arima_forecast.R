@@ -10,13 +10,8 @@ plot_arima = function(model, index) {
   ##     2, indicates test
   ##
   if (index == 0) {
-    df = data.frame(
-      date=model[1],
-      actual=model[2]
-    )
-
-    g = ggplot(df, aes(x=date)) +
-      geom_line(aes(y=actual, group=1), color='#FC4E07') +
+    g = ggplot(model, aes(x=date)) +
+      geom_line(aes(y=value, group=1), color='#FC4E07') +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }
   else if (index == 1) {

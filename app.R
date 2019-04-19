@@ -693,33 +693,33 @@ server = function(input, output, session) {
   ##
   output$overallTimeSeries = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(c(
-      do.call('c', model$get_decomposed()[[1]]['index']$tolist()),
-      model$get_decomposed()[[1]]['values']
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[1]]['index']$tolist()),
+      value=model$get_decomposed()[[1]]['values']
     ), 0))
   })
 
   output$overallTimeSeriesTrend = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(c(
-      do.call('c', model$get_decomposed()[[2]]['index']$tolist()),
-      model$get_decomposed()[[2]]['values']
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[2]]['index']$tolist()),
+      value=model$get_decomposed()[[2]]['values']
     ), 0))
   })
 
   output$overallTimeSeriesSeasonality = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(c(
-      do.call('c', model$get_decomposed()[[3]]['index']$tolist()),
-      model$get_decomposed()[[3]]['values']
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[3]]['index']$tolist()),
+      value=model$get_decomposed()[[3]]['values']
     ), 0))
   })
 
   output$overallTimeSeriesResidual = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(c(
-      do.call('c', model$get_decomposed()[[4]]['index']$tolist()),
-      model$get_decomposed()[[4]]['values']
+    ggplotly(plot_arima(data.frame(
+      date=do.call('c', model$get_decomposed()[[4]]['index']$tolist()),
+      value=model$get_decomposed()[[4]]['values']
     ), 0))
   })
 
