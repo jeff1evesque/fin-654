@@ -15,7 +15,7 @@ plot_arima = function(model, index) {
       actual=model[2]
     )
 
-    g = ggplot(model, aes(x=date)) +
+    g = ggplot(df, aes(x=date)) +
       geom_line(aes(y=actual, group=1), color='#FC4E07') +
       theme(axis.text.x = element_text(angle = 90, hjust = 1))
   }
