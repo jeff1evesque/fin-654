@@ -11,8 +11,8 @@ plot_arima = function(model, index) {
   ##
   if (index == 0) {
     df = data.frame(
-      date=model[0],
-      actual=model[1]
+      date=model[1],
+      actual=model[2]
     )
 
     g = ggplot(model, aes(x=date)) +
