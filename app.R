@@ -693,22 +693,34 @@ server = function(input, output, session) {
   ##
   output$overallTimeSeries = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$get_decomposed()[[1]], 0))
+    ggplotly(plot_arima(c(
+      do.call('c', model$get_decomposed()[[1]]['index']$tolist()),
+      model$get_decomposed()[[1]]['values']
+    ), 0))
   })
 
   output$overallTimeSeriesTrend = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$get_decomposed()[[2]], 0))
+    ggplotly(plot_arima(c(
+      do.call('c', model$get_decomposed()[[2]]['index']$tolist()),
+      model$get_decomposed()[[2]]['values']
+    ), 0))
   })
 
   output$overallTimeSeriesSeasonality = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$get_decomposed()[[3]], 0))
+    ggplotly(plot_arima(c(
+      do.call('c', model$get_decomposed()[[3]]['index']$tolist()),
+      model$get_decomposed()[[3]]['values']
+    ), 0))
   })
 
   output$overallTimeSeriesResidual = renderPlotly({
     model = forecast.arima()
-    ggplotly(plot_arima(model$get_decomposed()[[4]], 0))
+    ggplotly(plot_arima(c(
+      do.call('c', model$get_decomposed()[[4]]['index']$tolist()),
+      model$get_decomposed()[[4]]['values']
+    ), 0))
   })
 
   ##
